@@ -12,11 +12,13 @@
 "All" = "全部";
 "All models" = "全部模型";
 "All time" = "全部时间";
+"Automatically check for updates" = "自动检查更新";
 "Allow TokPeek in System Settings → General → Login Items." = "请在“系统设置”→“通用”→“登录项”中允许 TokPeek。";
 "Average" = "平均值";
 "By client" = "按客户端";
 "By model" = "按模型";
 "Cache" = "缓存";
+"Check for Updates…" = "检查更新…";
 "Client details are not available for this period." = "此时间段暂无客户端明细。";
 "Cost" = "费用";
 "Daily token usage chart" = "每日 Token 用量图表";
@@ -68,6 +70,7 @@
 "sources" = "来源";
 "System" = "系统";
 "TokPeek is still enabled in System Settings → General → Login Items." = "TokPeek 在“系统设置”→“通用”→“登录项”中仍处于启用状态。";
+"TokPeek checks GitHub Releases once a day. Updates are installed only after confirmation." = "TokPeek 每天检查一次 GitHub Releases，更新仅在确认后安装。";
 "TokPeek reads supported AI coding sessions on this Mac. Nothing is uploaded." = "TokPeek 会读取这台 Mac 上受支持的 AI 编程会话，所有数据仅在本机处理。";
 "Tokscale Core returned an unknown error" = "Tokscale Core 返回了未知错误";
 "Tokscale Core returned invalid text" = "Tokscale Core 返回了无效文本";
@@ -82,5 +85,6 @@
 "Usage period" = "使用周期";
 "Usage will appear here after TokPeek finds local sessions." = "TokPeek 找到本地会话后，用量会显示在这里。";
 "Unknown model" = "未知模型";
+"Updates" = "更新";
 "Version %@" = "版本 %@";
 "View Tokscale on GitHub" = "在 GitHub 上查看 Tokscale";

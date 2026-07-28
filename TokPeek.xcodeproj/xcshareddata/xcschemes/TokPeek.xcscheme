@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "1851CF41104049DFD51B4DCEE9717351"
+               BlueprintIdentifier = "5983F38AB0EDFCD2AC97FED703A861ED"
                BuildableName = "TokPeek.app"
                BlueprintName = "TokPeek"
                ReferencedContainer = "container:TokPeek.xcodeproj">
@@ -30,7 +30,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1851CF41104049DFD51B4DCEE9717351"
+            BlueprintIdentifier = "5983F38AB0EDFCD2AC97FED703A861ED"
             BuildableName = "TokPeek.app"
             BlueprintName = "TokPeek"
             ReferencedContainer = "container:TokPeek.xcodeproj">
@@ -41,7 +41,7 @@
             skipped = "NO">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "E35781DAA3268CF01D87CC01CB09F5D3"
+               BlueprintIdentifier = "E92B6A208B417023863AC9F9938BF6FD"
                BuildableName = "TokPeekTests.xctest"
                BlueprintName = "TokPeekTests"
                ReferencedContainer = "container:TokPeek.xcodeproj">
@@ -63,7 +63,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1851CF41104049DFD51B4DCEE9717351"
+            BlueprintIdentifier = "5983F38AB0EDFCD2AC97FED703A861ED"
             BuildableName = "TokPeek.app"
             BlueprintName = "TokPeek"
             ReferencedContainer = "container:TokPeek.xcodeproj">
@@ -80,7 +80,7 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "1851CF41104049DFD51B4DCEE9717351"
+            BlueprintIdentifier = "5983F38AB0EDFCD2AC97FED703A861ED"
             BuildableName = "TokPeek.app"
             BlueprintName = "TokPeek"
             ReferencedContainer = "container:TokPeek.xcodeproj">

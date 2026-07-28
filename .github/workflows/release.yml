@@ -56,13 +56,14 @@ jobs:
       - name: Run test suite
         run: make test
 
-      - name: Validate Apple signing secrets
+      - name: Validate release secrets
         env:
           APPLE_DEVELOPER_ID_P12_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_P12_BASE64 }}
           APPLE_DEVELOPER_ID_P12_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_P12_PASSWORD }}
           APPLE_NOTARY_KEY_P8_BASE64: ${{ secrets.APPLE_NOTARY_KEY_P8_BASE64 }}
           APPLE_NOTARY_KEY_ID: ${{ secrets.APPLE_NOTARY_KEY_ID }}
           APPLE_NOTARY_ISSUER_ID: ${{ secrets.APPLE_NOTARY_ISSUER_ID }}
+          SPARKLE_EDDSA_PRIVATE_KEY: ${{ secrets.SPARKLE_EDDSA_PRIVATE_KEY }}
         run: |
           required_secrets=(
             APPLE_DEVELOPER_ID_P12_BASE64
@@ -70,6 +71,7 @@ jobs:
             APPLE_NOTARY_KEY_P8_BASE64
             APPLE_NOTARY_KEY_ID
             APPLE_NOTARY_ISSUER_ID
+            SPARKLE_EDDSA_PRIVATE_KEY
           )
           missing_secrets=()
           for secret_name in "${required_secrets[@]}"; do
@@ -145,6 +147,8 @@ jobs:
           app_path="dist/TokPeek.app"
 
           codesign --verify --deep --strict --verbose=2 "$app_path"
+          codesign --verify --strict --verbose=2 \
+            "$app_path/Contents/Frameworks/Sparkle.framework"
           xcrun lipo "$app_path/Contents/MacOS/TokPeek" \
             -verify_arch arm64 x86_64
           signature_details=$(codesign -dvvv "$app_path" 2>&1)
@@ -160,6 +164,17 @@ jobs:
           )
           if [[ "$built_version" != "$RELEASE_VERSION" ]]; then
             echo "Expected version $RELEASE_VERSION, found $built_version." >&2
+            exit 1
+          fi
+
+          feed_url=$(
+            /usr/libexec/PlistBuddy \
+              -c "Print :SUFeedURL" \
+              "$app_path/Contents/Info.plist"
+          )
+          if [[ "$feed_url" != \
+            "https://github.com/murongg/TokPeek/releases/latest/download/appcast.xml" ]]; then
+            echo "Unexpected Sparkle feed URL: $feed_url" >&2
             exit 1
           fi
 
@@ -205,6 +220,60 @@ jobs:
             shasum -a 256 "$archive" > "$archive.sha256"
           )
 
+      - name: Generate signed Sparkle appcast
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.value }}
+          SPARKLE_EDDSA_PRIVATE_KEY: ${{ secrets.SPARKLE_EDDSA_PRIVATE_KEY }}
+        run: |
+          archive="TokPeek-${RELEASE_VERSION}-macOS-universal.zip"
+          appcast_dir="$RUNNER_TEMP/tokpeek-appcast"
+          mkdir -p "$appcast_dir"
+          cp "artifacts/$archive" "$appcast_dir/$archive"
+          cat > "$appcast_dir/${archive%.zip}.md" <<EOF
+          # TokPeek ${RELEASE_VERSION}
+
+          See the full release notes on GitHub.
+          EOF
+
+          generate_appcast=$(
+            find .build/xcode/SourcePackages/artifacts \
+              -type f \
+              -name generate_appcast \
+              -perm +111 \
+              -print \
+              -quit
+          )
+          if [[ -z "$generate_appcast" ]]; then
+            echo "Sparkle generate_appcast was not found." >&2
+            exit 1
+          fi
+
+          printf "%s" "$SPARKLE_EDDSA_PRIVATE_KEY" \
+            | "$generate_appcast" \
+                --ed-key-file - \
+                --download-url-prefix \
+                  "https://github.com/murongg/TokPeek/releases/download/$GITHUB_REF_NAME/" \
+                --embed-release-notes \
+                --full-release-notes-url \
+                  "https://github.com/murongg/TokPeek/releases/tag/$GITHUB_REF_NAME" \
+                --link "https://github.com/murongg/TokPeek" \
+                --maximum-versions 1 \
+                -o "$appcast_dir/appcast.xml" \
+                "$appcast_dir"
+
+          xmllint --noout "$appcast_dir/appcast.xml"
+          if ! grep -q "sparkle:edSignature=" \
+            "$appcast_dir/appcast.xml"; then
+            echo "The update archive is missing its Sparkle signature." >&2
+            exit 1
+          fi
+          if ! grep -q "sparkle-signatures:" \
+            "$appcast_dir/appcast.xml"; then
+            echo "The Sparkle appcast is missing its feed signature." >&2
+            exit 1
+          fi
+          cp "$appcast_dir/appcast.xml" artifacts/appcast.xml
+
       - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
@@ -214,6 +283,7 @@ jobs:
           gh release create "$GITHUB_REF_NAME" \
             "artifacts/$archive#TokPeek $RELEASE_VERSION (macOS Universal)" \
             "artifacts/$archive.sha256#SHA-256 checksum" \
+            "artifacts/appcast.xml#Sparkle update feed" \
             --verify-tag \
             --generate-notes \
             --fail-on-no-commits \
@@ -230,3 +300,4 @@ jobs:
             "$RUNNER_TEMP/developer-id.p12" \
             "$RUNNER_TEMP/AuthKey.p8" \
             "$RUNNER_TEMP/TokPeek-notarization.zip"
+          rm -rf "$RUNNER_TEMP/tokpeek-appcast"

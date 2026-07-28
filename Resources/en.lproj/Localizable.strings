@@ -12,11 +12,13 @@
 "All" = "All";
 "All models" = "All models";
 "All time" = "All time";
+"Automatically check for updates" = "Automatically check for updates";
 "Allow TokPeek in System Settings → General → Login Items." = "Allow TokPeek in System Settings → General → Login Items.";
 "Average" = "Average";
 "By client" = "By client";
 "By model" = "By model";
 "Cache" = "Cache";
+"Check for Updates…" = "Check for Updates…";
 "Client details are not available for this period." = "Client details are not available for this period.";
 "Cost" = "Cost";
 "Daily token usage chart" = "Daily token usage chart";
@@ -68,6 +70,7 @@
 "sources" = "sources";
 "System" = "System";
 "TokPeek is still enabled in System Settings → General → Login Items." = "TokPeek is still enabled in System Settings → General → Login Items.";
+"TokPeek checks GitHub Releases once a day. Updates are installed only after confirmation." = "TokPeek checks GitHub Releases once a day. Updates are installed only after confirmation.";
 "TokPeek reads supported AI coding sessions on this Mac. Nothing is uploaded." = "TokPeek reads supported AI coding sessions on this Mac. Nothing is uploaded.";
 "Tokscale Core returned an unknown error" = "Tokscale Core returned an unknown error";
 "Tokscale Core returned invalid text" = "Tokscale Core returned invalid text";
@@ -82,5 +85,6 @@
 "Usage period" = "Usage period";
 "Usage will appear here after TokPeek finds local sessions." = "Usage will appear here after TokPeek finds local sessions.";
 "Unknown model" = "Unknown model";
+"Updates" = "Updates";
 "Version %@" = "Version %@";
 "View Tokscale on GitHub" = "View Tokscale on GitHub";

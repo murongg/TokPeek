@@ -56,5 +56,12 @@ jobs:
         run: |
           make app
           codesign --verify --deep --strict --verbose=2 dist/TokPeek.app
+          codesign --verify --strict --verbose=2 \
+            dist/TokPeek.app/Contents/Frameworks/Sparkle.framework
           xcrun lipo dist/TokPeek.app/Contents/MacOS/TokPeek \
             -verify_arch arm64 x86_64
+          test -n "$(
+            /usr/libexec/PlistBuddy \
+              -c 'Print :SUPublicEDKey' \
+              dist/TokPeek.app/Contents/Info.plist
+          )"

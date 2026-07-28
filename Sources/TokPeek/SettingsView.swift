@@ -7,6 +7,7 @@ import SwiftUI
 struct SettingsView: View {
     @ObservedObject var settings: SettingsStore
     @ObservedObject var launchAtLogin: LaunchAtLoginController
+    @ObservedObject var updates: UpdateCoordinator
 
     var body: some View {
         TabView {
@@ -66,6 +67,31 @@ struct SettingsView: View {
                         .font(.caption)
                         .foregroundStyle(.primary)
                 }
+            }
+
+            Section("Updates") {
+                Toggle(
+                    "Automatically check for updates",
+                    isOn: Binding(
+                        get: {
+                            updates.automaticallyChecksForUpdates
+                        },
+                        set: {
+                            updates.setAutomaticallyChecksForUpdates($0)
+                        }
+                    )
+                )
+
+                Button("Check for Updates…") {
+                    updates.checkForUpdates()
+                }
+                .disabled(!updates.canCheckForUpdates)
+
+                Text(
+                    "TokPeek checks GitHub Releases once a day. Updates are installed only after confirmation."
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
         }
         .formStyle(.grouped)

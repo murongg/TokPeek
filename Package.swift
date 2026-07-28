@@ -19,6 +19,12 @@ let package = Package(
     products: [
         .executable(name: "TokPeek", targets: ["TokPeek"]),
     ],
+    dependencies: [
+        .package(
+            url: "https://github.com/sparkle-project/Sparkle",
+            exact: "2.9.4"
+        ),
+    ],
     targets: [
         .target(
             name: "TokPeekKit",
@@ -36,7 +42,11 @@ let package = Package(
         ),
         .executableTarget(
             name: "TokPeek",
-            dependencies: ["TokPeekBridge", "TokPeekKit"],
+            dependencies: [
+                "TokPeekBridge",
+                "TokPeekKit",
+                .product(name: "Sparkle", package: "Sparkle"),
+            ],
             path: "Sources/TokPeek",
             linkerSettings: rustLinkerSettings
         ),

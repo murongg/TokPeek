@@ -27,6 +27,30 @@ rust_group = project.main_group.new_group("Rust", "rust")
 app = project.new_target(:application, "TokPeek", :osx, "14.0")
 app.product_reference.name = "TokPeek.app"
 
+sparkle_package = project.new(
+  Xcodeproj::Project::Object::XCRemoteSwiftPackageReference
+)
+sparkle_package.repositoryURL =
+  "https://github.com/sparkle-project/Sparkle"
+sparkle_package.requirement = {
+  "kind" => "exactVersion",
+  "version" => "2.9.4"
+}
+project.root_object.package_references << sparkle_package
+
+sparkle_product = project.new(
+  Xcodeproj::Project::Object::XCSwiftPackageProductDependency
+)
+sparkle_product.package = sparkle_package
+sparkle_product.product_name = "Sparkle"
+app.package_product_dependencies << sparkle_product
+
+sparkle_build_file = project.new(
+  Xcodeproj::Project::Object::PBXBuildFile
+)
+sparkle_build_file.product_ref = sparkle_product
+app.frameworks_build_phase.files << sparkle_build_file
+
 swift_sources = Dir[
   File.join(project_root, "Sources/TokPeekKit/*.swift"),
   File.join(project_root, "Sources/TokPeekBridge/*.swift"),

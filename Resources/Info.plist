@@ -28,5 +28,19 @@
     <true/>
     <key>NSHumanReadableCopyright</key>
     <string>Copyright © 2026 TokPeek contributors</string>
+    <key>SUAllowsAutomaticUpdates</key>
+    <false/>
+    <key>SUEnableAutomaticChecks</key>
+    <true/>
+    <key>SUFeedURL</key>
+    <string>https://github.com/murongg/TokPeek/releases/latest/download/appcast.xml</string>
+    <key>SUPublicEDKey</key>
+    <string>EZlB1vnXqtHIrJyRpb/IxmCZggmPcjVflmr5tf7EL+A=</string>
+    <key>SURequireSignedFeed</key>
+    <true/>
+    <key>SUScheduledCheckInterval</key>
+    <integer>86400</integer>
+    <key>SUVerifyUpdateBeforeExtraction</key>
+    <true/>
 </dict>
 </plist>

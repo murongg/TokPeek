@@ -7,133 +7,142 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		01FEB10DC95A9280BBE414CA84A0FCBA /* UsageInsights.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8384523685C2F4698819B8A508C6847A /* UsageInsights.swift */; };
-		0373A9D86CB3D22BCC8DD2604F68897B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7FB2130AD6D7B91C64A4D1267B2565 /* SettingsView.swift */; };
-		03A07B4A4D27F880415CADD53D4AD0E6 /* CoreJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5645496A3CF0F3180D30BDCFFAD4B9EF /* CoreJSON.swift */; };
-		073C5ACFF23DBEE799529351F6DE5EF8 /* CoreResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9DF4D41093E9945B40B5E16B5B454D /* CoreResponse.swift */; };
-		0900C597406F996ABC75128A35563EDB /* UsageInsights.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8384523685C2F4698819B8A508C6847A /* UsageInsights.swift */; };
-		1B907D1477D2C7D88373F4B1CF1A22D6 /* CoreResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753FA68E570B7A57D8984B2EE9AFF68A /* CoreResponseTests.swift */; };
-		1D138640D753201681E945C046E1780F /* UsageOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0915FA23CE59D0783782E841FECC488B /* UsageOverview.swift */; };
-		28C96C38DDDB1C6FAD219BA932C2A101 /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B759BC3A80A460EF63A027E35DB550 /* SettingsPresenter.swift */; };
-		2F6EA9DEEB52DC4723B27D157E87FCD4 /* ClientBreakdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99E2F8237045080B652264026202C690 /* ClientBreakdown.swift */; };
-		30409571EA63A0E16B9C5B601D3E349E /* ClientBreakdownLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B3128AF6766A563CE1109A9F9E9588 /* ClientBreakdownLayoutTests.swift */; };
-		36FB616FCBD90F05AD8FBE660518EA57 /* LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5878A256D341C14DA11261C569F702FD /* LocalizationTests.swift */; };
-		4030996AD38321F33AFFA02DBACBB921 /* UsageInsightsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1138C800B34784BE1A767052B4744487 /* UsageInsightsTests.swift */; };
-		45F27E199A9F3173769A32D803F8B618 /* UsageReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7D851A70276F703188AE19B75339DA /* UsageReport.swift */; };
-		4651805539A09A7E2A0667C98A93E8C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A6F27966EB6C639B64E0314939221E5 /* Assets.xcassets */; };
-		57039F2729A0FEC38D9F8D666CAFF0F2 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E77DA364C7AA3E1B69E07435D709CD97 /* CoreFoundation.framework */; };
-		5A7C35AC8836E08463A4E90219C59DE5 /* ClientBreakdownLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961E92958CCFD80FB2267507E2E104CD /* ClientBreakdownLayout.swift */; };
-		66A75E7687A82EBF26B742E836A77318 /* MenuBarIconTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E277ACF5FF1343E9C39408A45295785 /* MenuBarIconTests.swift */; };
-		67B7EE4CE69884F479BA26E6A78B8013 /* SettingsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB31031C8B36ABABBC71DE74B9369A2 /* SettingsStoreTests.swift */; };
-		6A551444B08B50D1BD33D974B2A7E1DF /* ClientBreakdownLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961E92958CCFD80FB2267507E2E104CD /* ClientBreakdownLayout.swift */; };
-		6B219B0C8C04C558410ADB8B3B81398E /* UsageFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993CC3E1573F8394FBA506AD7C6A565 /* UsageFormatting.swift */; };
-		6E08E6ABC7CBD0013D80A176620B87C1 /* LaunchAtLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215227CF32CB160047F807F9F3E21128 /* LaunchAtLogin.swift */; };
-		7332C8AB8D176A51AE6A918C7B003261 /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F80A7CA27E9979C15252BDD63DBB6E0 /* MenuBarIcon.swift */; };
-		7A66E37205014B16A568044C9580D087 /* UsageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54625217C77CCC173868BF5653CE885 /* UsageRequest.swift */; };
-		80C41CE3F69ABC68F3B5A45B01C30C7B /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B759BC3A80A460EF63A027E35DB550 /* SettingsPresenter.swift */; };
-		825B23E6D8221E78FE801341E419605D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39AF01A3863F8C34C9E9CFFE2B882CA9 /* Localizable.strings */; };
-		829B2A2A10C69770E52B6DE982F6913F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8677E75374EA3FA1B9FC20B12AB3F82E /* Security.framework */; };
-		82BB007393D25EDD24CB0F71065C7501 /* UsageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54625217C77CCC173868BF5653CE885 /* UsageRequest.swift */; };
-		83BD8A0533D22BE171F55E4D40FAF46F /* UsageChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A165BA04A8A303BBC99FA67273EB7E /* UsageChart.swift */; };
-		8EB0FFE78692AED127EE7B3214F03438 /* LaunchAtLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215227CF32CB160047F807F9F3E21128 /* LaunchAtLogin.swift */; };
-		905DE41280C742203F91F843D89BA710 /* CoreJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5645496A3CF0F3180D30BDCFFAD4B9EF /* CoreJSON.swift */; };
-		9265EE11A0DB16EDA5188DB8E041FFEC /* libtokpeek_core_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60E3A57259E6455FF1D7BF77F7744EDE /* libtokpeek_core_ffi.a */; };
-		950F4FC74BAF2CB09CF18D880158AE1A /* TokscaleClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3123141C1138CDEBB84828851C101A0F /* TokscaleClient.swift */; };
-		9BED2A0A1F8F3B285FB5DD83ECD2B9AF /* ModelRanking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7CE6FE16507B0EC72EB106ED780EF7 /* ModelRanking.swift */; };
-		9E19487503E02DE364D666850C45A131 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A375B1F7A7962A02DADCAAFE496E5B5D /* Cocoa.framework */; };
-		9ECADE4FD0DBE9BE3B744D89A9CB9BC0 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34F0BB010DE16FF17C667FBC62D8784 /* Localization.swift */; };
-		A03E18C557E4B93762F33A5BA7320885 /* UsageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B796B3C9AA0671C52AD082AE7F6AB61A /* UsageStore.swift */; };
-		A77CACF8415901F312D21CCEA28775C7 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC9BE4AB9B12D29E56E944A45DF0091 /* Theme.swift */; };
-		ABE39E851F7ABFF4023C4D071A01DAC4 /* UsageChartLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31BF70BB29ED7A5AE3DB4BCBD79BF78 /* UsageChartLayout.swift */; };
-		AC64F6F5C4E6B1064388568AC938D201 /* LaunchAtLoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D50876C24B5C1CC547402D74B0A241 /* LaunchAtLoginTests.swift */; };
-		AF69C40FFFD710371C43E3F72D43B373 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0BC4EDB9E18E1F353DA2C4154CEE3 /* SettingsStore.swift */; };
-		B25F723D7FF855FFE19F9006B0EA48DA /* UsageChartLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B8A3E9E0573884CED6F97688A29D36 /* UsageChartLayoutTests.swift */; };
-		BA72B065337663335FA42A0CD1E6FB40 /* UsageFormattingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682F4C931549E42B8BCC8CE39F5756F2 /* UsageFormattingTests.swift */; };
-		C396C7DC1AF3AF4ABEFCFCA6CBBC45C5 /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F80A7CA27E9979C15252BDD63DBB6E0 /* MenuBarIcon.swift */; };
-		CF8CAC85AAF3F512448ECD974C5DF913 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1976B9C1DAD1290CA6525E409A738916 /* SystemConfiguration.framework */; };
-		D35407A175AC581108045E09D1AFE8BC /* UsageReportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850DFE9C4A211507682F7321053145C9 /* UsageReportTests.swift */; };
-		D8C20BBD115EB626747D5817FA7A97A3 /* UsageReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7D851A70276F703188AE19B75339DA /* UsageReport.swift */; };
-		DDFFCFB9039EF16628E9ACE76FEB0EBA /* UsageStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B446000CD3EF9E7131BEA6ACE6674E12 /* UsageStoreTests.swift */; };
-		E2B466871CBD1E5F11616B82B6FD074B /* SettingsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CB5ED37D6D3B6F746C50DE8A33BB6A /* SettingsPresenterTests.swift */; };
-		E324614BEC2F05847BEAA2C75206A3BE /* UsageChartLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31BF70BB29ED7A5AE3DB4BCBD79BF78 /* UsageChartLayout.swift */; };
-		E4A54025430324F70F88A8A4CE67AAEB /* CoreResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9DF4D41093E9945B40B5E16B5B454D /* CoreResponse.swift */; };
-		E80F3C66168D8815B9F819CB4A50E376 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A375B1F7A7962A02DADCAAFE496E5B5D /* Cocoa.framework */; };
-		EBC8B75AE1866D6132C10180A1766D26 /* UsageFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993CC3E1573F8394FBA506AD7C6A565 /* UsageFormatting.swift */; };
-		ECFF65EF0702C3374AD03171DAAFE188 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0BC4EDB9E18E1F353DA2C4154CEE3 /* SettingsStore.swift */; };
-		F9AE7F8025F24057D4277462F428A878 /* UsageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B796B3C9AA0671C52AD082AE7F6AB61A /* UsageStore.swift */; };
-		FAB6F1C08B9FF7DC403E9F8923387547 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E08EAA2378B0E97F673AAD4C1EBC398 /* DashboardView.swift */; };
-		FD39258CC2E4BAC226E84217E9E7FF9C /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34F0BB010DE16FF17C667FBC62D8784 /* Localization.swift */; };
-		FE234FFE9176FC2A96479138F3340E89 /* TokPeekApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A1CC3EE4289A7C78731075B1B2DE30 /* TokPeekApp.swift */; };
+		0115F26E7AB37F5DE1AFF3ECE1C942B6 /* UpdateCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27B5519947F25AD37C0E2DFDAA6DF64 /* UpdateCoordinator.swift */; };
+		02CBE8E902D9C6E49A5FFC82ACB48894 /* CoreResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A3365435308C686057E1B1F05FF217 /* CoreResponse.swift */; };
+		06154DAEC16D7973A046FC2738AAF382 /* ClientBreakdownLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40C6CC31BB3000C3CDB82C44A72F126E /* ClientBreakdownLayoutTests.swift */; };
+		0AEB236391F3CFA1B9DDC1A74974F98B /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B279E0D7DD42E6C62764FDD5768117 /* SettingsStore.swift */; };
+		126EF7FAB0BA72BC8CB79B21609E7BC9 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA8EF6884D69D81B152D7C5B47B607B /* DashboardView.swift */; };
+		14916E2C7EF50E7092EE759D2C1B6EBB /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A375B1F7A7962A02DADCAAFE496E5B5D /* Cocoa.framework */; };
+		153421CFA0A827630FC0C5D2F4C87B56 /* UsageChartLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B498A317EFF72FF573770E65E2AAF0D5 /* UsageChartLayout.swift */; };
+		19D098DA8041F841AA22375704BD73C3 /* UsageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED97B8D9DEED37A1A262562E7BFB5856 /* UsageRequest.swift */; };
+		1BB98C483AF1846D9691AB08789C94A6 /* ClientBreakdownLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B83F9623860F133F6F11C79CF8BE8D0 /* ClientBreakdownLayout.swift */; };
+		1FA0CC0BBBEF675E96245A3A7CCEBE08 /* UsageChartLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B350A90A33AA766144C1DB2676CC086 /* UsageChartLayoutTests.swift */; };
+		24FCE7B91961BC864E7271FAFCD34850 /* CoreResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59A3365435308C686057E1B1F05FF217 /* CoreResponse.swift */; };
+		2744B9777A8A3DF4C894F5D5533A0E94 /* UsageOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E593F59119F4A028FFF3B2DE0207BB2 /* UsageOverview.swift */; };
+		2D42F7737A115DBCD7BEAE20AEB0D36E /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F75580D9C02BB0D43D26E9E779F67 /* SettingsPresenter.swift */; };
+		31EEE719EBC0F0CF406EA67E82B75441 /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12ED9B5F2463AA2965ECB9BE7F6D4481 /* MenuBarIcon.swift */; };
+		350B3FA9847E24BA6F8C0C49B176CA35 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1976B9C1DAD1290CA6525E409A738916 /* SystemConfiguration.framework */; };
+		3A486B53273E2531CE5A61D1F4DA35DF /* UsageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7978243835FC0FCF1CCFE0995B0140AC /* UsageStore.swift */; };
+		433C189699E1E3AB7A880B6C90E57D1B /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12ED9B5F2463AA2965ECB9BE7F6D4481 /* MenuBarIcon.swift */; };
+		4A1A9C4C65AAA86003D7308427FBFFCB /* LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7473A556969B54BF09FE244E12F0FE8D /* LocalizationTests.swift */; };
+		4B9A2AF240A245C25A3C7C5A7B321F3E /* SettingsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD85137D76A03825D1F5F7AA7E5C1467 /* SettingsStoreTests.swift */; };
+		5FA71335C00174DF30D333AB0BF4417A /* UsageChartLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = B498A317EFF72FF573770E65E2AAF0D5 /* UsageChartLayout.swift */; };
+		6416667F0912E4B83BE4FBB58969EADB /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 0886566808A71967D2566AB309FB1B8B /* Sparkle */; };
+		64BD46E45ED7C811B709E2C17AA382BB /* CoreJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13FA090FDEC9AC6237CCA705A0EBCB83 /* CoreJSON.swift */; };
+		64E32D2682595EABFA19D2F7B4F11310 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39AF01A3863F8C34C9E9CFFE2B882CA9 /* Localizable.strings */; };
+		674963F5472A9D5915FDC09BD912059D /* UsageReportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92E9B4B38384072FA90906D70C4219DF /* UsageReportTests.swift */; };
+		6A2CA482C679B6FCFE68DE6D7A90BE90 /* TokPeekApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B941362BF43698D8278DB3E64D89EE27 /* TokPeekApp.swift */; };
+		6C7459B246267D06D9D816876C2B339E /* UsageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ED97B8D9DEED37A1A262562E7BFB5856 /* UsageRequest.swift */; };
+		6D44295E0E5689DCABC296B6FF8899D1 /* UsageInsights.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAC225AAD2265C3C97D2D73292F8B6A /* UsageInsights.swift */; };
+		6F7CAF318A9496FBD3965BD9EBB9197D /* LaunchAtLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B8745B8AE18175F280E85A37D1C9B1 /* LaunchAtLogin.swift */; };
+		7185CA582DAF6512B09FB604B0A0DB15 /* SparkleUpdateChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3727F837AA44F1ECC912100323145484 /* SparkleUpdateChecker.swift */; };
+		7317096D48745CB30367F92E9F377A7C /* UsageInsights.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAC225AAD2265C3C97D2D73292F8B6A /* UsageInsights.swift */; };
+		79C38A5A2840441A955B80703E87E2CC /* TokscaleClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1EDAF0E1DC247F1486E1BD34041206A3 /* TokscaleClient.swift */; };
+		8C111727E244D989C14E77656B606D8C /* UsageReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6777DE7F434EDC8EB5AAAAB7BC09D6A3 /* UsageReport.swift */; };
+		8D5A33D9694FF3B074587013F454EC31 /* ModelRanking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D10F83DC6CC900DE197175D3271C742 /* ModelRanking.swift */; };
+		91324C002FD839A1C6DE95D2FFFE83A1 /* ClientBreakdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6352AFF69EC5198CDE349259C4347A71 /* ClientBreakdown.swift */; };
+		9EBBEFDE0B6B2E2C8E454050B6466394 /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A7F75580D9C02BB0D43D26E9E779F67 /* SettingsPresenter.swift */; };
+		A0688ACE00CD7D49BEB430FB87C741AF /* libtokpeek_core_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60E3A57259E6455FF1D7BF77F7744EDE /* libtokpeek_core_ffi.a */; };
+		A778F4004B306FA07926E777296FDADB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A6F27966EB6C639B64E0314939221E5 /* Assets.xcassets */; };
+		A85D6309444704E0DB2663C391E4AF18 /* LaunchAtLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4B8745B8AE18175F280E85A37D1C9B1 /* LaunchAtLogin.swift */; };
+		A8BB6DD732F33F44E78FDE244C86DCB8 /* MenuBarIconTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 41DF6B5DE34A66F25B127F1160AD3DBA /* MenuBarIconTests.swift */; };
+		B823B79E4291F04AE27BB5F0BB40AC83 /* CoreJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13FA090FDEC9AC6237CCA705A0EBCB83 /* CoreJSON.swift */; };
+		C47323717CD4EDBA651F886B4A80E5A8 /* SettingsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 88FBD59FBB543D54AF6646EF492871FA /* SettingsPresenterTests.swift */; };
+		C7C3F7BFAA45D738439D8333DC55AFDC /* LaunchAtLoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DF1C16D088CDC34BB596A3B5AC5E6C5C /* LaunchAtLoginTests.swift */; };
+		CAFA9E6961BD18017EE28374247CD0F4 /* UsageReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6777DE7F434EDC8EB5AAAAB7BC09D6A3 /* UsageReport.swift */; };
+		CB1343087320C4443A4460CF65DDF617 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0FE84AEA3E920FE5B72F2FFFDD4FAC /* Localization.swift */; };
+		D2D568D12E0B73B69EDDEDFB999EDB1C /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E77DA364C7AA3E1B69E07435D709CD97 /* CoreFoundation.framework */; };
+		D65566B781CE433C0493058E2FEB7F01 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63CE2251004B0F313A3BFBBD06F614C6 /* Theme.swift */; };
+		D877763D574B4F69ACA8CC2A6457B004 /* ClientBreakdownLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B83F9623860F133F6F11C79CF8BE8D0 /* ClientBreakdownLayout.swift */; };
+		D87EFAF0942AC6C68ED78D6E4A39E8D6 /* UsageStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8449BEF68B8757A5695D28ED5E1A4C5E /* UsageStoreTests.swift */; };
+		DA252D040E452E53013A838FFB688DC2 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B279E0D7DD42E6C62764FDD5768117 /* SettingsStore.swift */; };
+		DDCBAB75896DCF0846E78105D3528B98 /* UpdateCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AFD64040AEF18E9400F4D75E35953367 /* UpdateCoordinatorTests.swift */; };
+		E4383A2D9C068C2B638C3BB7153A7433 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E0FE84AEA3E920FE5B72F2FFFDD4FAC /* Localization.swift */; };
+		E925D97FFBF426FC37A93B86AC21B186 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8677E75374EA3FA1B9FC20B12AB3F82E /* Security.framework */; };
+		EBDE483123DB1381EC3622300EE0EE46 /* UsageChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6393E344A6B4C4429DE2474F313E2E9 /* UsageChart.swift */; };
+		ECD4357C701681EE4B632B74B39E06ED /* UsageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7978243835FC0FCF1CCFE0995B0140AC /* UsageStore.swift */; };
+		EFC5B606FDF2E00A93843AD905E60E10 /* UsageFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B8FE36500B0642CF37C7BFDFF0B005 /* UsageFormatting.swift */; };
+		F6BC550D4C3C641AD9FBE54B3EC59A41 /* UsageFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28B8FE36500B0642CF37C7BFDFF0B005 /* UsageFormatting.swift */; };
+		F7953113CBC20B76E012FCA9B60419C3 /* UsageFormattingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A9208499D479E8AACB2581BB5E45FE /* UsageFormattingTests.swift */; };
+		FC7123E894F9F1917A59F8C2B56D298B /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A375B1F7A7962A02DADCAAFE496E5B5D /* Cocoa.framework */; };
+		FC799BC514D8F9DD25B6A9C3DE081088 /* CoreResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5C4DD2278516561FA56F176C528AEB8 /* CoreResponseTests.swift */; };
+		FD61AF83A76CEF64102D716DA4F1AB4D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A6859F69E622A830B92ABCA0154D1AE /* SettingsView.swift */; };
+		FE6834A9FDEAC7D131045FE9028D1A79 /* UsageInsightsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE054094D6DD90CFE93483FC26DBD347 /* UsageInsightsTests.swift */; };
+		FFDE7EA0F2C542D5ED654A73CCF00FD2 /* UpdateCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = C27B5519947F25AD37C0E2DFDAA6DF64 /* UpdateCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		01B8A3E9E0573884CED6F97688A29D36 /* UsageChartLayoutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageChartLayoutTests.swift; path = TokPeekKitTests/UsageChartLayoutTests.swift; sourceTree = "<group>"; };
-		0915FA23CE59D0783782E841FECC488B /* UsageOverview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageOverview.swift; path = TokPeek/UsageOverview.swift; sourceTree = "<group>"; };
-		0C9DF4D41093E9945B40B5E16B5B454D /* CoreResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CoreResponse.swift; path = TokPeekKit/CoreResponse.swift; sourceTree = "<group>"; };
-		1138C800B34784BE1A767052B4744487 /* UsageInsightsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageInsightsTests.swift; path = TokPeekKitTests/UsageInsightsTests.swift; sourceTree = "<group>"; };
+		0A6859F69E622A830B92ABCA0154D1AE /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = TokPeek/SettingsView.swift; sourceTree = "<group>"; };
 		11D3344648555DAD5F9C0105E68485CB /* TokPeekTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TokPeekTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		12ED9B5F2463AA2965ECB9BE7F6D4481 /* MenuBarIcon.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MenuBarIcon.swift; path = TokPeekKit/MenuBarIcon.swift; sourceTree = "<group>"; };
 		139F2BEAF258794938ED1DB042BB0D59 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		13FA090FDEC9AC6237CCA705A0EBCB83 /* CoreJSON.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CoreJSON.swift; path = TokPeekKit/CoreJSON.swift; sourceTree = "<group>"; };
 		1976B9C1DAD1290CA6525E409A738916 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		215227CF32CB160047F807F9F3E21128 /* LaunchAtLogin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LaunchAtLogin.swift; path = TokPeekKit/LaunchAtLogin.swift; sourceTree = "<group>"; };
+		1B350A90A33AA766144C1DB2676CC086 /* UsageChartLayoutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageChartLayoutTests.swift; path = TokPeekKitTests/UsageChartLayoutTests.swift; sourceTree = "<group>"; };
+		1EDAF0E1DC247F1486E1BD34041206A3 /* TokscaleClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokscaleClient.swift; path = TokPeekBridge/TokscaleClient.swift; sourceTree = "<group>"; };
 		2570D59C145D285817BEB258BC93A6E3 /* TokPeek.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = TokPeek.app; path = TokPeek.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		28CB5ED37D6D3B6F746C50DE8A33BB6A /* SettingsPresenterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsPresenterTests.swift; path = TokPeekKitTests/SettingsPresenterTests.swift; sourceTree = "<group>"; };
-		3123141C1138CDEBB84828851C101A0F /* TokscaleClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokscaleClient.swift; path = TokPeekBridge/TokscaleClient.swift; sourceTree = "<group>"; };
-		3993CC3E1573F8394FBA506AD7C6A565 /* UsageFormatting.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageFormatting.swift; path = TokPeekKit/UsageFormatting.swift; sourceTree = "<group>"; };
+		28B8FE36500B0642CF37C7BFDFF0B005 /* UsageFormatting.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageFormatting.swift; path = TokPeekKit/UsageFormatting.swift; sourceTree = "<group>"; };
+		2A7F75580D9C02BB0D43D26E9E779F67 /* SettingsPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsPresenter.swift; path = TokPeekKit/SettingsPresenter.swift; sourceTree = "<group>"; };
+		2D10F83DC6CC900DE197175D3271C742 /* ModelRanking.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ModelRanking.swift; path = TokPeek/ModelRanking.swift; sourceTree = "<group>"; };
+		3727F837AA44F1ECC912100323145484 /* SparkleUpdateChecker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SparkleUpdateChecker.swift; path = TokPeek/SparkleUpdateChecker.swift; sourceTree = "<group>"; };
 		3A6F27966EB6C639B64E0314939221E5 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		5645496A3CF0F3180D30BDCFFAD4B9EF /* CoreJSON.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CoreJSON.swift; path = TokPeekKit/CoreJSON.swift; sourceTree = "<group>"; };
-		5878A256D341C14DA11261C569F702FD /* LocalizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocalizationTests.swift; path = TokPeekKitTests/LocalizationTests.swift; sourceTree = "<group>"; };
-		5BC9BE4AB9B12D29E56E944A45DF0091 /* Theme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Theme.swift; path = TokPeek/Theme.swift; sourceTree = "<group>"; };
+		40C6CC31BB3000C3CDB82C44A72F126E /* ClientBreakdownLayoutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClientBreakdownLayoutTests.swift; path = TokPeekKitTests/ClientBreakdownLayoutTests.swift; sourceTree = "<group>"; };
+		41DF6B5DE34A66F25B127F1160AD3DBA /* MenuBarIconTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MenuBarIconTests.swift; path = TokPeekKitTests/MenuBarIconTests.swift; sourceTree = "<group>"; };
+		4DDF492392F7DAD24A5B8A499230E5B0 /* tokpeek_core.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = tokpeek_core.h; path = CTokPeekCore/include/tokpeek_core.h; sourceTree = "<group>"; };
+		59A3365435308C686057E1B1F05FF217 /* CoreResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CoreResponse.swift; path = TokPeekKit/CoreResponse.swift; sourceTree = "<group>"; };
 		60E3A57259E6455FF1D7BF77F7744EDE /* libtokpeek_core_ffi.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libtokpeek_core_ffi.a; path = target/universal/release/libtokpeek_core_ffi.a; sourceTree = "<group>"; };
-		64D50876C24B5C1CC547402D74B0A241 /* LaunchAtLoginTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LaunchAtLoginTests.swift; path = TokPeekKitTests/LaunchAtLoginTests.swift; sourceTree = "<group>"; };
-		682F4C931549E42B8BCC8CE39F5756F2 /* UsageFormattingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageFormattingTests.swift; path = TokPeekKitTests/UsageFormattingTests.swift; sourceTree = "<group>"; };
-		6E08EAA2378B0E97F673AAD4C1EBC398 /* DashboardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DashboardView.swift; path = TokPeek/DashboardView.swift; sourceTree = "<group>"; };
-		70B759BC3A80A460EF63A027E35DB550 /* SettingsPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsPresenter.swift; path = TokPeekKit/SettingsPresenter.swift; sourceTree = "<group>"; };
-		753FA68E570B7A57D8984B2EE9AFF68A /* CoreResponseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CoreResponseTests.swift; path = TokPeekKitTests/CoreResponseTests.swift; sourceTree = "<group>"; };
-		76A165BA04A8A303BBC99FA67273EB7E /* UsageChart.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageChart.swift; path = TokPeek/UsageChart.swift; sourceTree = "<group>"; };
-		7A7CE6FE16507B0EC72EB106ED780EF7 /* ModelRanking.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ModelRanking.swift; path = TokPeek/ModelRanking.swift; sourceTree = "<group>"; };
-		7B7FB2130AD6D7B91C64A4D1267B2565 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = TokPeek/SettingsView.swift; sourceTree = "<group>"; };
-		8384523685C2F4698819B8A508C6847A /* UsageInsights.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageInsights.swift; path = TokPeekKit/UsageInsights.swift; sourceTree = "<group>"; };
-		850DFE9C4A211507682F7321053145C9 /* UsageReportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageReportTests.swift; path = TokPeekKitTests/UsageReportTests.swift; sourceTree = "<group>"; };
+		6352AFF69EC5198CDE349259C4347A71 /* ClientBreakdown.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClientBreakdown.swift; path = TokPeek/ClientBreakdown.swift; sourceTree = "<group>"; };
+		63CE2251004B0F313A3BFBBD06F614C6 /* Theme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Theme.swift; path = TokPeek/Theme.swift; sourceTree = "<group>"; };
+		6777DE7F434EDC8EB5AAAAB7BC09D6A3 /* UsageReport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageReport.swift; path = TokPeekKit/UsageReport.swift; sourceTree = "<group>"; };
+		6DA8EF6884D69D81B152D7C5B47B607B /* DashboardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DashboardView.swift; path = TokPeek/DashboardView.swift; sourceTree = "<group>"; };
+		6DAC225AAD2265C3C97D2D73292F8B6A /* UsageInsights.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageInsights.swift; path = TokPeekKit/UsageInsights.swift; sourceTree = "<group>"; };
+		7473A556969B54BF09FE244E12F0FE8D /* LocalizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocalizationTests.swift; path = TokPeekKitTests/LocalizationTests.swift; sourceTree = "<group>"; };
+		7978243835FC0FCF1CCFE0995B0140AC /* UsageStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageStore.swift; path = TokPeekKit/UsageStore.swift; sourceTree = "<group>"; };
+		7B83F9623860F133F6F11C79CF8BE8D0 /* ClientBreakdownLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClientBreakdownLayout.swift; path = TokPeekKit/ClientBreakdownLayout.swift; sourceTree = "<group>"; };
+		8449BEF68B8757A5695D28ED5E1A4C5E /* UsageStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageStoreTests.swift; path = TokPeekKitTests/UsageStoreTests.swift; sourceTree = "<group>"; };
 		8677E75374EA3FA1B9FC20B12AB3F82E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
-		8E277ACF5FF1343E9C39408A45295785 /* MenuBarIconTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MenuBarIconTests.swift; path = TokPeekKitTests/MenuBarIconTests.swift; sourceTree = "<group>"; };
-		8F80A7CA27E9979C15252BDD63DBB6E0 /* MenuBarIcon.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MenuBarIcon.swift; path = TokPeekKit/MenuBarIcon.swift; sourceTree = "<group>"; };
-		961E92958CCFD80FB2267507E2E104CD /* ClientBreakdownLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClientBreakdownLayout.swift; path = TokPeekKit/ClientBreakdownLayout.swift; sourceTree = "<group>"; };
-		99E2F8237045080B652264026202C690 /* ClientBreakdown.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClientBreakdown.swift; path = TokPeek/ClientBreakdown.swift; sourceTree = "<group>"; };
-		A31BF70BB29ED7A5AE3DB4BCBD79BF78 /* UsageChartLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageChartLayout.swift; path = TokPeekKit/UsageChartLayout.swift; sourceTree = "<group>"; };
-		A34F0BB010DE16FF17C667FBC62D8784 /* Localization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Localization.swift; path = TokPeekKit/Localization.swift; sourceTree = "<group>"; };
+		88FBD59FBB543D54AF6646EF492871FA /* SettingsPresenterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsPresenterTests.swift; path = TokPeekKitTests/SettingsPresenterTests.swift; sourceTree = "<group>"; };
+		8E0FE84AEA3E920FE5B72F2FFFDD4FAC /* Localization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Localization.swift; path = TokPeekKit/Localization.swift; sourceTree = "<group>"; };
+		90B279E0D7DD42E6C62764FDD5768117 /* SettingsStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsStore.swift; path = TokPeekKit/SettingsStore.swift; sourceTree = "<group>"; };
+		92E9B4B38384072FA90906D70C4219DF /* UsageReportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageReportTests.swift; path = TokPeekKitTests/UsageReportTests.swift; sourceTree = "<group>"; };
+		9E593F59119F4A028FFF3B2DE0207BB2 /* UsageOverview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageOverview.swift; path = TokPeek/UsageOverview.swift; sourceTree = "<group>"; };
 		A375B1F7A7962A02DADCAAFE496E5B5D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
-		AAB31031C8B36ABABBC71DE74B9369A2 /* SettingsStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsStoreTests.swift; path = TokPeekKitTests/SettingsStoreTests.swift; sourceTree = "<group>"; };
+		A3A9208499D479E8AACB2581BB5E45FE /* UsageFormattingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageFormattingTests.swift; path = TokPeekKitTests/UsageFormattingTests.swift; sourceTree = "<group>"; };
+		A5C4DD2278516561FA56F176C528AEB8 /* CoreResponseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CoreResponseTests.swift; path = TokPeekKitTests/CoreResponseTests.swift; sourceTree = "<group>"; };
 		ADDCD9238FFD6E35E5F0EC0CC14ABAC6 /* zh-Hans */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
-		B446000CD3EF9E7131BEA6ACE6674E12 /* UsageStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageStoreTests.swift; path = TokPeekKitTests/UsageStoreTests.swift; sourceTree = "<group>"; };
-		B796B3C9AA0671C52AD082AE7F6AB61A /* UsageStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageStore.swift; path = TokPeekKit/UsageStore.swift; sourceTree = "<group>"; };
-		C54625217C77CCC173868BF5653CE885 /* UsageRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageRequest.swift; path = TokPeekKit/UsageRequest.swift; sourceTree = "<group>"; };
-		C9A1CC3EE4289A7C78731075B1B2DE30 /* TokPeekApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokPeekApp.swift; path = TokPeek/TokPeekApp.swift; sourceTree = "<group>"; };
-		CA2F5553947FD42AA1C64784AB04139C /* tokpeek_core.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = tokpeek_core.h; path = CTokPeekCore/include/tokpeek_core.h; sourceTree = "<group>"; };
+		AFD64040AEF18E9400F4D75E35953367 /* UpdateCoordinatorTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UpdateCoordinatorTests.swift; path = TokPeekKitTests/UpdateCoordinatorTests.swift; sourceTree = "<group>"; };
+		B498A317EFF72FF573770E65E2AAF0D5 /* UsageChartLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageChartLayout.swift; path = TokPeekKit/UsageChartLayout.swift; sourceTree = "<group>"; };
+		B941362BF43698D8278DB3E64D89EE27 /* TokPeekApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokPeekApp.swift; path = TokPeek/TokPeekApp.swift; sourceTree = "<group>"; };
+		BD85137D76A03825D1F5F7AA7E5C1467 /* SettingsStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsStoreTests.swift; path = TokPeekKitTests/SettingsStoreTests.swift; sourceTree = "<group>"; };
+		C27B5519947F25AD37C0E2DFDAA6DF64 /* UpdateCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UpdateCoordinator.swift; path = TokPeekKit/UpdateCoordinator.swift; sourceTree = "<group>"; };
 		CF788998800D55248F72BFBAE43FC11A /* en */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		D4B8745B8AE18175F280E85A37D1C9B1 /* LaunchAtLogin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LaunchAtLogin.swift; path = TokPeekKit/LaunchAtLogin.swift; sourceTree = "<group>"; };
+		DE054094D6DD90CFE93483FC26DBD347 /* UsageInsightsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageInsightsTests.swift; path = TokPeekKitTests/UsageInsightsTests.swift; sourceTree = "<group>"; };
+		DF1C16D088CDC34BB596A3B5AC5E6C5C /* LaunchAtLoginTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LaunchAtLoginTests.swift; path = TokPeekKitTests/LaunchAtLoginTests.swift; sourceTree = "<group>"; };
 		E77DA364C7AA3E1B69E07435D709CD97 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
-		EA7D851A70276F703188AE19B75339DA /* UsageReport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageReport.swift; path = TokPeekKit/UsageReport.swift; sourceTree = "<group>"; };
-		F4B0BC4EDB9E18E1F353DA2C4154CEE3 /* SettingsStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsStore.swift; path = TokPeekKit/SettingsStore.swift; sourceTree = "<group>"; };
-		F4B3128AF6766A563CE1109A9F9E9588 /* ClientBreakdownLayoutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClientBreakdownLayoutTests.swift; path = TokPeekKitTests/ClientBreakdownLayoutTests.swift; sourceTree = "<group>"; };
+		ED97B8D9DEED37A1A262562E7BFB5856 /* UsageRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageRequest.swift; path = TokPeekKit/UsageRequest.swift; sourceTree = "<group>"; };
+		F6393E344A6B4C4429DE2474F313E2E9 /* UsageChart.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageChart.swift; path = TokPeek/UsageChart.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		D489B03BB7D1D83A56581A617524A317 /* Frameworks */ = {
+		FA3AD2443991EDEE5C1E293F38BD99F1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9E19487503E02DE364D666850C45A131 /* Cocoa.framework in Frameworks */,
+				FC7123E894F9F1917A59F8C2B56D298B /* Cocoa.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		FE12AB95B26FD6B56BA78CBB40C12775 /* Frameworks */ = {
+		FD1DEDCCCD80ADE3BCF67EC0E46380CB /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E80F3C66168D8815B9F819CB4A50E376 /* Cocoa.framework in Frameworks */,
-				9265EE11A0DB16EDA5188DB8E041FFEC /* libtokpeek_core_ffi.a in Frameworks */,
-				829B2A2A10C69770E52B6DE982F6913F /* Security.framework in Frameworks */,
-				CF8CAC85AAF3F512448ECD974C5DF913 /* SystemConfiguration.framework in Frameworks */,
-				57039F2729A0FEC38D9F8D666CAFF0F2 /* CoreFoundation.framework in Frameworks */,
+				14916E2C7EF50E7092EE759D2C1B6EBB /* Cocoa.framework in Frameworks */,
+				6416667F0912E4B83BE4FBB58969EADB /* Sparkle in Frameworks */,
+				A0688ACE00CD7D49BEB430FB87C741AF /* libtokpeek_core_ffi.a in Frameworks */,
+				E925D97FFBF426FC37A93B86AC21B186 /* Security.framework in Frameworks */,
+				350B3FA9847E24BA6F8C0C49B176CA35 /* SystemConfiguration.framework in Frameworks */,
+				D2D568D12E0B73B69EDDEDFB999EDB1C /* CoreFoundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -162,9 +171,9 @@
 			children = (
 				D5F477245CAF669A8374512F9DEBB9BB /* Products */,
 				DCB1359F4B6946B2EF6914D97B592FC0 /* Frameworks */,
-				F5619BBB0CF1BE8BDC628A501321D9D4 /* Sources */,
+				D5C42B359C91EA1F3F7275DD2FE67C77 /* Sources */,
 				4A2F152C79EFAC8AE32A60D2296BBE25 /* Resources */,
-				66D4E1DCE1F0577E1651464433D8F704 /* Tests */,
+				7225724BD6C77D3DB42CFC34807C7FDE /* Tests */,
 				30A55701970DCB8208F7A2926F24A4B7 /* Rust */,
 			);
 			sourceTree = "<group>";
@@ -180,24 +189,59 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
-		66D4E1DCE1F0577E1651464433D8F704 /* Tests */ = {
+		7225724BD6C77D3DB42CFC34807C7FDE /* Tests */ = {
 			isa = PBXGroup;
 			children = (
-				F4B3128AF6766A563CE1109A9F9E9588 /* ClientBreakdownLayoutTests.swift */,
-				753FA68E570B7A57D8984B2EE9AFF68A /* CoreResponseTests.swift */,
-				64D50876C24B5C1CC547402D74B0A241 /* LaunchAtLoginTests.swift */,
-				5878A256D341C14DA11261C569F702FD /* LocalizationTests.swift */,
-				8E277ACF5FF1343E9C39408A45295785 /* MenuBarIconTests.swift */,
-				28CB5ED37D6D3B6F746C50DE8A33BB6A /* SettingsPresenterTests.swift */,
-				AAB31031C8B36ABABBC71DE74B9369A2 /* SettingsStoreTests.swift */,
-				01B8A3E9E0573884CED6F97688A29D36 /* UsageChartLayoutTests.swift */,
-				682F4C931549E42B8BCC8CE39F5756F2 /* UsageFormattingTests.swift */,
-				1138C800B34784BE1A767052B4744487 /* UsageInsightsTests.swift */,
-				850DFE9C4A211507682F7321053145C9 /* UsageReportTests.swift */,
-				B446000CD3EF9E7131BEA6ACE6674E12 /* UsageStoreTests.swift */,
+				40C6CC31BB3000C3CDB82C44A72F126E /* ClientBreakdownLayoutTests.swift */,
+				A5C4DD2278516561FA56F176C528AEB8 /* CoreResponseTests.swift */,
+				DF1C16D088CDC34BB596A3B5AC5E6C5C /* LaunchAtLoginTests.swift */,
+				7473A556969B54BF09FE244E12F0FE8D /* LocalizationTests.swift */,
+				41DF6B5DE34A66F25B127F1160AD3DBA /* MenuBarIconTests.swift */,
+				88FBD59FBB543D54AF6646EF492871FA /* SettingsPresenterTests.swift */,
+				BD85137D76A03825D1F5F7AA7E5C1467 /* SettingsStoreTests.swift */,
+				AFD64040AEF18E9400F4D75E35953367 /* UpdateCoordinatorTests.swift */,
+				1B350A90A33AA766144C1DB2676CC086 /* UsageChartLayoutTests.swift */,
+				A3A9208499D479E8AACB2581BB5E45FE /* UsageFormattingTests.swift */,
+				DE054094D6DD90CFE93483FC26DBD347 /* UsageInsightsTests.swift */,
+				92E9B4B38384072FA90906D70C4219DF /* UsageReportTests.swift */,
+				8449BEF68B8757A5695D28ED5E1A4C5E /* UsageStoreTests.swift */,
 			);
 			name = Tests;
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		D5C42B359C91EA1F3F7275DD2FE67C77 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				6352AFF69EC5198CDE349259C4347A71 /* ClientBreakdown.swift */,
+				6DA8EF6884D69D81B152D7C5B47B607B /* DashboardView.swift */,
+				2D10F83DC6CC900DE197175D3271C742 /* ModelRanking.swift */,
+				0A6859F69E622A830B92ABCA0154D1AE /* SettingsView.swift */,
+				3727F837AA44F1ECC912100323145484 /* SparkleUpdateChecker.swift */,
+				63CE2251004B0F313A3BFBBD06F614C6 /* Theme.swift */,
+				B941362BF43698D8278DB3E64D89EE27 /* TokPeekApp.swift */,
+				F6393E344A6B4C4429DE2474F313E2E9 /* UsageChart.swift */,
+				9E593F59119F4A028FFF3B2DE0207BB2 /* UsageOverview.swift */,
+				1EDAF0E1DC247F1486E1BD34041206A3 /* TokscaleClient.swift */,
+				7B83F9623860F133F6F11C79CF8BE8D0 /* ClientBreakdownLayout.swift */,
+				13FA090FDEC9AC6237CCA705A0EBCB83 /* CoreJSON.swift */,
+				59A3365435308C686057E1B1F05FF217 /* CoreResponse.swift */,
+				D4B8745B8AE18175F280E85A37D1C9B1 /* LaunchAtLogin.swift */,
+				8E0FE84AEA3E920FE5B72F2FFFDD4FAC /* Localization.swift */,
+				12ED9B5F2463AA2965ECB9BE7F6D4481 /* MenuBarIcon.swift */,
+				2A7F75580D9C02BB0D43D26E9E779F67 /* SettingsPresenter.swift */,
+				90B279E0D7DD42E6C62764FDD5768117 /* SettingsStore.swift */,
+				C27B5519947F25AD37C0E2DFDAA6DF64 /* UpdateCoordinator.swift */,
+				B498A317EFF72FF573770E65E2AAF0D5 /* UsageChartLayout.swift */,
+				28B8FE36500B0642CF37C7BFDFF0B005 /* UsageFormatting.swift */,
+				6DAC225AAD2265C3C97D2D73292F8B6A /* UsageInsights.swift */,
+				6777DE7F434EDC8EB5AAAAB7BC09D6A3 /* UsageReport.swift */,
+				ED97B8D9DEED37A1A262562E7BFB5856 /* UsageRequest.swift */,
+				7978243835FC0FCF1CCFE0995B0140AC /* UsageStore.swift */,
+				4DDF492392F7DAD24A5B8A499230E5B0 /* tokpeek_core.h */,
+			);
+			name = Sources;
+			path = Sources;
 			sourceTree = "<group>";
 		};
 		D5F477245CAF669A8374512F9DEBB9BB /* Products */ = {
@@ -220,66 +264,37 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		F5619BBB0CF1BE8BDC628A501321D9D4 /* Sources */ = {
-			isa = PBXGroup;
-			children = (
-				99E2F8237045080B652264026202C690 /* ClientBreakdown.swift */,
-				6E08EAA2378B0E97F673AAD4C1EBC398 /* DashboardView.swift */,
-				7A7CE6FE16507B0EC72EB106ED780EF7 /* ModelRanking.swift */,
-				7B7FB2130AD6D7B91C64A4D1267B2565 /* SettingsView.swift */,
-				5BC9BE4AB9B12D29E56E944A45DF0091 /* Theme.swift */,
-				C9A1CC3EE4289A7C78731075B1B2DE30 /* TokPeekApp.swift */,
-				76A165BA04A8A303BBC99FA67273EB7E /* UsageChart.swift */,
-				0915FA23CE59D0783782E841FECC488B /* UsageOverview.swift */,
-				3123141C1138CDEBB84828851C101A0F /* TokscaleClient.swift */,
-				961E92958CCFD80FB2267507E2E104CD /* ClientBreakdownLayout.swift */,
-				5645496A3CF0F3180D30BDCFFAD4B9EF /* CoreJSON.swift */,
-				0C9DF4D41093E9945B40B5E16B5B454D /* CoreResponse.swift */,
-				215227CF32CB160047F807F9F3E21128 /* LaunchAtLogin.swift */,
-				A34F0BB010DE16FF17C667FBC62D8784 /* Localization.swift */,
-				8F80A7CA27E9979C15252BDD63DBB6E0 /* MenuBarIcon.swift */,
-				70B759BC3A80A460EF63A027E35DB550 /* SettingsPresenter.swift */,
-				F4B0BC4EDB9E18E1F353DA2C4154CEE3 /* SettingsStore.swift */,
-				A31BF70BB29ED7A5AE3DB4BCBD79BF78 /* UsageChartLayout.swift */,
-				3993CC3E1573F8394FBA506AD7C6A565 /* UsageFormatting.swift */,
-				8384523685C2F4698819B8A508C6847A /* UsageInsights.swift */,
-				EA7D851A70276F703188AE19B75339DA /* UsageReport.swift */,
-				C54625217C77CCC173868BF5653CE885 /* UsageRequest.swift */,
-				B796B3C9AA0671C52AD082AE7F6AB61A /* UsageStore.swift */,
-				CA2F5553947FD42AA1C64784AB04139C /* tokpeek_core.h */,
-			);
-			name = Sources;
-			path = Sources;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		1851CF41104049DFD51B4DCEE9717351 /* TokPeek */ = {
+		5983F38AB0EDFCD2AC97FED703A861ED /* TokPeek */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2910B0E3F076B3FDD6B585E573423D97 /* Build configuration list for PBXNativeTarget "TokPeek" */;
+			buildConfigurationList = 48FB2BFF8855ACAAF99010AC07B0768E /* Build configuration list for PBXNativeTarget "TokPeek" */;
 			buildPhases = (
-				21C46EAC85EF27C8AF76E675D0C611F2 /* Build Tokscale Core */,
-				DE0CC331FB771AF4BE9CB854CFCFC5D4 /* Sources */,
-				FE12AB95B26FD6B56BA78CBB40C12775 /* Frameworks */,
-				92C358D4710C0DFC7A2DC56D9B265673 /* Resources */,
+				5CD5C325E0BB400C691F0779924ADAC2 /* Build Tokscale Core */,
+				F716DD6E6BF053D4E135D8406521D84B /* Sources */,
+				FD1DEDCCCD80ADE3BCF67EC0E46380CB /* Frameworks */,
+				922C34AA85EC37661ED314C3A7C4C32D /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			name = TokPeek;
+			packageProductDependencies = (
+				0886566808A71967D2566AB309FB1B8B /* Sparkle */,
+			);
 			productName = TokPeek;
 			productReference = 2570D59C145D285817BEB258BC93A6E3 /* TokPeek.app */;
 			productType = "com.apple.product-type.application";
 		};
-		E35781DAA3268CF01D87CC01CB09F5D3 /* TokPeekTests */ = {
+		E92B6A208B417023863AC9F9938BF6FD /* TokPeekTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2FECFD7651133A2A3609DD2EEE84BE6F /* Build configuration list for PBXNativeTarget "TokPeekTests" */;
+			buildConfigurationList = 20D7AC68668AFD90351130DBC38449B5 /* Build configuration list for PBXNativeTarget "TokPeekTests" */;
 			buildPhases = (
-				647AEE9D6A356576F492BEF904BCEF70 /* Sources */,
-				D489B03BB7D1D83A56581A617524A317 /* Frameworks */,
-				2753C931608E4740E2EFFB7767C54E19 /* Resources */,
+				45F489CD69E8F15A05F7EC95E5CCD6DF /* Sources */,
+				FA3AD2443991EDEE5C1E293F38BD99F1 /* Frameworks */,
+				910DE378470D8856A76FD7AC3989F5EC /* Resources */,
 			);
 			buildRules = (
 			);
@@ -310,38 +325,41 @@
 			);
 			mainGroup = 4005E265310925C02A0BEC8E658E32F8;
 			minimizedProjectReferenceProxies = 0;
+			packageReferences = (
+				E5B5979E23940287773D67CCD823A169 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D5F477245CAF669A8374512F9DEBB9BB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				1851CF41104049DFD51B4DCEE9717351 /* TokPeek */,
-				E35781DAA3268CF01D87CC01CB09F5D3 /* TokPeekTests */,
+				5983F38AB0EDFCD2AC97FED703A861ED /* TokPeek */,
+				E92B6A208B417023863AC9F9938BF6FD /* TokPeekTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		2753C931608E4740E2EFFB7767C54E19 /* Resources */ = {
+		910DE378470D8856A76FD7AC3989F5EC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		92C358D4710C0DFC7A2DC56D9B265673 /* Resources */ = {
+		922C34AA85EC37661ED314C3A7C4C32D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4651805539A09A7E2A0667C98A93E8C9 /* Assets.xcassets in Resources */,
-				825B23E6D8221E78FE801341E419605D /* Localizable.strings in Resources */,
+				A778F4004B306FA07926E777296FDADB /* Assets.xcassets in Resources */,
+				64E32D2682595EABFA19D2F7B4F11310 /* Localizable.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		21C46EAC85EF27C8AF76E675D0C611F2 /* Build Tokscale Core */ = {
+		5CD5C325E0BB400C691F0779924ADAC2 /* Build Tokscale Core */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
@@ -363,66 +381,70 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		647AEE9D6A356576F492BEF904BCEF70 /* Sources */ = {
+		45F489CD69E8F15A05F7EC95E5CCD6DF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5A7C35AC8836E08463A4E90219C59DE5 /* ClientBreakdownLayout.swift in Sources */,
-				905DE41280C742203F91F843D89BA710 /* CoreJSON.swift in Sources */,
-				E4A54025430324F70F88A8A4CE67AAEB /* CoreResponse.swift in Sources */,
-				8EB0FFE78692AED127EE7B3214F03438 /* LaunchAtLogin.swift in Sources */,
-				FD39258CC2E4BAC226E84217E9E7FF9C /* Localization.swift in Sources */,
-				C396C7DC1AF3AF4ABEFCFCA6CBBC45C5 /* MenuBarIcon.swift in Sources */,
-				80C41CE3F69ABC68F3B5A45B01C30C7B /* SettingsPresenter.swift in Sources */,
-				ECFF65EF0702C3374AD03171DAAFE188 /* SettingsStore.swift in Sources */,
-				E324614BEC2F05847BEAA2C75206A3BE /* UsageChartLayout.swift in Sources */,
-				EBC8B75AE1866D6132C10180A1766D26 /* UsageFormatting.swift in Sources */,
-				01FEB10DC95A9280BBE414CA84A0FCBA /* UsageInsights.swift in Sources */,
-				D8C20BBD115EB626747D5817FA7A97A3 /* UsageReport.swift in Sources */,
-				82BB007393D25EDD24CB0F71065C7501 /* UsageRequest.swift in Sources */,
-				A03E18C557E4B93762F33A5BA7320885 /* UsageStore.swift in Sources */,
-				30409571EA63A0E16B9C5B601D3E349E /* ClientBreakdownLayoutTests.swift in Sources */,
-				1B907D1477D2C7D88373F4B1CF1A22D6 /* CoreResponseTests.swift in Sources */,
-				AC64F6F5C4E6B1064388568AC938D201 /* LaunchAtLoginTests.swift in Sources */,
-				36FB616FCBD90F05AD8FBE660518EA57 /* LocalizationTests.swift in Sources */,
-				66A75E7687A82EBF26B742E836A77318 /* MenuBarIconTests.swift in Sources */,
-				E2B466871CBD1E5F11616B82B6FD074B /* SettingsPresenterTests.swift in Sources */,
-				67B7EE4CE69884F479BA26E6A78B8013 /* SettingsStoreTests.swift in Sources */,
-				B25F723D7FF855FFE19F9006B0EA48DA /* UsageChartLayoutTests.swift in Sources */,
-				BA72B065337663335FA42A0CD1E6FB40 /* UsageFormattingTests.swift in Sources */,
-				4030996AD38321F33AFFA02DBACBB921 /* UsageInsightsTests.swift in Sources */,
-				D35407A175AC581108045E09D1AFE8BC /* UsageReportTests.swift in Sources */,
-				DDFFCFB9039EF16628E9ACE76FEB0EBA /* UsageStoreTests.swift in Sources */,
+				D877763D574B4F69ACA8CC2A6457B004 /* ClientBreakdownLayout.swift in Sources */,
+				64BD46E45ED7C811B709E2C17AA382BB /* CoreJSON.swift in Sources */,
+				02CBE8E902D9C6E49A5FFC82ACB48894 /* CoreResponse.swift in Sources */,
+				6F7CAF318A9496FBD3965BD9EBB9197D /* LaunchAtLogin.swift in Sources */,
+				CB1343087320C4443A4460CF65DDF617 /* Localization.swift in Sources */,
+				31EEE719EBC0F0CF406EA67E82B75441 /* MenuBarIcon.swift in Sources */,
+				9EBBEFDE0B6B2E2C8E454050B6466394 /* SettingsPresenter.swift in Sources */,
+				DA252D040E452E53013A838FFB688DC2 /* SettingsStore.swift in Sources */,
+				0115F26E7AB37F5DE1AFF3ECE1C942B6 /* UpdateCoordinator.swift in Sources */,
+				153421CFA0A827630FC0C5D2F4C87B56 /* UsageChartLayout.swift in Sources */,
+				F6BC550D4C3C641AD9FBE54B3EC59A41 /* UsageFormatting.swift in Sources */,
+				6D44295E0E5689DCABC296B6FF8899D1 /* UsageInsights.swift in Sources */,
+				CAFA9E6961BD18017EE28374247CD0F4 /* UsageReport.swift in Sources */,
+				19D098DA8041F841AA22375704BD73C3 /* UsageRequest.swift in Sources */,
+				ECD4357C701681EE4B632B74B39E06ED /* UsageStore.swift in Sources */,
+				06154DAEC16D7973A046FC2738AAF382 /* ClientBreakdownLayoutTests.swift in Sources */,
+				FC799BC514D8F9DD25B6A9C3DE081088 /* CoreResponseTests.swift in Sources */,
+				C7C3F7BFAA45D738439D8333DC55AFDC /* LaunchAtLoginTests.swift in Sources */,
+				4A1A9C4C65AAA86003D7308427FBFFCB /* LocalizationTests.swift in Sources */,
+				A8BB6DD732F33F44E78FDE244C86DCB8 /* MenuBarIconTests.swift in Sources */,
+				C47323717CD4EDBA651F886B4A80E5A8 /* SettingsPresenterTests.swift in Sources */,
+				4B9A2AF240A245C25A3C7C5A7B321F3E /* SettingsStoreTests.swift in Sources */,
+				DDCBAB75896DCF0846E78105D3528B98 /* UpdateCoordinatorTests.swift in Sources */,
+				1FA0CC0BBBEF675E96245A3A7CCEBE08 /* UsageChartLayoutTests.swift in Sources */,
+				F7953113CBC20B76E012FCA9B60419C3 /* UsageFormattingTests.swift in Sources */,
+				FE6834A9FDEAC7D131045FE9028D1A79 /* UsageInsightsTests.swift in Sources */,
+				674963F5472A9D5915FDC09BD912059D /* UsageReportTests.swift in Sources */,
+				D87EFAF0942AC6C68ED78D6E4A39E8D6 /* UsageStoreTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DE0CC331FB771AF4BE9CB854CFCFC5D4 /* Sources */ = {
+		F716DD6E6BF053D4E135D8406521D84B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2F6EA9DEEB52DC4723B27D157E87FCD4 /* ClientBreakdown.swift in Sources */,
-				FAB6F1C08B9FF7DC403E9F8923387547 /* DashboardView.swift in Sources */,
-				9BED2A0A1F8F3B285FB5DD83ECD2B9AF /* ModelRanking.swift in Sources */,
-				0373A9D86CB3D22BCC8DD2604F68897B /* SettingsView.swift in Sources */,
-				A77CACF8415901F312D21CCEA28775C7 /* Theme.swift in Sources */,
-				FE234FFE9176FC2A96479138F3340E89 /* TokPeekApp.swift in Sources */,
-				83BD8A0533D22BE171F55E4D40FAF46F /* UsageChart.swift in Sources */,
-				1D138640D753201681E945C046E1780F /* UsageOverview.swift in Sources */,
-				950F4FC74BAF2CB09CF18D880158AE1A /* TokscaleClient.swift in Sources */,
-				6A551444B08B50D1BD33D974B2A7E1DF /* ClientBreakdownLayout.swift in Sources */,
-				03A07B4A4D27F880415CADD53D4AD0E6 /* CoreJSON.swift in Sources */,
-				073C5ACFF23DBEE799529351F6DE5EF8 /* CoreResponse.swift in Sources */,
-				6E08E6ABC7CBD0013D80A176620B87C1 /* LaunchAtLogin.swift in Sources */,
-				9ECADE4FD0DBE9BE3B744D89A9CB9BC0 /* Localization.swift in Sources */,
-				7332C8AB8D176A51AE6A918C7B003261 /* MenuBarIcon.swift in Sources */,
-				28C96C38DDDB1C6FAD219BA932C2A101 /* SettingsPresenter.swift in Sources */,
-				AF69C40FFFD710371C43E3F72D43B373 /* SettingsStore.swift in Sources */,
-				ABE39E851F7ABFF4023C4D071A01DAC4 /* UsageChartLayout.swift in Sources */,
-				6B219B0C8C04C558410ADB8B3B81398E /* UsageFormatting.swift in Sources */,
-				0900C597406F996ABC75128A35563EDB /* UsageInsights.swift in Sources */,
-				45F27E199A9F3173769A32D803F8B618 /* UsageReport.swift in Sources */,
-				7A66E37205014B16A568044C9580D087 /* UsageRequest.swift in Sources */,
-				F9AE7F8025F24057D4277462F428A878 /* UsageStore.swift in Sources */,
+				91324C002FD839A1C6DE95D2FFFE83A1 /* ClientBreakdown.swift in Sources */,
+				126EF7FAB0BA72BC8CB79B21609E7BC9 /* DashboardView.swift in Sources */,
+				8D5A33D9694FF3B074587013F454EC31 /* ModelRanking.swift in Sources */,
+				FD61AF83A76CEF64102D716DA4F1AB4D /* SettingsView.swift in Sources */,
+				7185CA582DAF6512B09FB604B0A0DB15 /* SparkleUpdateChecker.swift in Sources */,
+				D65566B781CE433C0493058E2FEB7F01 /* Theme.swift in Sources */,
+				6A2CA482C679B6FCFE68DE6D7A90BE90 /* TokPeekApp.swift in Sources */,
+				EBDE483123DB1381EC3622300EE0EE46 /* UsageChart.swift in Sources */,
+				2744B9777A8A3DF4C894F5D5533A0E94 /* UsageOverview.swift in Sources */,
+				79C38A5A2840441A955B80703E87E2CC /* TokscaleClient.swift in Sources */,
+				1BB98C483AF1846D9691AB08789C94A6 /* ClientBreakdownLayout.swift in Sources */,
+				B823B79E4291F04AE27BB5F0BB40AC83 /* CoreJSON.swift in Sources */,
+				24FCE7B91961BC864E7271FAFCD34850 /* CoreResponse.swift in Sources */,
+				A85D6309444704E0DB2663C391E4AF18 /* LaunchAtLogin.swift in Sources */,
+				E4383A2D9C068C2B638C3BB7153A7433 /* Localization.swift in Sources */,
+				433C189699E1E3AB7A880B6C90E57D1B /* MenuBarIcon.swift in Sources */,
+				2D42F7737A115DBCD7BEAE20AEB0D36E /* SettingsPresenter.swift in Sources */,
+				0AEB236391F3CFA1B9DDC1A74974F98B /* SettingsStore.swift in Sources */,
+				FFDE7EA0F2C542D5ED654A73CCF00FD2 /* UpdateCoordinator.swift in Sources */,
+				5FA71335C00174DF30D333AB0BF4417A /* UsageChartLayout.swift in Sources */,
+				EFC5B606FDF2E00A93843AD905E60E10 /* UsageFormatting.swift in Sources */,
+				7317096D48745CB30367F92E9F377A7C /* UsageInsights.swift in Sources */,
+				8C111727E244D989C14E77656B606D8C /* UsageReport.swift in Sources */,
+				6C7459B246267D06D9D816876C2B339E /* UsageRequest.swift in Sources */,
+				3A486B53273E2531CE5A61D1F4DA35DF /* UsageStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -441,7 +463,7 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
-		275A37F9683A4125B5EFEE91FF941875 /* Debug */ = {
+		36793691936B6332F2A3153FA921D63C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGNING_ALLOWED = NO;
@@ -455,37 +477,19 @@
 			};
 			name = Debug;
 		};
-		2F528DC04C78BA26F67C922472FFACF8 /* Debug */ = {
+		49000780782B56E572156E6F76260517 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_STYLE = Automatic;
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 1;
-				ENABLE_HARDENED_RUNTIME = YES;
-				GENERATE_INFOPLIST_FILE = NO;
-				INFOPLIST_FILE = Resources/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/rust/target/universal/release",
-				);
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.1.0;
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					"-lc++",
-					"-lresolv",
-				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.tokpeek.app;
-				PRODUCT_NAME = TokPeek;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tokpeek.tests;
 				SDKROOT = macosx;
-				SWIFT_OBJC_BRIDGING_HEADER = Sources/CTokPeekCore/include/tokpeek_core.h;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) XCODE_PROJECT";
 				SWIFT_STRICT_CONCURRENCY = complete;
+				TEST_HOST = "";
 			};
-			name = Debug;
+			name = Release;
 		};
 		70B56833EA84012D040A291FA5F1BD28 /* Debug */ = {
 			isa = XCBuildConfiguration;
@@ -549,7 +553,7 @@
 			};
 			name = Debug;
 		};
-		B73E30E3834D98E99C07865B9ED52B6A /* Release */ = {
+		80A4C76385F3AC3A4913ECBA7D11BB95 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -580,6 +584,38 @@
 				SWIFT_STRICT_CONCURRENCY = complete;
 			};
 			name = Release;
+		};
+		92FF7AE55369F4995508FC56C5620947 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/rust/target/universal/release",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lc++",
+					"-lresolv",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tokpeek.app;
+				PRODUCT_NAME = TokPeek;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = Sources/CTokPeekCore/include/tokpeek_core.h;
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Debug;
 		};
 		BB5A49188DA17A85CACAA5243A2448AC /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -636,37 +672,23 @@
 			};
 			name = Release;
 		};
-		DAD0FF08EE2ED375B8DE7D10B478C7AF /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGNING_ALLOWED = NO;
-				GENERATE_INFOPLIST_FILE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.tokpeek.tests;
-				SDKROOT = macosx;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) XCODE_PROJECT";
-				SWIFT_STRICT_CONCURRENCY = complete;
-				TEST_HOST = "";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		2910B0E3F076B3FDD6B585E573423D97 /* Build configuration list for PBXNativeTarget "TokPeek" */ = {
+		20D7AC68668AFD90351130DBC38449B5 /* Build configuration list for PBXNativeTarget "TokPeekTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				B73E30E3834D98E99C07865B9ED52B6A /* Release */,
-				2F528DC04C78BA26F67C922472FFACF8 /* Debug */,
+				49000780782B56E572156E6F76260517 /* Release */,
+				36793691936B6332F2A3153FA921D63C /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2FECFD7651133A2A3609DD2EEE84BE6F /* Build configuration list for PBXNativeTarget "TokPeekTests" */ = {
+		48FB2BFF8855ACAAF99010AC07B0768E /* Build configuration list for PBXNativeTarget "TokPeek" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DAD0FF08EE2ED375B8DE7D10B478C7AF /* Release */,
-				275A37F9683A4125B5EFEE91FF941875 /* Debug */,
+				80A4C76385F3AC3A4913ECBA7D11BB95 /* Release */,
+				92FF7AE55369F4995508FC56C5620947 /* Debug */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -681,6 +703,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E5B5979E23940287773D67CCD823A169 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = exactVersion;
+				version = 2.9.4;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		0886566808A71967D2566AB309FB1B8B /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E5B5979E23940287773D67CCD823A169 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = F94ED967A767D819CF5A4ADF72E00FE7 /* Project object */;
 }

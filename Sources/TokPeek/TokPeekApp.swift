@@ -18,12 +18,22 @@ struct TokPeekApp: App {
     )
     @StateObject private var settings = SettingsStore()
     @StateObject private var launchAtLogin = LaunchAtLoginController()
+    @StateObject private var updates: UpdateCoordinator
+
+    init() {
+        _updates = StateObject(
+            wrappedValue: UpdateCoordinator(
+                checker: SparkleUpdateChecker()
+            )
+        )
+    }
 
     var body: some Scene {
         MenuBarExtra {
             DashboardView(
                 store: store,
-                settings: settings
+                settings: settings,
+                updates: updates
             )
         } label: {
             menuBarLabel
@@ -36,7 +46,8 @@ struct TokPeekApp: App {
         Settings {
             SettingsView(
                 settings: settings,
-                launchAtLogin: launchAtLogin
+                launchAtLogin: launchAtLogin,
+                updates: updates
             )
         }
     }

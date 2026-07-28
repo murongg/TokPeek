@@ -6,3 +6,4 @@ rust/target/
 *.p12
 AuthKey_*.p8
 *.keychain-db
+*.sparkle-private-key

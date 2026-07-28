@@ -8,6 +8,7 @@ import SwiftUI
 struct DashboardView: View {
     @ObservedObject var store: UsageStore
     @ObservedObject var settings: SettingsStore
+    @ObservedObject var updates: UpdateCoordinator
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.openSettings) private var openSettings
     @State private var selectedModelID: String?
@@ -265,6 +266,17 @@ struct DashboardView: View {
                 Label("Settings", systemImage: "gearshape")
             }
             .buttonStyle(.borderless)
+
+            Button {
+                updates.checkForUpdates()
+            } label: {
+                Label(
+                    "Check for Updates…",
+                    systemImage: "arrow.triangle.2.circlepath"
+                )
+            }
+            .buttonStyle(.borderless)
+            .disabled(!updates.canCheckForUpdates)
 
             Spacer()
 
