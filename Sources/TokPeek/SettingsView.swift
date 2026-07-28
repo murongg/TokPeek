@@ -154,8 +154,18 @@ struct SettingsView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
-            if let url = URL(string: "https://github.com/junhoyeo/tokscale") {
-                Link("View Tokscale on GitHub", destination: url)
+            HStack(spacing: 18) {
+                if let url = URL(
+                    string: "https://github.com/murongg/TokPeek"
+                ) {
+                    Link("View TokPeek on GitHub", destination: url)
+                }
+
+                if let url = URL(
+                    string: "https://github.com/junhoyeo/tokscale"
+                ) {
+                    Link("View Tokscale on GitHub", destination: url)
+                }
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
