@@ -1,0 +1,686 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		01FEB10DC95A9280BBE414CA84A0FCBA /* UsageInsights.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8384523685C2F4698819B8A508C6847A /* UsageInsights.swift */; };
+		0373A9D86CB3D22BCC8DD2604F68897B /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B7FB2130AD6D7B91C64A4D1267B2565 /* SettingsView.swift */; };
+		03A07B4A4D27F880415CADD53D4AD0E6 /* CoreJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5645496A3CF0F3180D30BDCFFAD4B9EF /* CoreJSON.swift */; };
+		073C5ACFF23DBEE799529351F6DE5EF8 /* CoreResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9DF4D41093E9945B40B5E16B5B454D /* CoreResponse.swift */; };
+		0900C597406F996ABC75128A35563EDB /* UsageInsights.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8384523685C2F4698819B8A508C6847A /* UsageInsights.swift */; };
+		1B907D1477D2C7D88373F4B1CF1A22D6 /* CoreResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 753FA68E570B7A57D8984B2EE9AFF68A /* CoreResponseTests.swift */; };
+		1D138640D753201681E945C046E1780F /* UsageOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0915FA23CE59D0783782E841FECC488B /* UsageOverview.swift */; };
+		28C96C38DDDB1C6FAD219BA932C2A101 /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B759BC3A80A460EF63A027E35DB550 /* SettingsPresenter.swift */; };
+		2F6EA9DEEB52DC4723B27D157E87FCD4 /* ClientBreakdown.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99E2F8237045080B652264026202C690 /* ClientBreakdown.swift */; };
+		30409571EA63A0E16B9C5B601D3E349E /* ClientBreakdownLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B3128AF6766A563CE1109A9F9E9588 /* ClientBreakdownLayoutTests.swift */; };
+		36FB616FCBD90F05AD8FBE660518EA57 /* LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5878A256D341C14DA11261C569F702FD /* LocalizationTests.swift */; };
+		4030996AD38321F33AFFA02DBACBB921 /* UsageInsightsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1138C800B34784BE1A767052B4744487 /* UsageInsightsTests.swift */; };
+		45F27E199A9F3173769A32D803F8B618 /* UsageReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7D851A70276F703188AE19B75339DA /* UsageReport.swift */; };
+		4651805539A09A7E2A0667C98A93E8C9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A6F27966EB6C639B64E0314939221E5 /* Assets.xcassets */; };
+		57039F2729A0FEC38D9F8D666CAFF0F2 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E77DA364C7AA3E1B69E07435D709CD97 /* CoreFoundation.framework */; };
+		5A7C35AC8836E08463A4E90219C59DE5 /* ClientBreakdownLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961E92958CCFD80FB2267507E2E104CD /* ClientBreakdownLayout.swift */; };
+		66A75E7687A82EBF26B742E836A77318 /* MenuBarIconTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E277ACF5FF1343E9C39408A45295785 /* MenuBarIconTests.swift */; };
+		67B7EE4CE69884F479BA26E6A78B8013 /* SettingsStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAB31031C8B36ABABBC71DE74B9369A2 /* SettingsStoreTests.swift */; };
+		6A551444B08B50D1BD33D974B2A7E1DF /* ClientBreakdownLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 961E92958CCFD80FB2267507E2E104CD /* ClientBreakdownLayout.swift */; };
+		6B219B0C8C04C558410ADB8B3B81398E /* UsageFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993CC3E1573F8394FBA506AD7C6A565 /* UsageFormatting.swift */; };
+		6E08E6ABC7CBD0013D80A176620B87C1 /* LaunchAtLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215227CF32CB160047F807F9F3E21128 /* LaunchAtLogin.swift */; };
+		7332C8AB8D176A51AE6A918C7B003261 /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F80A7CA27E9979C15252BDD63DBB6E0 /* MenuBarIcon.swift */; };
+		7A66E37205014B16A568044C9580D087 /* UsageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54625217C77CCC173868BF5653CE885 /* UsageRequest.swift */; };
+		80C41CE3F69ABC68F3B5A45B01C30C7B /* SettingsPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B759BC3A80A460EF63A027E35DB550 /* SettingsPresenter.swift */; };
+		825B23E6D8221E78FE801341E419605D /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 39AF01A3863F8C34C9E9CFFE2B882CA9 /* Localizable.strings */; };
+		829B2A2A10C69770E52B6DE982F6913F /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8677E75374EA3FA1B9FC20B12AB3F82E /* Security.framework */; };
+		82BB007393D25EDD24CB0F71065C7501 /* UsageRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = C54625217C77CCC173868BF5653CE885 /* UsageRequest.swift */; };
+		83BD8A0533D22BE171F55E4D40FAF46F /* UsageChart.swift in Sources */ = {isa = PBXBuildFile; fileRef = 76A165BA04A8A303BBC99FA67273EB7E /* UsageChart.swift */; };
+		8EB0FFE78692AED127EE7B3214F03438 /* LaunchAtLogin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215227CF32CB160047F807F9F3E21128 /* LaunchAtLogin.swift */; };
+		905DE41280C742203F91F843D89BA710 /* CoreJSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5645496A3CF0F3180D30BDCFFAD4B9EF /* CoreJSON.swift */; };
+		9265EE11A0DB16EDA5188DB8E041FFEC /* libtokpeek_core_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60E3A57259E6455FF1D7BF77F7744EDE /* libtokpeek_core_ffi.a */; };
+		950F4FC74BAF2CB09CF18D880158AE1A /* TokscaleClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3123141C1138CDEBB84828851C101A0F /* TokscaleClient.swift */; };
+		9BED2A0A1F8F3B285FB5DD83ECD2B9AF /* ModelRanking.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A7CE6FE16507B0EC72EB106ED780EF7 /* ModelRanking.swift */; };
+		9E19487503E02DE364D666850C45A131 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A375B1F7A7962A02DADCAAFE496E5B5D /* Cocoa.framework */; };
+		9ECADE4FD0DBE9BE3B744D89A9CB9BC0 /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34F0BB010DE16FF17C667FBC62D8784 /* Localization.swift */; };
+		A03E18C557E4B93762F33A5BA7320885 /* UsageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B796B3C9AA0671C52AD082AE7F6AB61A /* UsageStore.swift */; };
+		A77CACF8415901F312D21CCEA28775C7 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BC9BE4AB9B12D29E56E944A45DF0091 /* Theme.swift */; };
+		ABE39E851F7ABFF4023C4D071A01DAC4 /* UsageChartLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31BF70BB29ED7A5AE3DB4BCBD79BF78 /* UsageChartLayout.swift */; };
+		AC64F6F5C4E6B1064388568AC938D201 /* LaunchAtLoginTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64D50876C24B5C1CC547402D74B0A241 /* LaunchAtLoginTests.swift */; };
+		AF69C40FFFD710371C43E3F72D43B373 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0BC4EDB9E18E1F353DA2C4154CEE3 /* SettingsStore.swift */; };
+		B25F723D7FF855FFE19F9006B0EA48DA /* UsageChartLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01B8A3E9E0573884CED6F97688A29D36 /* UsageChartLayoutTests.swift */; };
+		BA72B065337663335FA42A0CD1E6FB40 /* UsageFormattingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 682F4C931549E42B8BCC8CE39F5756F2 /* UsageFormattingTests.swift */; };
+		C396C7DC1AF3AF4ABEFCFCA6CBBC45C5 /* MenuBarIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F80A7CA27E9979C15252BDD63DBB6E0 /* MenuBarIcon.swift */; };
+		CF8CAC85AAF3F512448ECD974C5DF913 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1976B9C1DAD1290CA6525E409A738916 /* SystemConfiguration.framework */; };
+		D35407A175AC581108045E09D1AFE8BC /* UsageReportTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 850DFE9C4A211507682F7321053145C9 /* UsageReportTests.swift */; };
+		D8C20BBD115EB626747D5817FA7A97A3 /* UsageReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7D851A70276F703188AE19B75339DA /* UsageReport.swift */; };
+		DDFFCFB9039EF16628E9ACE76FEB0EBA /* UsageStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B446000CD3EF9E7131BEA6ACE6674E12 /* UsageStoreTests.swift */; };
+		E2B466871CBD1E5F11616B82B6FD074B /* SettingsPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28CB5ED37D6D3B6F746C50DE8A33BB6A /* SettingsPresenterTests.swift */; };
+		E324614BEC2F05847BEAA2C75206A3BE /* UsageChartLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31BF70BB29ED7A5AE3DB4BCBD79BF78 /* UsageChartLayout.swift */; };
+		E4A54025430324F70F88A8A4CE67AAEB /* CoreResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9DF4D41093E9945B40B5E16B5B454D /* CoreResponse.swift */; };
+		E80F3C66168D8815B9F819CB4A50E376 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A375B1F7A7962A02DADCAAFE496E5B5D /* Cocoa.framework */; };
+		EBC8B75AE1866D6132C10180A1766D26 /* UsageFormatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3993CC3E1573F8394FBA506AD7C6A565 /* UsageFormatting.swift */; };
+		ECFF65EF0702C3374AD03171DAAFE188 /* SettingsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4B0BC4EDB9E18E1F353DA2C4154CEE3 /* SettingsStore.swift */; };
+		F9AE7F8025F24057D4277462F428A878 /* UsageStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B796B3C9AA0671C52AD082AE7F6AB61A /* UsageStore.swift */; };
+		FAB6F1C08B9FF7DC403E9F8923387547 /* DashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E08EAA2378B0E97F673AAD4C1EBC398 /* DashboardView.swift */; };
+		FD39258CC2E4BAC226E84217E9E7FF9C /* Localization.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34F0BB010DE16FF17C667FBC62D8784 /* Localization.swift */; };
+		FE234FFE9176FC2A96479138F3340E89 /* TokPeekApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9A1CC3EE4289A7C78731075B1B2DE30 /* TokPeekApp.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		01B8A3E9E0573884CED6F97688A29D36 /* UsageChartLayoutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageChartLayoutTests.swift; path = TokPeekKitTests/UsageChartLayoutTests.swift; sourceTree = "<group>"; };
+		0915FA23CE59D0783782E841FECC488B /* UsageOverview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageOverview.swift; path = TokPeek/UsageOverview.swift; sourceTree = "<group>"; };
+		0C9DF4D41093E9945B40B5E16B5B454D /* CoreResponse.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CoreResponse.swift; path = TokPeekKit/CoreResponse.swift; sourceTree = "<group>"; };
+		1138C800B34784BE1A767052B4744487 /* UsageInsightsTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageInsightsTests.swift; path = TokPeekKitTests/UsageInsightsTests.swift; sourceTree = "<group>"; };
+		11D3344648555DAD5F9C0105E68485CB /* TokPeekTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TokPeekTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		139F2BEAF258794938ED1DB042BB0D59 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1976B9C1DAD1290CA6525E409A738916 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		215227CF32CB160047F807F9F3E21128 /* LaunchAtLogin.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LaunchAtLogin.swift; path = TokPeekKit/LaunchAtLogin.swift; sourceTree = "<group>"; };
+		2570D59C145D285817BEB258BC93A6E3 /* TokPeek.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = TokPeek.app; path = TokPeek.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		28CB5ED37D6D3B6F746C50DE8A33BB6A /* SettingsPresenterTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsPresenterTests.swift; path = TokPeekKitTests/SettingsPresenterTests.swift; sourceTree = "<group>"; };
+		3123141C1138CDEBB84828851C101A0F /* TokscaleClient.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokscaleClient.swift; path = TokPeekBridge/TokscaleClient.swift; sourceTree = "<group>"; };
+		3993CC3E1573F8394FBA506AD7C6A565 /* UsageFormatting.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageFormatting.swift; path = TokPeekKit/UsageFormatting.swift; sourceTree = "<group>"; };
+		3A6F27966EB6C639B64E0314939221E5 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		5645496A3CF0F3180D30BDCFFAD4B9EF /* CoreJSON.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CoreJSON.swift; path = TokPeekKit/CoreJSON.swift; sourceTree = "<group>"; };
+		5878A256D341C14DA11261C569F702FD /* LocalizationTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LocalizationTests.swift; path = TokPeekKitTests/LocalizationTests.swift; sourceTree = "<group>"; };
+		5BC9BE4AB9B12D29E56E944A45DF0091 /* Theme.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Theme.swift; path = TokPeek/Theme.swift; sourceTree = "<group>"; };
+		60E3A57259E6455FF1D7BF77F7744EDE /* libtokpeek_core_ffi.a */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = archive.ar; name = libtokpeek_core_ffi.a; path = target/universal/release/libtokpeek_core_ffi.a; sourceTree = "<group>"; };
+		64D50876C24B5C1CC547402D74B0A241 /* LaunchAtLoginTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = LaunchAtLoginTests.swift; path = TokPeekKitTests/LaunchAtLoginTests.swift; sourceTree = "<group>"; };
+		682F4C931549E42B8BCC8CE39F5756F2 /* UsageFormattingTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageFormattingTests.swift; path = TokPeekKitTests/UsageFormattingTests.swift; sourceTree = "<group>"; };
+		6E08EAA2378B0E97F673AAD4C1EBC398 /* DashboardView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = DashboardView.swift; path = TokPeek/DashboardView.swift; sourceTree = "<group>"; };
+		70B759BC3A80A460EF63A027E35DB550 /* SettingsPresenter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsPresenter.swift; path = TokPeekKit/SettingsPresenter.swift; sourceTree = "<group>"; };
+		753FA68E570B7A57D8984B2EE9AFF68A /* CoreResponseTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CoreResponseTests.swift; path = TokPeekKitTests/CoreResponseTests.swift; sourceTree = "<group>"; };
+		76A165BA04A8A303BBC99FA67273EB7E /* UsageChart.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageChart.swift; path = TokPeek/UsageChart.swift; sourceTree = "<group>"; };
+		7A7CE6FE16507B0EC72EB106ED780EF7 /* ModelRanking.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ModelRanking.swift; path = TokPeek/ModelRanking.swift; sourceTree = "<group>"; };
+		7B7FB2130AD6D7B91C64A4D1267B2565 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsView.swift; path = TokPeek/SettingsView.swift; sourceTree = "<group>"; };
+		8384523685C2F4698819B8A508C6847A /* UsageInsights.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageInsights.swift; path = TokPeekKit/UsageInsights.swift; sourceTree = "<group>"; };
+		850DFE9C4A211507682F7321053145C9 /* UsageReportTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageReportTests.swift; path = TokPeekKitTests/UsageReportTests.swift; sourceTree = "<group>"; };
+		8677E75374EA3FA1B9FC20B12AB3F82E /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		8E277ACF5FF1343E9C39408A45295785 /* MenuBarIconTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MenuBarIconTests.swift; path = TokPeekKitTests/MenuBarIconTests.swift; sourceTree = "<group>"; };
+		8F80A7CA27E9979C15252BDD63DBB6E0 /* MenuBarIcon.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = MenuBarIcon.swift; path = TokPeekKit/MenuBarIcon.swift; sourceTree = "<group>"; };
+		961E92958CCFD80FB2267507E2E104CD /* ClientBreakdownLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClientBreakdownLayout.swift; path = TokPeekKit/ClientBreakdownLayout.swift; sourceTree = "<group>"; };
+		99E2F8237045080B652264026202C690 /* ClientBreakdown.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClientBreakdown.swift; path = TokPeek/ClientBreakdown.swift; sourceTree = "<group>"; };
+		A31BF70BB29ED7A5AE3DB4BCBD79BF78 /* UsageChartLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageChartLayout.swift; path = TokPeekKit/UsageChartLayout.swift; sourceTree = "<group>"; };
+		A34F0BB010DE16FF17C667FBC62D8784 /* Localization.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Localization.swift; path = TokPeekKit/Localization.swift; sourceTree = "<group>"; };
+		A375B1F7A7962A02DADCAAFE496E5B5D /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX15.0.sdk/System/Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
+		AAB31031C8B36ABABBC71DE74B9369A2 /* SettingsStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsStoreTests.swift; path = TokPeekKitTests/SettingsStoreTests.swift; sourceTree = "<group>"; };
+		ADDCD9238FFD6E35E5F0EC0CC14ABAC6 /* zh-Hans */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/Localizable.strings"; sourceTree = "<group>"; };
+		B446000CD3EF9E7131BEA6ACE6674E12 /* UsageStoreTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageStoreTests.swift; path = TokPeekKitTests/UsageStoreTests.swift; sourceTree = "<group>"; };
+		B796B3C9AA0671C52AD082AE7F6AB61A /* UsageStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageStore.swift; path = TokPeekKit/UsageStore.swift; sourceTree = "<group>"; };
+		C54625217C77CCC173868BF5653CE885 /* UsageRequest.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageRequest.swift; path = TokPeekKit/UsageRequest.swift; sourceTree = "<group>"; };
+		C9A1CC3EE4289A7C78731075B1B2DE30 /* TokPeekApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TokPeekApp.swift; path = TokPeek/TokPeekApp.swift; sourceTree = "<group>"; };
+		CA2F5553947FD42AA1C64784AB04139C /* tokpeek_core.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = tokpeek_core.h; path = CTokPeekCore/include/tokpeek_core.h; sourceTree = "<group>"; };
+		CF788998800D55248F72BFBAE43FC11A /* en */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E77DA364C7AA3E1B69E07435D709CD97 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		EA7D851A70276F703188AE19B75339DA /* UsageReport.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageReport.swift; path = TokPeekKit/UsageReport.swift; sourceTree = "<group>"; };
+		F4B0BC4EDB9E18E1F353DA2C4154CEE3 /* SettingsStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SettingsStore.swift; path = TokPeekKit/SettingsStore.swift; sourceTree = "<group>"; };
+		F4B3128AF6766A563CE1109A9F9E9588 /* ClientBreakdownLayoutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ClientBreakdownLayoutTests.swift; path = TokPeekKitTests/ClientBreakdownLayoutTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		D489B03BB7D1D83A56581A617524A317 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9E19487503E02DE364D666850C45A131 /* Cocoa.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FE12AB95B26FD6B56BA78CBB40C12775 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				E80F3C66168D8815B9F819CB4A50E376 /* Cocoa.framework in Frameworks */,
+				9265EE11A0DB16EDA5188DB8E041FFEC /* libtokpeek_core_ffi.a in Frameworks */,
+				829B2A2A10C69770E52B6DE982F6913F /* Security.framework in Frameworks */,
+				CF8CAC85AAF3F512448ECD974C5DF913 /* SystemConfiguration.framework in Frameworks */,
+				57039F2729A0FEC38D9F8D666CAFF0F2 /* CoreFoundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		30A55701970DCB8208F7A2926F24A4B7 /* Rust */ = {
+			isa = PBXGroup;
+			children = (
+				60E3A57259E6455FF1D7BF77F7744EDE /* libtokpeek_core_ffi.a */,
+			);
+			name = Rust;
+			path = rust;
+			sourceTree = "<group>";
+		};
+		3FB6065931E51CD145F84AA16AD44A59 /* OS X */ = {
+			isa = PBXGroup;
+			children = (
+				A375B1F7A7962A02DADCAAFE496E5B5D /* Cocoa.framework */,
+			);
+			name = "OS X";
+			sourceTree = "<group>";
+		};
+		4005E265310925C02A0BEC8E658E32F8 = {
+			isa = PBXGroup;
+			children = (
+				D5F477245CAF669A8374512F9DEBB9BB /* Products */,
+				DCB1359F4B6946B2EF6914D97B592FC0 /* Frameworks */,
+				F5619BBB0CF1BE8BDC628A501321D9D4 /* Sources */,
+				4A2F152C79EFAC8AE32A60D2296BBE25 /* Resources */,
+				66D4E1DCE1F0577E1651464433D8F704 /* Tests */,
+				30A55701970DCB8208F7A2926F24A4B7 /* Rust */,
+			);
+			sourceTree = "<group>";
+		};
+		4A2F152C79EFAC8AE32A60D2296BBE25 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				3A6F27966EB6C639B64E0314939221E5 /* Assets.xcassets */,
+				39AF01A3863F8C34C9E9CFFE2B882CA9 /* Localizable.strings */,
+				139F2BEAF258794938ED1DB042BB0D59 /* Info.plist */,
+			);
+			name = Resources;
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		66D4E1DCE1F0577E1651464433D8F704 /* Tests */ = {
+			isa = PBXGroup;
+			children = (
+				F4B3128AF6766A563CE1109A9F9E9588 /* ClientBreakdownLayoutTests.swift */,
+				753FA68E570B7A57D8984B2EE9AFF68A /* CoreResponseTests.swift */,
+				64D50876C24B5C1CC547402D74B0A241 /* LaunchAtLoginTests.swift */,
+				5878A256D341C14DA11261C569F702FD /* LocalizationTests.swift */,
+				8E277ACF5FF1343E9C39408A45295785 /* MenuBarIconTests.swift */,
+				28CB5ED37D6D3B6F746C50DE8A33BB6A /* SettingsPresenterTests.swift */,
+				AAB31031C8B36ABABBC71DE74B9369A2 /* SettingsStoreTests.swift */,
+				01B8A3E9E0573884CED6F97688A29D36 /* UsageChartLayoutTests.swift */,
+				682F4C931549E42B8BCC8CE39F5756F2 /* UsageFormattingTests.swift */,
+				1138C800B34784BE1A767052B4744487 /* UsageInsightsTests.swift */,
+				850DFE9C4A211507682F7321053145C9 /* UsageReportTests.swift */,
+				B446000CD3EF9E7131BEA6ACE6674E12 /* UsageStoreTests.swift */,
+			);
+			name = Tests;
+			path = Tests;
+			sourceTree = "<group>";
+		};
+		D5F477245CAF669A8374512F9DEBB9BB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				2570D59C145D285817BEB258BC93A6E3 /* TokPeek.app */,
+				11D3344648555DAD5F9C0105E68485CB /* TokPeekTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DCB1359F4B6946B2EF6914D97B592FC0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				3FB6065931E51CD145F84AA16AD44A59 /* OS X */,
+				8677E75374EA3FA1B9FC20B12AB3F82E /* Security.framework */,
+				1976B9C1DAD1290CA6525E409A738916 /* SystemConfiguration.framework */,
+				E77DA364C7AA3E1B69E07435D709CD97 /* CoreFoundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F5619BBB0CF1BE8BDC628A501321D9D4 /* Sources */ = {
+			isa = PBXGroup;
+			children = (
+				99E2F8237045080B652264026202C690 /* ClientBreakdown.swift */,
+				6E08EAA2378B0E97F673AAD4C1EBC398 /* DashboardView.swift */,
+				7A7CE6FE16507B0EC72EB106ED780EF7 /* ModelRanking.swift */,
+				7B7FB2130AD6D7B91C64A4D1267B2565 /* SettingsView.swift */,
+				5BC9BE4AB9B12D29E56E944A45DF0091 /* Theme.swift */,
+				C9A1CC3EE4289A7C78731075B1B2DE30 /* TokPeekApp.swift */,
+				76A165BA04A8A303BBC99FA67273EB7E /* UsageChart.swift */,
+				0915FA23CE59D0783782E841FECC488B /* UsageOverview.swift */,
+				3123141C1138CDEBB84828851C101A0F /* TokscaleClient.swift */,
+				961E92958CCFD80FB2267507E2E104CD /* ClientBreakdownLayout.swift */,
+				5645496A3CF0F3180D30BDCFFAD4B9EF /* CoreJSON.swift */,
+				0C9DF4D41093E9945B40B5E16B5B454D /* CoreResponse.swift */,
+				215227CF32CB160047F807F9F3E21128 /* LaunchAtLogin.swift */,
+				A34F0BB010DE16FF17C667FBC62D8784 /* Localization.swift */,
+				8F80A7CA27E9979C15252BDD63DBB6E0 /* MenuBarIcon.swift */,
+				70B759BC3A80A460EF63A027E35DB550 /* SettingsPresenter.swift */,
+				F4B0BC4EDB9E18E1F353DA2C4154CEE3 /* SettingsStore.swift */,
+				A31BF70BB29ED7A5AE3DB4BCBD79BF78 /* UsageChartLayout.swift */,
+				3993CC3E1573F8394FBA506AD7C6A565 /* UsageFormatting.swift */,
+				8384523685C2F4698819B8A508C6847A /* UsageInsights.swift */,
+				EA7D851A70276F703188AE19B75339DA /* UsageReport.swift */,
+				C54625217C77CCC173868BF5653CE885 /* UsageRequest.swift */,
+				B796B3C9AA0671C52AD082AE7F6AB61A /* UsageStore.swift */,
+				CA2F5553947FD42AA1C64784AB04139C /* tokpeek_core.h */,
+			);
+			name = Sources;
+			path = Sources;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1851CF41104049DFD51B4DCEE9717351 /* TokPeek */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2910B0E3F076B3FDD6B585E573423D97 /* Build configuration list for PBXNativeTarget "TokPeek" */;
+			buildPhases = (
+				21C46EAC85EF27C8AF76E675D0C611F2 /* Build Tokscale Core */,
+				DE0CC331FB771AF4BE9CB854CFCFC5D4 /* Sources */,
+				FE12AB95B26FD6B56BA78CBB40C12775 /* Frameworks */,
+				92C358D4710C0DFC7A2DC56D9B265673 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TokPeek;
+			productName = TokPeek;
+			productReference = 2570D59C145D285817BEB258BC93A6E3 /* TokPeek.app */;
+			productType = "com.apple.product-type.application";
+		};
+		E35781DAA3268CF01D87CC01CB09F5D3 /* TokPeekTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2FECFD7651133A2A3609DD2EEE84BE6F /* Build configuration list for PBXNativeTarget "TokPeekTests" */;
+			buildPhases = (
+				647AEE9D6A356576F492BEF904BCEF70 /* Sources */,
+				D489B03BB7D1D83A56581A617524A317 /* Frameworks */,
+				2753C931608E4740E2EFFB7767C54E19 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = TokPeekTests;
+			productName = TokPeekTests;
+			productReference = 11D3344648555DAD5F9C0105E68485CB /* TokPeekTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		F94ED967A767D819CF5A4ADF72E00FE7 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 2620;
+				LastUpgradeCheck = 2620;
+			};
+			buildConfigurationList = B2656BFB57DEF0954689370BC713BD3A /* Build configuration list for PBXProject "TokPeek" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+				"zh-Hans",
+			);
+			mainGroup = 4005E265310925C02A0BEC8E658E32F8;
+			minimizedProjectReferenceProxies = 0;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = D5F477245CAF669A8374512F9DEBB9BB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1851CF41104049DFD51B4DCEE9717351 /* TokPeek */,
+				E35781DAA3268CF01D87CC01CB09F5D3 /* TokPeekTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		2753C931608E4740E2EFFB7767C54E19 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		92C358D4710C0DFC7A2DC56D9B265673 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4651805539A09A7E2A0667C98A93E8C9 /* Assets.xcassets in Resources */,
+				825B23E6D8221E78FE801341E419605D /* Localizable.strings in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		21C46EAC85EF27C8AF76E675D0C611F2 /* Build Tokscale Core */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Build Tokscale Core";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/zsh;
+			shellScript = "set -euo pipefail\nexport PATH=\"$HOME/.cargo/bin:/opt/homebrew/bin:/usr/local/bin:$PATH\"\nexport MACOSX_DEPLOYMENT_TARGET=\"${MACOSX_DEPLOYMENT_TARGET:-14.0}\"\n\"$PROJECT_DIR/scripts/build-rust-universal.sh\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		647AEE9D6A356576F492BEF904BCEF70 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				5A7C35AC8836E08463A4E90219C59DE5 /* ClientBreakdownLayout.swift in Sources */,
+				905DE41280C742203F91F843D89BA710 /* CoreJSON.swift in Sources */,
+				E4A54025430324F70F88A8A4CE67AAEB /* CoreResponse.swift in Sources */,
+				8EB0FFE78692AED127EE7B3214F03438 /* LaunchAtLogin.swift in Sources */,
+				FD39258CC2E4BAC226E84217E9E7FF9C /* Localization.swift in Sources */,
+				C396C7DC1AF3AF4ABEFCFCA6CBBC45C5 /* MenuBarIcon.swift in Sources */,
+				80C41CE3F69ABC68F3B5A45B01C30C7B /* SettingsPresenter.swift in Sources */,
+				ECFF65EF0702C3374AD03171DAAFE188 /* SettingsStore.swift in Sources */,
+				E324614BEC2F05847BEAA2C75206A3BE /* UsageChartLayout.swift in Sources */,
+				EBC8B75AE1866D6132C10180A1766D26 /* UsageFormatting.swift in Sources */,
+				01FEB10DC95A9280BBE414CA84A0FCBA /* UsageInsights.swift in Sources */,
+				D8C20BBD115EB626747D5817FA7A97A3 /* UsageReport.swift in Sources */,
+				82BB007393D25EDD24CB0F71065C7501 /* UsageRequest.swift in Sources */,
+				A03E18C557E4B93762F33A5BA7320885 /* UsageStore.swift in Sources */,
+				30409571EA63A0E16B9C5B601D3E349E /* ClientBreakdownLayoutTests.swift in Sources */,
+				1B907D1477D2C7D88373F4B1CF1A22D6 /* CoreResponseTests.swift in Sources */,
+				AC64F6F5C4E6B1064388568AC938D201 /* LaunchAtLoginTests.swift in Sources */,
+				36FB616FCBD90F05AD8FBE660518EA57 /* LocalizationTests.swift in Sources */,
+				66A75E7687A82EBF26B742E836A77318 /* MenuBarIconTests.swift in Sources */,
+				E2B466871CBD1E5F11616B82B6FD074B /* SettingsPresenterTests.swift in Sources */,
+				67B7EE4CE69884F479BA26E6A78B8013 /* SettingsStoreTests.swift in Sources */,
+				B25F723D7FF855FFE19F9006B0EA48DA /* UsageChartLayoutTests.swift in Sources */,
+				BA72B065337663335FA42A0CD1E6FB40 /* UsageFormattingTests.swift in Sources */,
+				4030996AD38321F33AFFA02DBACBB921 /* UsageInsightsTests.swift in Sources */,
+				D35407A175AC581108045E09D1AFE8BC /* UsageReportTests.swift in Sources */,
+				DDFFCFB9039EF16628E9ACE76FEB0EBA /* UsageStoreTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DE0CC331FB771AF4BE9CB854CFCFC5D4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2F6EA9DEEB52DC4723B27D157E87FCD4 /* ClientBreakdown.swift in Sources */,
+				FAB6F1C08B9FF7DC403E9F8923387547 /* DashboardView.swift in Sources */,
+				9BED2A0A1F8F3B285FB5DD83ECD2B9AF /* ModelRanking.swift in Sources */,
+				0373A9D86CB3D22BCC8DD2604F68897B /* SettingsView.swift in Sources */,
+				A77CACF8415901F312D21CCEA28775C7 /* Theme.swift in Sources */,
+				FE234FFE9176FC2A96479138F3340E89 /* TokPeekApp.swift in Sources */,
+				83BD8A0533D22BE171F55E4D40FAF46F /* UsageChart.swift in Sources */,
+				1D138640D753201681E945C046E1780F /* UsageOverview.swift in Sources */,
+				950F4FC74BAF2CB09CF18D880158AE1A /* TokscaleClient.swift in Sources */,
+				6A551444B08B50D1BD33D974B2A7E1DF /* ClientBreakdownLayout.swift in Sources */,
+				03A07B4A4D27F880415CADD53D4AD0E6 /* CoreJSON.swift in Sources */,
+				073C5ACFF23DBEE799529351F6DE5EF8 /* CoreResponse.swift in Sources */,
+				6E08E6ABC7CBD0013D80A176620B87C1 /* LaunchAtLogin.swift in Sources */,
+				9ECADE4FD0DBE9BE3B744D89A9CB9BC0 /* Localization.swift in Sources */,
+				7332C8AB8D176A51AE6A918C7B003261 /* MenuBarIcon.swift in Sources */,
+				28C96C38DDDB1C6FAD219BA932C2A101 /* SettingsPresenter.swift in Sources */,
+				AF69C40FFFD710371C43E3F72D43B373 /* SettingsStore.swift in Sources */,
+				ABE39E851F7ABFF4023C4D071A01DAC4 /* UsageChartLayout.swift in Sources */,
+				6B219B0C8C04C558410ADB8B3B81398E /* UsageFormatting.swift in Sources */,
+				0900C597406F996ABC75128A35563EDB /* UsageInsights.swift in Sources */,
+				45F27E199A9F3173769A32D803F8B618 /* UsageReport.swift in Sources */,
+				7A66E37205014B16A568044C9580D087 /* UsageRequest.swift in Sources */,
+				F9AE7F8025F24057D4277462F428A878 /* UsageStore.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		39AF01A3863F8C34C9E9CFFE2B882CA9 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CF788998800D55248F72BFBAE43FC11A /* en */,
+				ADDCD9238FFD6E35E5F0EC0CC14ABAC6 /* zh-Hans */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		275A37F9683A4125B5EFEE91FF941875 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tokpeek.tests;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) XCODE_PROJECT";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				TEST_HOST = "";
+			};
+			name = Debug;
+		};
+		2F528DC04C78BA26F67C922472FFACF8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/rust/target/universal/release",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lc++",
+					"-lresolv",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tokpeek.app;
+				PRODUCT_NAME = TokPeek;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = Sources/CTokPeekCore/include/tokpeek_core.h;
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Debug;
+		};
+		70B56833EA84012D040A291FA5F1BD28 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Debug;
+		};
+		B73E30E3834D98E99C07865B9ED52B6A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_HARDENED_RUNTIME = YES;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Resources/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/rust/target/universal/release",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-lc++",
+					"-lresolv",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tokpeek.app;
+				PRODUCT_NAME = TokPeek;
+				SDKROOT = macosx;
+				SWIFT_OBJC_BRIDGING_HEADER = Sources/CTokPeekCore/include/tokpeek_core.h;
+				SWIFT_STRICT_CONCURRENCY = complete;
+			};
+			name = Release;
+		};
+		BB5A49188DA17A85CACAA5243A2448AC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 6.0;
+			};
+			name = Release;
+		};
+		DAD0FF08EE2ED375B8DE7D10B478C7AF /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGNING_ALLOWED = NO;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.tokpeek.tests;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) XCODE_PROJECT";
+				SWIFT_STRICT_CONCURRENCY = complete;
+				TEST_HOST = "";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		2910B0E3F076B3FDD6B585E573423D97 /* Build configuration list for PBXNativeTarget "TokPeek" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B73E30E3834D98E99C07865B9ED52B6A /* Release */,
+				2F528DC04C78BA26F67C922472FFACF8 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		2FECFD7651133A2A3609DD2EEE84BE6F /* Build configuration list for PBXNativeTarget "TokPeekTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DAD0FF08EE2ED375B8DE7D10B478C7AF /* Release */,
+				275A37F9683A4125B5EFEE91FF941875 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B2656BFB57DEF0954689370BC713BD3A /* Build configuration list for PBXProject "TokPeek" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				70B56833EA84012D040A291FA5F1BD28 /* Debug */,
+				BB5A49188DA17A85CACAA5243A2448AC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = F94ED967A767D819CF5A4ADF72E00FE7 /* Project object */;
+}

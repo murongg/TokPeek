@@ -1,0 +1,4 @@
+public enum MenuBarIcon {
+    public static let systemName = "chart.bar"
+    public static let usesBrandMarkInSummary = true
+}

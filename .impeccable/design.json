@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-07-27T19:40:00+08:00",
+  "title": "Design System: TokPeek",
+  "extensions": {
+    "colorMeta": {
+      "signal-green": {
+        "role": "primary",
+        "displayName": "Signal Green",
+        "canonical": "oklch(0.55 0.13 160)",
+        "tonalRamp": [
+          "oklch(0.18 0.05 160)",
+          "oklch(0.28 0.08 160)",
+          "oklch(0.38 0.10 160)",
+          "oklch(0.48 0.12 160)",
+          "oklch(0.58 0.13 160)",
+          "oklch(0.70 0.10 160)",
+          "oklch(0.84 0.06 160)",
+          "oklch(0.94 0.03 160)"
+        ]
+      },
+      "meter-amber": {
+        "role": "secondary",
+        "displayName": "Meter Amber",
+        "canonical": "oklch(0.72 0.16 75)",
+        "tonalRamp": [
+          "oklch(0.18 0.05 75)",
+          "oklch(0.28 0.08 75)",
+          "oklch(0.38 0.11 75)",
+          "oklch(0.50 0.14 75)",
+          "oklch(0.62 0.16 75)",
+          "oklch(0.72 0.16 75)",
+          "oklch(0.84 0.10 75)",
+          "oklch(0.94 0.04 75)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Panel and settings titles."
+      },
+      "data": {
+        "displayName": "Data",
+        "purpose": "Stable token, cost, percentage, and duration values."
+      }
+    },
+    "shadows": [],
+    "motion": [
+      {
+        "name": "state-fast",
+        "value": "180ms ease-out",
+        "purpose": "Selection and refresh-state transitions; disabled under Reduce Motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "menu-panel",
+        "value": "400px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "A restrained native action using Signal Green.",
+      "html": "<button class=\"ds-button-primary\">Refresh</button>",
+      "css": ".ds-button-primary { background: oklch(0.55 0.13 160); color: white; border: 0; border-radius: 8px; padding: 7px 12px; font: 600 13px -apple-system, sans-serif; transition: background 180ms ease-out; } .ds-button-primary:hover { background: oklch(0.50 0.12 160); } .ds-button-primary:active { background: oklch(0.44 0.105 160); } .ds-button-primary:focus-visible { outline: 3px solid oklch(0.72 0.10 160 / 0.45); outline-offset: 2px; }"
+    },
+    {
+      "name": "Period Filter",
+      "kind": "chip",
+      "refersTo": "filter-selected",
+      "description": "A compact, familiar period selector.",
+      "html": "<div class=\"ds-filter\"><button>7D</button><button class=\"is-selected\">30D</button><button>90D</button><button>All</button></div>",
+      "css": ".ds-filter { display: inline-flex; gap: 2px; padding: 2px; border-radius: 8px; background: oklch(0.97 0.006 160); } .ds-filter button { border: 0; border-radius: 6px; padding: 5px 9px; color: oklch(0.50 0.014 160); background: transparent; font: 500 11px -apple-system, sans-serif; } .ds-filter button.is-selected { color: oklch(0.44 0.105 160); background: oklch(0.94 0.035 160); font-weight: 600; } .ds-filter button:focus-visible { outline: 2px solid oklch(0.55 0.13 160); }"
+    },
+    {
+      "name": "Chart Surface",
+      "kind": "card",
+      "refersTo": "chart-surface",
+      "description": "A tonal grouping surface without a decorative shadow.",
+      "html": "<section class=\"ds-chart\"><strong>Recent activity</strong><div aria-label=\"Chart placeholder\">▁▂▃▂▅▇</div></section>",
+      "css": ".ds-chart { width: 320px; padding: 12px; border-radius: 12px; color: oklch(0.20 0.016 160); background: oklch(0.97 0.006 160); font: 400 13px -apple-system, sans-serif; } .ds-chart strong { display: block; margin-bottom: 12px; font-weight: 600; } .ds-chart div { color: oklch(0.55 0.13 160); font: 600 28px ui-monospace, monospace; letter-spacing: 4px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Quiet Instrument Panel",
+    "overview": "TokPeek feels like a precise instrument built into macOS: present when needed, silent when not. Native controls, compact hierarchy, and calm tonal surfaces keep usage understandable in two seconds.",
+    "keyCharacteristics": [
+      "Native macOS behavior and control vocabulary",
+      "Compact, scan-friendly hierarchy",
+      "Monospaced numerals inside a system-sans interface",
+      "Tonal layering instead of decorative shadows",
+      "State motion only with a Reduce Motion fallback"
+    ],
+    "rules": [
+      {
+        "name": "The Ten Percent Rule",
+        "body": "Signal Green occupies no more than ten percent of a surface.",
+        "section": "colors"
+      },
+      {
+        "name": "The Stable Number Rule",
+        "body": "Every changing numeric value uses monospaced digits.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Window Rule",
+        "body": "The menu window owns elevation; internal content stays flat.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preserve a two-second path to total usage and estimated cost.",
+      "Do use standard macOS settings controls and keyboard focus.",
+      "Do reserve Signal Green for selection, state, and primary action."
+    ],
+    "donts": [
+      "Don't turn the panel into a dense web analytics dashboard.",
+      "Don't use neon gaming-monitor colors or crypto price-ticker urgency.",
+      "Don't use decorative glassmorphism, gradient text, or nested cards.",
+      "Don't imitate TokenBar's visual identity."
+    ]
+  }
+}
