@@ -29,11 +29,12 @@ sign_target() {
 
     local codesign_arguments=(
         --force
-        --options runtime
         --sign "$signing_identity"
     )
     if [[ "$signing_identity" != "-" ]]; then
-        codesign_arguments+=(--timestamp)
+        # Ad-hoc signatures have no Team ID, so enabling the hardened runtime
+        # would make macOS reject the embedded Sparkle framework at launch.
+        codesign_arguments+=(--options runtime --timestamp)
     fi
 
     codesign "${codesign_arguments[@]}" "$@" "$target"
