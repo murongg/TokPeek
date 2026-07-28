@@ -12,6 +12,17 @@ rm -rf "$app_path"
 mkdir -p "$(dirname "$app_path")"
 ditto "$source_app" "$app_path"
 
+if [[ -n "${MARKETING_VERSION:-}" ]]; then
+    plutil -replace CFBundleShortVersionString \
+        -string "$MARKETING_VERSION" \
+        "$app_path/Contents/Info.plist"
+fi
+if [[ -n "${CURRENT_PROJECT_VERSION:-}" ]]; then
+    plutil -replace CFBundleVersion \
+        -string "$CURRENT_PROJECT_VERSION" \
+        "$app_path/Contents/Info.plist"
+fi
+
 if [[ "$signing_identity" == "-" ]]; then
     codesign \
         --force \

@@ -1,0 +1,60 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Test and build
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+
+      - name: Configure Rust
+        run: |
+          rustup set profile minimal
+          rustup update stable --no-self-update
+          rustup default stable
+          rustup target add aarch64-apple-darwin x86_64-apple-darwin
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust/target
+          key: ${{ runner.os }}-${{ runner.arch }}-rust-${{ hashFiles('rust/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-rust-
+
+      - name: Show toolchain versions
+        run: |
+          xcodebuild -version
+          swift --version
+          rustc --version
+          cargo --version
+
+      - name: Run test suite
+        run: make test
+
+      - name: Verify release build
+        run: |
+          make app
+          codesign --verify --deep --strict --verbose=2 dist/TokPeek.app
+          xcrun lipo dist/TokPeek.app/Contents/MacOS/TokPeek \
+            -verify_arch arm64 x86_64

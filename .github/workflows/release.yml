@@ -1,0 +1,232 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Build and publish
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Resolve release version
+        id: version
+        shell: bash
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          if [[ ! "$tag" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Release tags must use the form v1.2.3." >&2
+            exit 1
+          fi
+          echo "value=${tag#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Configure Rust
+        run: |
+          rustup set profile minimal
+          rustup update stable --no-self-update
+          rustup default stable
+          rustup target add aarch64-apple-darwin x86_64-apple-darwin
+
+      - name: Cache Rust dependencies
+        uses: actions/cache@v6
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            rust/target
+          key: ${{ runner.os }}-${{ runner.arch }}-rust-${{ hashFiles('rust/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-rust-
+
+      - name: Run test suite
+        run: make test
+
+      - name: Validate Apple signing secrets
+        env:
+          APPLE_DEVELOPER_ID_P12_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_P12_BASE64 }}
+          APPLE_DEVELOPER_ID_P12_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_P12_PASSWORD }}
+          APPLE_NOTARY_KEY_P8_BASE64: ${{ secrets.APPLE_NOTARY_KEY_P8_BASE64 }}
+          APPLE_NOTARY_KEY_ID: ${{ secrets.APPLE_NOTARY_KEY_ID }}
+          APPLE_NOTARY_ISSUER_ID: ${{ secrets.APPLE_NOTARY_ISSUER_ID }}
+        run: |
+          required_secrets=(
+            APPLE_DEVELOPER_ID_P12_BASE64
+            APPLE_DEVELOPER_ID_P12_PASSWORD
+            APPLE_NOTARY_KEY_P8_BASE64
+            APPLE_NOTARY_KEY_ID
+            APPLE_NOTARY_ISSUER_ID
+          )
+          missing_secrets=()
+          for secret_name in "${required_secrets[@]}"; do
+            if [[ -z "${!secret_name:-}" ]]; then
+              missing_secrets+=("$secret_name")
+            fi
+          done
+          if (( ${#missing_secrets[@]} > 0 )); then
+            printf "Missing required GitHub secret: %s\n" \
+              "${missing_secrets[@]}" >&2
+            exit 1
+          fi
+
+      - name: Import Developer ID certificate
+        id: signing
+        env:
+          APPLE_DEVELOPER_ID_P12_BASE64: ${{ secrets.APPLE_DEVELOPER_ID_P12_BASE64 }}
+          APPLE_DEVELOPER_ID_P12_PASSWORD: ${{ secrets.APPLE_DEVELOPER_ID_P12_PASSWORD }}
+        run: |
+          certificate_path="$RUNNER_TEMP/developer-id.p12"
+          keychain_path="$RUNNER_TEMP/tokpeek-signing.keychain-db"
+          keychain_password=$(openssl rand -hex 24)
+
+          printf "%s" "$APPLE_DEVELOPER_ID_P12_BASE64" \
+            | base64 --decode > "$certificate_path"
+          security create-keychain \
+            -p "$keychain_password" \
+            "$keychain_path"
+          security set-keychain-settings \
+            -lut 21600 \
+            "$keychain_path"
+          security unlock-keychain \
+            -p "$keychain_password" \
+            "$keychain_path"
+          security import "$certificate_path" \
+            -k "$keychain_path" \
+            -P "$APPLE_DEVELOPER_ID_P12_PASSWORD" \
+            -T /usr/bin/codesign \
+            -T /usr/bin/security
+          security set-key-partition-list \
+            -S apple-tool:,apple:,codesign: \
+            -s \
+            -k "$keychain_password" \
+            "$keychain_path"
+          security list-keychains \
+            -d user \
+            -s "$keychain_path"
+
+          signing_identity=$(
+            security find-identity \
+              -v \
+              -p codesigning \
+              "$keychain_path" \
+              | awk '/Developer ID Application/ { print $2; exit }'
+          )
+          if [[ -z "$signing_identity" ]]; then
+            echo "No Developer ID Application identity was imported." >&2
+            exit 1
+          fi
+          echo "sha1=$signing_identity" >> "$GITHUB_OUTPUT"
+
+      - name: Build application
+        env:
+          CODE_SIGN_IDENTITY: ${{ steps.signing.outputs.sha1 }}
+          MARKETING_VERSION: ${{ steps.version.outputs.value }}
+          CURRENT_PROJECT_VERSION: ${{ github.run_number }}
+        run: make app
+
+      - name: Verify signed application
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          app_path="dist/TokPeek.app"
+
+          codesign --verify --deep --strict --verbose=2 "$app_path"
+          xcrun lipo "$app_path/Contents/MacOS/TokPeek" \
+            -verify_arch arm64 x86_64
+          signature_details=$(codesign -dvvv "$app_path" 2>&1)
+          printf "%s\n" "$signature_details"
+          grep -q "Authority=Developer ID Application:" \
+            <<< "$signature_details"
+          grep -q "Timestamp=" <<< "$signature_details"
+
+          built_version=$(
+            /usr/libexec/PlistBuddy \
+              -c "Print :CFBundleShortVersionString" \
+              "$app_path/Contents/Info.plist"
+          )
+          if [[ "$built_version" != "$RELEASE_VERSION" ]]; then
+            echo "Expected version $RELEASE_VERSION, found $built_version." >&2
+            exit 1
+          fi
+
+      - name: Notarize and staple application
+        env:
+          APPLE_NOTARY_KEY_P8_BASE64: ${{ secrets.APPLE_NOTARY_KEY_P8_BASE64 }}
+          APPLE_NOTARY_KEY_ID: ${{ secrets.APPLE_NOTARY_KEY_ID }}
+          APPLE_NOTARY_ISSUER_ID: ${{ secrets.APPLE_NOTARY_ISSUER_ID }}
+        run: |
+          app_path="dist/TokPeek.app"
+          notary_key_path="$RUNNER_TEMP/AuthKey.p8"
+          notary_archive="$RUNNER_TEMP/TokPeek-notarization.zip"
+
+          printf "%s" "$APPLE_NOTARY_KEY_P8_BASE64" \
+            | base64 --decode > "$notary_key_path"
+          chmod 600 "$notary_key_path"
+          ditto -c -k --sequesterRsrc --keepParent \
+            "$app_path" \
+            "$notary_archive"
+
+          xcrun notarytool submit "$notary_archive" \
+            --key "$notary_key_path" \
+            --key-id "$APPLE_NOTARY_KEY_ID" \
+            --issuer "$APPLE_NOTARY_ISSUER_ID" \
+            --wait
+          xcrun stapler staple "$app_path"
+          xcrun stapler validate "$app_path"
+          spctl -vvv --assess --type exec "$app_path"
+
+      - name: Package release assets
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          app_path="dist/TokPeek.app"
+          archive="TokPeek-${RELEASE_VERSION}-macOS-universal.zip"
+
+          mkdir -p artifacts
+          ditto -c -k --sequesterRsrc --keepParent \
+            "$app_path" \
+            "artifacts/$archive"
+          (
+            cd artifacts
+            shasum -a 256 "$archive" > "$archive.sha256"
+          )
+
+      - name: Publish GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          archive="TokPeek-${RELEASE_VERSION}-macOS-universal.zip"
+          gh release create "$GITHUB_REF_NAME" \
+            "artifacts/$archive#TokPeek $RELEASE_VERSION (macOS Universal)" \
+            "artifacts/$archive.sha256#SHA-256 checksum" \
+            --verify-tag \
+            --generate-notes \
+            --fail-on-no-commits \
+            --title "TokPeek $RELEASE_VERSION" \
+            --notes "This build is signed with Developer ID and notarized by Apple. It requires macOS 14 or later."
+
+      - name: Remove signing credentials
+        if: ${{ always() }}
+        run: |
+          security delete-keychain \
+            "$RUNNER_TEMP/tokpeek-signing.keychain-db" \
+            2>/dev/null || true
+          rm -f \
+            "$RUNNER_TEMP/developer-id.p12" \
+            "$RUNNER_TEMP/AuthKey.p8" \
+            "$RUNNER_TEMP/TokPeek-notarization.zip"

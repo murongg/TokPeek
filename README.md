@@ -1,5 +1,7 @@
 # TokPeek
 
+[![CI](https://github.com/murongg/TokPeek/actions/workflows/ci.yml/badge.svg)](https://github.com/murongg/TokPeek/actions/workflows/ci.yml)
+
 TokPeek is a native macOS menu bar app for viewing local AI token usage. The
 interface is written in SwiftUI, while session discovery, parsing, pricing, and
 aggregation come from
@@ -100,7 +102,27 @@ The app target intentionally does not enable App Sandbox because Tokscale Core
 must discover session files belonging to supported coding tools. Hardened
 runtime remains enabled for signed builds.
 
-Notarization and release automation are not included yet.
+## Automation
+
+The CI workflow runs the Rust, Swift Package Manager, and Xcode test suites for
+pushes to `main` and pull requests. It also creates and verifies a Universal 2
+Release build.
+
+Stable releases are created from semantic version tags:
+
+```bash
+git tag -a v0.1.0 -m "TokPeek v0.1.0"
+git push origin v0.1.0
+```
+
+The Release workflow verifies the full test suite, injects the tag version into
+the app bundle, signs it with Developer ID, submits it for Apple notarization,
+staples the accepted ticket, and publishes a Universal 2 ZIP plus a SHA-256
+checksum to GitHub Releases.
+
+Apple credentials are supplied only through encrypted GitHub Secrets and are
+removed from the ephemeral runner after every release. See
+[RELEASING.md](RELEASING.md) for certificate, API key, and secret setup.
 
 ## Tokscale version
 
