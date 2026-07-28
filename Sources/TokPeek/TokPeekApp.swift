@@ -36,7 +36,10 @@ struct TokPeekApp: App {
                 updates: updates
             )
         } label: {
-            menuBarLabel
+            MenuBarStatusLabel(
+                settings: settings,
+                store: store
+            )
                 .task(id: menuBarRefreshTaskID) {
                     await refreshMenuBarUsage()
                 }
@@ -52,43 +55,6 @@ struct TokPeekApp: App {
         }
     }
 
-    @ViewBuilder
-    private var menuBarLabel: some View {
-        if settings.menuBarMetric == .summary {
-            MenuBarSummaryLabel(
-                summary: store.report.map {
-                    UsageFormatting.menuBarSummary(
-                        for: $0
-                    )
-                }
-            )
-        } else if let report = store.report,
-            let title = UsageFormatting.menuBarTitle(
-                for: settings.menuBarMetric,
-                report: report
-            )
-        {
-            Label {
-                Text(title)
-            } icon: {
-                menuBarGlyph
-            }
-        } else if settings.menuBarMetric == .iconOnly {
-            menuBarGlyph
-                .accessibilityLabel("TokPeek")
-        } else {
-            Label {
-                Text("TokPeek")
-            } icon: {
-                menuBarGlyph
-            }
-        }
-    }
-
-    private var menuBarGlyph: some View {
-        Image(systemName: MenuBarIcon.systemName)
-    }
-
     private var menuBarRefreshTaskID: String {
         [
             settings.usagePeriod.rawValue,
@@ -102,6 +68,62 @@ struct TokPeekApp: App {
         await store.refreshIfNeeded(
             maxAge: settings.refreshFrequency.seconds
         )
+    }
+}
+
+private struct MenuBarStatusLabel: View {
+    @ObservedObject var settings: SettingsStore
+    @ObservedObject var store: UsageStore
+
+    @ViewBuilder
+    var body: some View {
+        let presentation = UsageFormatting.menuBarPresentation(
+            for: settings.menuBarMetric,
+            report: store.report
+        )
+
+        switch presentation {
+        case let .summary(summary):
+            MenuBarSummaryLabel(
+                summary: summary
+            )
+        case .tokens, .cost:
+            Text(presentation.singleLineText ?? "—")
+                .font(
+                    .system(
+                        size: 12,
+                        weight: .semibold,
+                        design: .monospaced
+                    )
+                )
+                .lineLimit(1)
+                .fixedSize(horizontal: true, vertical: false)
+        case .iconOnly:
+            Image(nsImage: iconOnlyArtwork)
+                .accessibilityLabel("TokPeek")
+        }
+    }
+
+    private var iconOnlyArtwork: NSImage {
+        let renderer = ImageRenderer(
+            content: Group {
+                if MenuBarIcon.usesBrandMarkInIconOnly {
+                    MenuBarPeekMark()
+                } else {
+                    Image(systemName: MenuBarIcon.systemName)
+                        .font(.system(size: 14, weight: .regular))
+                        .frame(width: 17, height: 17)
+                }
+            }
+        )
+        renderer.scale = NSScreen.main?.backingScaleFactor ?? 2
+
+        guard let image = renderer.nsImage else {
+            return NSImage()
+        }
+
+        image.isTemplate = true
+        return image
     }
 }
 

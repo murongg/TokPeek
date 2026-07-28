@@ -98,6 +98,9 @@ charts, eyes, or colored details. The default menu bar status item uses a
 two-line numeric summary instead of the mark; the template symbol remains the
 loading fallback and an optional display mode.
 
+The AppIcon tile fills its asset canvas; rounded corners provide the only
+transparent area, with no additional safe-area inset.
+
 ## Color
 
 TokPeek has no brand hue.
@@ -221,7 +224,9 @@ Every segment remains text-labeled and VoiceOver-readable.
 
 ### Status
 
-- Loading: grayscale tonal skeletons.
+- Loading: grayscale tonal skeletons. Period changes crossfade to a gently
+  pulsing skeleton, while scheduled same-period refreshes keep the current
+  report visible.
 - Empty: monochrome mark, explanation, and one recovery action.
 - Error: primary foreground plus icon and readable message.
 - Stale data: warning icon and last-updated timestamp while preserving the last

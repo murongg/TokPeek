@@ -76,8 +76,7 @@ func drawIcon(size: CGFloat) {
     NSColor.clear.setFill()
     bounds.fill()
 
-    let inset = size * 0.075
-    let tile = bounds.insetBy(dx: inset, dy: inset)
+    let tile = bounds
     let tilePath = NSBezierPath(
         roundedRect: tile,
         xRadius: size * 0.22,

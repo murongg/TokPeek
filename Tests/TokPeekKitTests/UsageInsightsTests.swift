@@ -91,6 +91,74 @@ func menuBarMetricsProduceLabels() throws {
     #expect(summary.stackedText == "$1.25\n1.5K")
 }
 
+@Test("Every menu bar display setting resolves to a distinct presentation")
+func menuBarDisplaySettingsResolveDistinctPresentations() throws {
+    let report = try CoreJSON.decoder.decode(
+        UsageReport.self,
+        from: Data(insightsFixture.utf8)
+    )
+    let summary = UsageFormatting.menuBarSummary(for: report)
+
+    #expect(
+        UsageFormatting.menuBarPresentation(
+            for: .summary,
+            report: report
+        ) == .summary(summary)
+    )
+    #expect(
+        UsageFormatting.menuBarPresentation(
+            for: .tokens,
+            report: report
+        ) == .tokens("1.5K")
+    )
+    #expect(
+        UsageFormatting.menuBarPresentation(
+            for: .cost,
+            report: report
+        ) == .cost("$1.25")
+    )
+    #expect(
+        UsageFormatting.menuBarPresentation(
+            for: .iconOnly,
+            report: report
+        ) == .iconOnly
+    )
+    #expect(
+        UsageFormatting.menuBarPresentation(
+            for: .tokens,
+            report: nil
+        ) == .tokens(nil)
+    )
+    #expect(
+        UsageFormatting.menuBarPresentation(
+            for: .cost,
+            report: nil
+        ) == .cost(nil)
+    )
+}
+
+@Test("Only single-metric menu bar modes expose visible text")
+func singleMetricMenuBarModesExposeVisibleText() {
+    #expect(
+        MenuBarPresentation.tokens("1.5K").singleLineText == "1.5K"
+    )
+    #expect(
+        MenuBarPresentation.cost("$1.25").singleLineText == "$1.25"
+    )
+    #expect(
+        MenuBarPresentation.tokens(nil).singleLineText == "—"
+    )
+    #expect(
+        MenuBarPresentation.cost(nil).singleLineText == "$—"
+    )
+    #expect(
+        MenuBarPresentation.summary(nil).singleLineText == nil
+    )
+    #expect(
+        MenuBarPresentation.iconOnly.singleLineText == nil
+    )
+}
+
 private func modelRankingReport() -> UsageReport {
     UsageReport(
         meta: ReportMetadata(

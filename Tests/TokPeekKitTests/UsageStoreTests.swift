@@ -60,6 +60,61 @@ func newestRequestWins() async throws {
 }
 
 @MainActor
+@Test("Changing requests exposes a replacement loading state")
+func changedRequestShowsReplacementLoadingState() async throws {
+    let previousReport = try fixtureReport(totalTokens: 200)
+    let replacementReport = try fixtureReport(totalTokens: 100)
+    let store = UsageStore(
+        loader: DelayedRequestLoader(
+            slowReport: replacementReport,
+            latestReport: previousReport
+        ),
+        request: UsageRequest(since: "latest")
+    )
+    await store.refresh()
+
+    store.request = UsageRequest(since: "slow")
+    let replacementRefresh = Task {
+        await store.refresh()
+    }
+    try await Task.sleep(for: .milliseconds(5))
+
+    #expect(store.report == previousReport)
+    #expect(store.isLoading)
+    #expect(store.isLoadingNewRequest)
+
+    await replacementRefresh.value
+
+    #expect(store.report == replacementReport)
+    #expect(store.isLoading == false)
+    #expect(store.isLoadingNewRequest == false)
+}
+
+@MainActor
+@Test("Refreshing the same request keeps replacement loading quiet")
+func sameRequestKeepsReplacementLoadingQuiet() async throws {
+    let report = try fixtureReport(totalTokens: 100)
+    let store = UsageStore(
+        loader: DelayedRequestLoader(
+            slowReport: report,
+            latestReport: report
+        ),
+        request: UsageRequest(since: "slow")
+    )
+    await store.refresh()
+
+    let scheduledRefresh = Task {
+        await store.refresh()
+    }
+    try await Task.sleep(for: .milliseconds(5))
+
+    #expect(store.isLoading)
+    #expect(store.isLoadingNewRequest == false)
+
+    await scheduledRefresh.value
+}
+
+@MainActor
 @Test("A fresh cached report skips another core scan")
 func freshCacheSkipsRefresh() async throws {
     let loader = CountingLoader(report: try fixtureReport())

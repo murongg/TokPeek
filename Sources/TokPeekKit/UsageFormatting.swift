@@ -9,6 +9,24 @@ public struct MenuBarSummary: Sendable, Equatable {
     }
 }
 
+public enum MenuBarPresentation: Sendable, Equatable {
+    case summary(MenuBarSummary?)
+    case tokens(String?)
+    case cost(String?)
+    case iconOnly
+
+    public var singleLineText: String? {
+        switch self {
+        case .summary, .iconOnly:
+            nil
+        case let .tokens(tokens):
+            tokens ?? "—"
+        case let .cost(cost):
+            cost ?? "$—"
+        }
+    }
+}
+
 public struct UsageTooltipMetrics: Sendable, Equatable {
     public let tokens: String
     public let cost: String
@@ -94,6 +112,30 @@ public enum UsageFormatting {
             tokens: compactTokens(report.summary.totalTokens),
             cost: menuBarCost(report.summary.totalCost)
         )
+    }
+
+    public static func menuBarPresentation(
+        for metric: MenuBarMetric,
+        report: UsageReport?
+    ) -> MenuBarPresentation {
+        switch metric {
+        case .summary:
+            .summary(report.map(menuBarSummary(for:)))
+        case .tokens:
+            .tokens(
+                report.flatMap {
+                    menuBarTitle(for: .tokens, report: $0)
+                }
+            )
+        case .cost:
+            .cost(
+                report.flatMap {
+                    menuBarTitle(for: .cost, report: $0)
+                }
+            )
+        case .iconOnly:
+            .iconOnly
+        }
     }
 
     private static func compact(

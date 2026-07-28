@@ -11,6 +11,7 @@ public final class UsageStore: ObservableObject {
     @Published public private(set) var modelCatalog: [String] = []
     @Published public private(set) var isLoading = false
     @Published public private(set) var errorMessage: String?
+    @Published private var loadingRequest: UsageRequest?
 
     var loader: any UsageLoading
     public var request: UsageRequest
@@ -20,6 +21,14 @@ public final class UsageStore: ObservableObject {
     private var lastSuccessfulRefreshAt: Date?
     private var lastSuccessfulModelCatalogRequest: UsageRequest?
     private var lastSuccessfulModelCatalogRefreshAt: Date?
+
+    public var isLoadingNewRequest: Bool {
+        // Scheduled refreshes keep the current report visible. A changed
+        // period or data root gets an explicit loading transition instead.
+        isLoading
+            && report != nil
+            && loadingRequest != lastSuccessfulRequest
+    }
 
     public init(
         loader: any UsageLoading,
@@ -44,11 +53,13 @@ public final class UsageStore: ObservableObject {
         let generation = refreshGeneration
         let requestedReport = request
         let activeLoader = loader
+        loadingRequest = requestedReport
         isLoading = true
         errorMessage = nil
         defer {
             if generation == refreshGeneration {
                 isLoading = false
+                loadingRequest = nil
             }
         }
 

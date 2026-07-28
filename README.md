@@ -12,7 +12,8 @@ aggregation come from
 ## Highlights
 
 - Native `MenuBarExtra` interface on macOS 14 or later
-- Configurable menu bar metric: token total, estimated cost, or icon only
+- Configurable menu bar display: token and cost, token total, estimated cost,
+  or icon only
 - 7-day, 30-day, 90-day, and all-time reporting
 - Token composition, daily activity chart, and client ranking
 - Native Settings window with refresh interval and default range controls

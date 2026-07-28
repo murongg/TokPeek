@@ -26,15 +26,13 @@ struct DashboardView: View {
                 VStack(alignment: .leading, spacing: 16) {
                     filterBar
 
-                    if let report = store.report {
-                        reportContent(
-                            filteredReport(report)
+                    usageContent
+                        .animation(
+                            reduceMotion
+                                ? nil
+                                : .easeOut(duration: 0.18),
+                            value: showsLoadingPlaceholder
                         )
-                    } else if store.isLoading {
-                        LoadingView()
-                    } else {
-                        EmptyUsageView(refresh: refresh)
-                    }
 
                     if let errorMessage = store.errorMessage {
                         ErrorBanner(message: errorMessage)
@@ -64,6 +62,29 @@ struct DashboardView: View {
             }
             self.selectedModelID = nil
         }
+    }
+
+    @ViewBuilder
+    private var usageContent: some View {
+        if showsLoadingPlaceholder {
+            LoadingView()
+                .transition(.opacity)
+        } else if let report = store.report {
+            VStack(alignment: .leading, spacing: 16) {
+                reportContent(
+                    filteredReport(report)
+                )
+            }
+            .transition(.opacity)
+        } else {
+            EmptyUsageView(refresh: refresh)
+                .transition(.opacity)
+        }
+    }
+
+    private var showsLoadingPlaceholder: Bool {
+        store.isLoading
+            && (store.report == nil || store.isLoadingNewRequest)
     }
 
     private var header: some View {
@@ -369,6 +390,9 @@ struct DashboardView: View {
 }
 
 private struct LoadingView: View {
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+    @State private var isPulsing = false
+
     var body: some View {
         VStack(alignment: .leading, spacing: 14) {
             RoundedRectangle(cornerRadius: 8)
@@ -387,7 +411,23 @@ private struct LoadingView: View {
                 }
             }
         }
+        .opacity(
+            reduceMotion
+                ? 1
+                : (isPulsing ? 0.46 : 0.82)
+        )
         .redacted(reason: .placeholder)
+        .onAppear {
+            guard !reduceMotion else {
+                return
+            }
+            withAnimation(
+                .easeInOut(duration: 0.75)
+                    .repeatForever(autoreverses: true)
+            ) {
+                isPulsing = true
+            }
+        }
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("Loading local usage")
     }
