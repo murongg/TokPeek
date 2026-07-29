@@ -26,6 +26,13 @@ struct ClientBreakdown: View {
             } else {
                 HStack(alignment: .center, spacing: 16) {
                     donutChart(layout)
+                        // The tooltip extends into the legend's bounds, so the
+                        // chart's entire sibling layer must rise above it.
+                        .zIndex(
+                            ClientBreakdownLayout.chartLayer(
+                                isTooltipVisible: hoveredSliceID != nil
+                            )
+                        )
 
                     VStack(spacing: 8) {
                         ForEach(
@@ -50,6 +57,7 @@ struct ClientBreakdown: View {
                             }
                         }
                     }
+                    .zIndex(ClientBreakdownLayout.legendLayer)
                 }
             }
         }

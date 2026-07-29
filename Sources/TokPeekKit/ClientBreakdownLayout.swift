@@ -14,8 +14,16 @@ public struct ClientUsageSlice: Identifiable, Sendable, Equatable {
 }
 
 public struct ClientBreakdownLayout: Sendable, Equatable {
+    public static let legendLayer = 0.0
+
     public let slices: [ClientUsageSlice]
     public let totalTokens: Int64
+
+    public static func chartLayer(
+        isTooltipVisible: Bool
+    ) -> Double {
+        isTooltipVisible ? legendLayer + 1 : legendLayer
+    }
 
     public init(
         summaries: [ClientUsageSummary]

@@ -47,6 +47,20 @@ func clientBreakdownGroupsLongTail() throws {
     #expect(layout.slice(atFraction: 1) == nil)
 }
 
+@Test("Client tooltip chart is raised above its legend while visible")
+func clientTooltipChartRisesAboveLegend() {
+    #expect(
+        ClientBreakdownLayout.chartLayer(
+            isTooltipVisible: false
+        ) == ClientBreakdownLayout.legendLayer
+    )
+    #expect(
+        ClientBreakdownLayout.chartLayer(
+            isTooltipVisible: true
+        ) > ClientBreakdownLayout.legendLayer
+    )
+}
+
 private func clientSummary(
     _ client: String,
     tokens: Int64,
