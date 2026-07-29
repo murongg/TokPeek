@@ -51,7 +51,7 @@ func filtersReportByModel() {
     #expect(report.summary.totalCost == 0.7)
     #expect(report.summary.totalDays == 2)
     #expect(report.summary.activeDays == 2)
-    #expect(report.summary.averagePerDay == 0.35)
+    #expect(report.summary.averagePerDay == 350)
     #expect(report.summary.maxCostInSingleDay == 0.5)
     #expect(
         report.summary.clients
@@ -77,6 +77,84 @@ func filtersReportByModel() {
             .flatMap(\.clients)
             .map(\.modelId)
             == ["mock-model-beta", "mock-model-beta"]
+    )
+}
+
+@Test("Client filtering rebuilds daily, hourly, and ranking aggregates")
+func filtersReportByClient() {
+    let report = modelRankingReport().filtered(
+        client: "mock-client-beta"
+    )
+
+    #expect(report.summary.totalTokens == 400)
+    #expect(report.summary.totalCost == 0.4)
+    #expect(report.summary.activeDays == 1)
+    #expect(report.summary.clients == ["mock-client-beta"])
+    #expect(report.summary.models == ["mock-model-alpha"])
+    #expect(report.contributions.map(\.totals.tokens) == [400, 0])
+    #expect(report.hourlyContributions.map(\.totals.tokens) == [400, 0])
+    #expect(report.clientSummaries.map(\.client) == ["mock-client-beta"])
+    #expect(report.modelSummaries.map(\.modelId) == ["mock-model-alpha"])
+}
+
+@Test("Usage comparison reports increases, decreases, and new activity")
+func comparesUsagePeriods() {
+    let current = comparisonReport(tokens: 1_500, cost: 0.75)
+    let previous = comparisonReport(tokens: 1_000, cost: 1.00)
+
+    let comparison = current.compared(to: previous)
+
+    #expect(comparison.tokens.direction == .increase)
+    #expect(comparison.tokens.fraction == 0.5)
+    #expect(comparison.cost.direction == .decrease)
+    #expect(comparison.cost.fraction == -0.25)
+    #expect(UsageFormatting.trendText(comparison.tokens) == "↑ 50%")
+    #expect(UsageFormatting.trendText(comparison.cost) == "↓ 25%")
+
+    let newUsage = current.compared(
+        to: comparisonReport(tokens: 0, cost: 0)
+    )
+    #expect(newUsage.tokens.direction == .newActivity)
+    #expect(newUsage.tokens.fraction == nil)
+    #expect(UsageFormatting.trendText(newUsage.tokens) == "↑ New")
+}
+
+@Test("Menu bar summaries append compact trend symbols when available")
+func menuBarSummaryIncludesTrends() {
+    let current = comparisonReport(tokens: 1_500, cost: 0.75)
+    let previous = comparisonReport(tokens: 1_000, cost: 1.00)
+    let comparison = current.compared(to: previous)
+
+    let summary = UsageFormatting.menuBarSummary(
+        for: current,
+        comparison: comparison
+    )
+
+    #expect(summary.tokens == "1.5K")
+    #expect(summary.cost == "$0.75")
+    #expect(summary.tokenTrendSymbol == "↑")
+    #expect(summary.costTrendSymbol == "↓")
+}
+
+@Test("Dashboard filter count reflects only active selections")
+func dashboardFilterCountReflectsSelections() {
+    #expect(
+        UsageFormatting.activeFilterCount(
+            client: nil,
+            model: nil
+        ) == 0
+    )
+    #expect(
+        UsageFormatting.activeFilterCount(
+            client: "mock-client",
+            model: nil
+        ) == 1
+    )
+    #expect(
+        UsageFormatting.activeFilterCount(
+            client: "mock-client",
+            model: "mock-model"
+        ) == 2
     )
 }
 
@@ -256,6 +334,33 @@ private func modelRankingReport() -> UsageReport {
                 ]
             ),
         ]
+    )
+}
+
+private func comparisonReport(
+    tokens: Int64,
+    cost: Double
+) -> UsageReport {
+    UsageReport(
+        meta: ReportMetadata(
+            generatedAt: "2026-07-27T10:00:00Z",
+            version: "4.7.0",
+            dateRangeStart: "2026-07-27",
+            dateRangeEnd: "2026-07-27",
+            processingTimeMs: 1
+        ),
+        summary: UsageSummary(
+            totalTokens: tokens,
+            totalCost: cost,
+            totalDays: 1,
+            activeDays: tokens > 0 ? 1 : 0,
+            averagePerDay: Double(tokens),
+            maxCostInSingleDay: cost,
+            clients: [],
+            models: []
+        ),
+        years: [],
+        contributions: []
     )
 }
 

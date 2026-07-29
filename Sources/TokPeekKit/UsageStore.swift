@@ -8,6 +8,7 @@ public protocol UsageLoading: Sendable {
 @MainActor
 public final class UsageStore: ObservableObject {
     @Published public private(set) var report: UsageReport?
+    @Published public private(set) var comparisonReport: UsageReport?
     @Published public private(set) var modelCatalog: [String] = []
     @Published public private(set) var isLoading = false
     @Published public private(set) var errorMessage: String?
@@ -15,10 +16,24 @@ public final class UsageStore: ObservableObject {
 
     var loader: any UsageLoading
     public var request: UsageRequest
+    public var comparisonRequest: UsageRequest? {
+        didSet {
+            guard comparisonRequest != oldValue else {
+                return
+            }
+            comparisonGeneration &+= 1
+            if comparisonRequest != lastSuccessfulComparisonRequest {
+                comparisonReport = nil
+            }
+        }
+    }
     private var refreshGeneration: UInt64 = 0
+    private var comparisonGeneration: UInt64 = 0
     private var modelCatalogGeneration: UInt64 = 0
     private var lastSuccessfulRequest: UsageRequest?
     private var lastSuccessfulRefreshAt: Date?
+    private var lastSuccessfulComparisonRequest: UsageRequest?
+    private var lastSuccessfulComparisonRefreshAt: Date?
     private var lastSuccessfulModelCatalogRequest: UsageRequest?
     private var lastSuccessfulModelCatalogRefreshAt: Date?
 
@@ -36,6 +51,7 @@ public final class UsageStore: ObservableObject {
     ) {
         self.loader = loader
         self.request = request
+        comparisonRequest = nil
     }
 
     public func refreshIfNeeded(
@@ -80,6 +96,44 @@ public final class UsageStore: ObservableObject {
                 return
             }
             errorMessage = error.localizedDescription
+        }
+    }
+
+    public func refreshComparisonIfNeeded(
+        maxAge: TimeInterval? = nil,
+        now: Date = Date()
+    ) async {
+        guard let comparisonRequest else {
+            comparisonReport = nil
+            lastSuccessfulComparisonRequest = nil
+            lastSuccessfulComparisonRefreshAt = nil
+            return
+        }
+        guard shouldRefreshComparison(
+            request: comparisonRequest,
+            maxAge: maxAge,
+            now: now
+        ) else {
+            return
+        }
+
+        comparisonGeneration &+= 1
+        let generation = comparisonGeneration
+        let activeLoader = loader
+
+        do {
+            let loadedReport = try await activeLoader.loadReport(
+                request: comparisonRequest
+            )
+            guard generation == comparisonGeneration else {
+                return
+            }
+            comparisonReport = loadedReport
+            lastSuccessfulComparisonRequest = comparisonRequest
+            lastSuccessfulComparisonRefreshAt = now
+        } catch {
+            // Comparison is supplementary; the current report remains useful
+            // when an older range cannot be loaded.
         }
     }
 
@@ -158,6 +212,28 @@ public final class UsageStore: ObservableObject {
 
         return now.timeIntervalSince(
             lastSuccessfulModelCatalogRefreshAt
+        ) >= maxAge
+    }
+
+    private func shouldRefreshComparison(
+        request: UsageRequest,
+        maxAge: TimeInterval?,
+        now: Date
+    ) -> Bool {
+        guard
+            comparisonReport != nil,
+            lastSuccessfulComparisonRequest == request,
+            let lastSuccessfulComparisonRefreshAt
+        else {
+            return true
+        }
+
+        guard let maxAge else {
+            return false
+        }
+
+        return now.timeIntervalSince(
+            lastSuccessfulComparisonRefreshAt
         ) >= maxAge
     }
 }

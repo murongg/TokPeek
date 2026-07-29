@@ -56,18 +56,26 @@ struct TokPeekApp: App {
     }
 
     private var menuBarRefreshTaskID: String {
-        [
+        let request = settings.values.usageRequest()
+        return [
             settings.usagePeriod.rawValue,
             String(settings.refreshFrequency.rawValue),
             String(settings.useEnvironmentRoots),
+            request.since ?? "",
+            request.until ?? "",
+            request.startTimeMs.map(String.init) ?? "",
+            request.endTimeMs.map(String.init) ?? "",
         ].joined(separator: "|")
     }
 
     private func refreshMenuBarUsage() async {
-        store.request = settings.values.usageRequest()
+        let request = settings.values.usageRequest()
+        store.request = request
+        store.comparisonRequest = request.previousPeriod()
         await store.refreshIfNeeded(
             maxAge: settings.refreshFrequency.seconds
         )
+        await store.refreshComparisonIfNeeded()
     }
 }
 
@@ -77,9 +85,15 @@ private struct MenuBarStatusLabel: View {
 
     @ViewBuilder
     var body: some View {
+        let comparison = store.report.flatMap { current in
+            store.comparisonReport.map {
+                current.compared(to: $0)
+            }
+        }
         let presentation = UsageFormatting.menuBarPresentation(
             for: settings.menuBarMetric,
-            report: store.report
+            report: store.report,
+            comparison: comparison
         )
 
         switch presentation {
@@ -179,8 +193,14 @@ private struct MenuBarSummaryArtwork: View {
             }
 
             VStack(alignment: .leading, spacing: -3.5) {
-                Text(summary?.cost ?? "$—")
-                Text(summary?.tokens ?? "—")
+                Text(
+                    (summary?.cost ?? "$—")
+                        + (summary?.costTrendSymbol ?? "")
+                )
+                Text(
+                    (summary?.tokens ?? "—")
+                        + (summary?.tokenTrendSymbol ?? "")
+                )
             }
             .font(
                 .system(

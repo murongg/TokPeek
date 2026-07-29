@@ -11,6 +11,7 @@ struct DashboardView: View {
     @ObservedObject var updates: UpdateCoordinator
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @Environment(\.openSettings) private var openSettings
+    @State private var selectedClientID: String?
     @State private var selectedModelID: String?
 
     var body: some View {
@@ -62,6 +63,15 @@ struct DashboardView: View {
             }
             self.selectedModelID = nil
         }
+        .onChange(of: availableClientIDs) {
+            guard
+                let selectedClientID,
+                !availableClientIDs.contains(selectedClientID)
+            else {
+                return
+            }
+            self.selectedClientID = nil
+        }
     }
 
     @ViewBuilder
@@ -70,9 +80,16 @@ struct DashboardView: View {
             LoadingView()
                 .transition(.opacity)
         } else if let report = store.report {
+            let filteredReport = filteredReport(report)
+            let comparison = store.comparisonReport.map {
+                filteredReport.compared(
+                    to: self.filteredReport($0)
+                )
+            }
             VStack(alignment: .leading, spacing: 16) {
                 reportContent(
-                    filteredReport(report)
+                    filteredReport,
+                    comparison: comparison
                 )
             }
             .transition(.opacity)
@@ -122,97 +139,15 @@ struct DashboardView: View {
         }
     }
 
-    private var periodPicker: some View {
-        Picker("Usage period", selection: $settings.usagePeriod) {
-            ForEach(UsagePeriod.allCases) { period in
-                Text(period.shortTitle)
-                    .tag(period)
-            }
-        }
-        .pickerStyle(.segmented)
-        .labelsHidden()
-        .frame(width: 288)
-        .padding(.leading, 16)
-        .accessibilityLabel("Usage period")
-    }
-
     private var filterBar: some View {
-        HStack(spacing: 12) {
-            periodPicker
-
-            Spacer(minLength: 8)
-
-            modelFilter
-        }
-    }
-
-    private var modelFilter: some View {
-        Menu {
-            modelFilterButton(
-                title: Localization.string("All models"),
-                id: nil
-            )
-
-            if !availableModels.isEmpty {
-                Divider()
-            }
-
-            ForEach(availableModels, id: \.self) { model in
-                modelFilterButton(
-                    title: modelDisplayName(model),
-                    id: model
-                )
-            }
-        } label: {
-            HStack(spacing: 6) {
-                Image(systemName: "line.3.horizontal.decrease")
-                    .font(.system(size: 10, weight: .semibold))
-
-                Text(selectedModelTitle)
-                    .lineLimit(1)
-                    .truncationMode(.middle)
-
-                Spacer(minLength: 2)
-
-                Image(systemName: "chevron.down")
-                    .font(.system(size: 8, weight: .semibold))
-                    .foregroundStyle(.secondary)
-            }
-            .font(.caption.weight(.medium))
-            .padding(.horizontal, 8)
-            .frame(width: 118, height: 24, alignment: .leading)
-            .background(
-                TokPeekTheme.surface,
-                in: RoundedRectangle(cornerRadius: 8)
-            )
-        }
-        .menuStyle(.borderlessButton)
-        .menuIndicator(.hidden)
-        .disabled(store.report == nil)
-        .help(modelFilterHelp)
-        .accessibilityLabel("Filter by model")
-        .accessibilityValue(selectedModelTitle)
-    }
-
-    private func modelFilterButton(
-        title: String,
-        id: String?
-    ) -> some View {
-        Button {
-            withAnimation(
-                reduceMotion ? nil : .easeOut(duration: 0.18)
-            ) {
-                selectedModelID = id
-            }
-        } label: {
-            HStack {
-                Text(title)
-
-                if selectedModelID == id {
-                    Image(systemName: "checkmark")
-                }
-            }
-        }
+        UsageFilterBar(
+            settings: settings,
+            clients: availableClients,
+            models: availableModels,
+            selectedClientID: $selectedClientID,
+            selectedModelID: $selectedModelID,
+            isEnabled: store.report != nil
+        )
     }
 
     private var availableModels: [String] {
@@ -230,6 +165,26 @@ struct DashboardView: View {
         availableModels
     }
 
+    private var availableClients: [String] {
+        store.report?.summary.clients.sorted {
+            $0.localizedStandardCompare($1) == .orderedAscending
+        } ?? []
+    }
+
+    private var availableClientIDs: [String] {
+        availableClients
+    }
+
+    private var selectedClient: String? {
+        guard
+            let selectedClientID,
+            availableClients.contains(selectedClientID)
+        else {
+            return nil
+        }
+        return selectedClientID
+    }
+
     private var selectedModel: String? {
         guard
             let selectedModelID,
@@ -240,41 +195,32 @@ struct DashboardView: View {
         return selectedModelID
     }
 
-    private var selectedModelTitle: String {
-        selectedModel.map(modelDisplayName)
-            ?? Localization.string("All models")
-    }
-
-    private var modelFilterHelp: String {
-        let filterLabel = Localization.string("Filter by model")
-        guard let selectedModel else {
-            return filterLabel
-        }
-        return "\(filterLabel): \(modelDisplayName(selectedModel))"
-    }
-
-    private func modelDisplayName(
-        _ model: String
-    ) -> String {
-        model.isEmpty
-            ? Localization.string("Unknown model")
-            : model
-    }
-
     private func filteredReport(
         _ report: UsageReport
     ) -> UsageReport {
-        guard let selectedModel else {
-            return report
+        var filteredReport = report
+        if let selectedClient {
+            filteredReport = filteredReport.filtered(
+                client: selectedClient
+            )
         }
-        return report.filtered(
-            modelId: selectedModel
-        )
+        if let selectedModel {
+            filteredReport = filteredReport.filtered(
+                modelId: selectedModel
+            )
+        }
+        return filteredReport
     }
 
     @ViewBuilder
-    private func reportContent(_ report: UsageReport) -> some View {
-        UsageOverview(report: report)
+    private func reportContent(
+        _ report: UsageReport,
+        comparison: UsageComparison?
+    ) -> some View {
+        UsageOverview(
+            report: report,
+            comparison: comparison
+        )
         UsageChart(
             report: report,
             period: settings.usagePeriod
@@ -291,17 +237,6 @@ struct DashboardView: View {
                 Label("Settings", systemImage: "gearshape")
             }
             .buttonStyle(.borderless)
-
-            Button {
-                updates.checkForUpdates()
-            } label: {
-                Label(
-                    "Check for Updates…",
-                    systemImage: "arrow.triangle.2.circlepath"
-                )
-            }
-            .buttonStyle(.borderless)
-            .disabled(!updates.canCheckForUpdates)
 
             Spacer()
 
@@ -322,10 +257,30 @@ struct DashboardView: View {
                 )
             }
 
-            Button("Quit") {
-                NSApplication.shared.terminate(nil)
+            Menu {
+                Button {
+                    updates.checkForUpdates()
+                } label: {
+                    Label(
+                        "Check for Updates…",
+                        systemImage: "arrow.triangle.2.circlepath"
+                    )
+                }
+                .disabled(!updates.canCheckForUpdates)
+
+                Divider()
+
+                Button("Quit") {
+                    NSApplication.shared.terminate(nil)
+                }
+            } label: {
+                Image(systemName: "ellipsis.circle")
+                    .frame(width: 20, height: 20)
             }
-            .buttonStyle(.borderless)
+            .menuStyle(.borderlessButton)
+            .menuIndicator(.hidden)
+            .help("More actions")
+            .accessibilityLabel("More actions")
         }
         .font(.caption)
     }
@@ -345,10 +300,15 @@ struct DashboardView: View {
     }
 
     private var refreshTaskID: String {
-        [
+        let request = settings.values.usageRequest()
+        return [
             settings.usagePeriod.rawValue,
             String(settings.refreshFrequency.rawValue),
             String(settings.useEnvironmentRoots),
+            request.since ?? "",
+            request.until ?? "",
+            request.startTimeMs.map(String.init) ?? "",
+            request.endTimeMs.map(String.init) ?? "",
         ].joined(separator: "|")
     }
 
@@ -362,15 +322,17 @@ struct DashboardView: View {
     }
 
     private func loadUsage() async {
-        store.request = settings.values.usageRequest()
+        configureRequests()
         await store.refresh()
+        await store.refreshComparisonIfNeeded()
     }
 
     private func refreshLoop() async {
-        store.request = settings.values.usageRequest()
+        configureRequests()
         await store.refreshIfNeeded(
             maxAge: settings.refreshFrequency.seconds
         )
+        await store.refreshComparisonIfNeeded()
         await store.refreshModelCatalogIfNeeded(
             maxAge: 300
         )
@@ -390,6 +352,385 @@ struct DashboardView: View {
                 maxAge: 300
             )
         }
+    }
+
+    private func configureRequests() {
+        let request = settings.values.usageRequest()
+        store.request = request
+        store.comparisonRequest = request.previousPeriod()
+    }
+}
+
+private struct UsageFilterBar: View {
+    @ObservedObject var settings: SettingsStore
+    let clients: [String]
+    let models: [String]
+    @Binding var selectedClientID: String?
+    @Binding var selectedModelID: String?
+    let isEnabled: Bool
+
+    @State private var showsCustomRange = false
+
+    var body: some View {
+        HStack(
+            spacing: CGFloat(
+                DashboardLayoutMetrics.filterSpacing
+            )
+        ) {
+            Picker(
+                "Usage period",
+                selection: $settings.usagePeriod
+            ) {
+                ForEach(UsagePeriod.presetCases) { period in
+                    Text(period.shortTitle)
+                        .tag(period)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .frame(
+                width: CGFloat(
+                    DashboardLayoutMetrics.periodPickerWidth
+                )
+            )
+            .padding(
+                .horizontal,
+                CGFloat(
+                    DashboardLayoutMetrics
+                        .segmentedControlHorizontalAllowance
+                )
+            )
+            .accessibilityLabel("Usage period")
+
+            Button {
+                showsCustomRange = true
+            } label: {
+                Image(systemName: "calendar")
+                    .frame(
+                        width: CGFloat(
+                            DashboardLayoutMetrics.calendarButtonWidth
+                        ),
+                        height: 24
+                    )
+                    .background(
+                        settings.usagePeriod == .custom
+                            ? Color.primary.opacity(0.14)
+                            : TokPeekTheme.surface,
+                        in: RoundedRectangle(cornerRadius: 8)
+                    )
+            }
+            .buttonStyle(.borderless)
+            .help(customRangeTitle)
+            .accessibilityLabel("Custom range")
+            .accessibilityValue(customRangeTitle)
+            .popover(
+                isPresented: $showsCustomRange,
+                arrowEdge: .top
+            ) {
+                CustomRangePicker(
+                    range: settings.customDateRange
+                ) { range in
+                    settings.customDateRange = range
+                    settings.usagePeriod = .custom
+                    showsCustomRange = false
+                }
+            }
+
+            UsageFiltersMenu(
+                clients: clients,
+                models: models,
+                selectedClientID: $selectedClientID,
+                selectedModelID: $selectedModelID,
+                clientDisplayName: clientDisplayName,
+                modelDisplayName: modelDisplayName
+            )
+            .frame(
+                width: CGFloat(
+                    DashboardLayoutMetrics.filtersMenuWidth
+                )
+            )
+            .disabled(!isEnabled)
+        }
+    }
+
+    private var customRangeTitle: String {
+        let start = settings.customDateRange.start.formatted(
+            date: .abbreviated,
+            time: .omitted
+        )
+        let end = settings.customDateRange.end.formatted(
+            date: .abbreviated,
+            time: .omitted
+        )
+        return "\(start) – \(end)"
+    }
+
+    private func clientDisplayName(
+        _ client: String
+    ) -> String {
+        client
+            .replacingOccurrences(of: "-", with: " ")
+            .replacingOccurrences(of: "_", with: " ")
+            .capitalized
+    }
+
+    private func modelDisplayName(
+        _ model: String
+    ) -> String {
+        model.isEmpty
+            ? Localization.string("Unknown model")
+            : model
+    }
+}
+
+private struct UsageFiltersMenu: View {
+    let clients: [String]
+    let models: [String]
+    @Binding var selectedClientID: String?
+    @Binding var selectedModelID: String?
+    let clientDisplayName: (String) -> String
+    let modelDisplayName: (String) -> String
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    var body: some View {
+        Menu {
+            Menu {
+                filterOption(
+                    title: Localization.string("All clients"),
+                    id: nil,
+                    selection: $selectedClientID
+                )
+
+                if !clients.isEmpty {
+                    Divider()
+                }
+
+                ForEach(clients, id: \.self) { client in
+                    filterOption(
+                        title: clientDisplayName(client),
+                        id: client,
+                        selection: $selectedClientID
+                    )
+                }
+            } label: {
+                Label(
+                    selectedClientTitle,
+                    systemImage: "desktopcomputer"
+                )
+            }
+
+            Menu {
+                filterOption(
+                    title: Localization.string("All models"),
+                    id: nil,
+                    selection: $selectedModelID
+                )
+
+                if !models.isEmpty {
+                    Divider()
+                }
+
+                ForEach(models, id: \.self) { model in
+                    filterOption(
+                        title: modelDisplayName(model),
+                        id: model,
+                        selection: $selectedModelID
+                    )
+                }
+            } label: {
+                Label(selectedModelTitle, systemImage: "cpu")
+            }
+
+            if activeFilterCount > 0 {
+                Divider()
+
+                Button {
+                    withFilterAnimation {
+                        selectedClientID = nil
+                        selectedModelID = nil
+                    }
+                } label: {
+                    Label(
+                        "Clear filters",
+                        systemImage: "xmark.circle"
+                    )
+                }
+            }
+        } label: {
+            Rectangle()
+                .fill(Color.primary.opacity(0.001))
+                .contentShape(Rectangle())
+                .frame(
+                    width: CGFloat(
+                        DashboardLayoutMetrics.filtersMenuLabelWidth
+                    ),
+                    height: 24
+                )
+        }
+        .menuStyle(.borderlessButton)
+        .menuIndicator(.hidden)
+        .frame(
+            width: CGFloat(
+                DashboardLayoutMetrics.filtersMenuWidth
+            ),
+            height: 24
+        )
+        // Native Menu keeps space for its indicator even when hidden. Drawing
+        // the visual label as an overlay makes its trailing edge follow our
+        // dashboard grid while the transparent Menu retains native behavior.
+        .overlay(alignment: .trailing) {
+            filtersMenuLabel
+                .allowsHitTesting(false)
+        }
+        .help(filterHelp)
+        .accessibilityLabel("Filters")
+        .accessibilityValue(filterHelp)
+    }
+
+    private var filtersMenuLabel: some View {
+        HStack(spacing: 6) {
+            Image(systemName: "line.3.horizontal.decrease")
+                .font(.system(size: 10, weight: .semibold))
+
+            if activeFilterCount == 0 {
+                Text("Filters")
+            } else {
+                Text("\(activeFilterCount)")
+                    .font(.caption2.monospacedDigit().weight(.semibold))
+            }
+        }
+        .font(.caption.weight(.medium))
+        .padding(
+            EdgeInsets(
+                top: 0,
+                leading: CGFloat(
+                    DashboardLayoutMetrics
+                        .filtersMenuContentLeadingPadding
+                ),
+                bottom: 0,
+                trailing: CGFloat(
+                    DashboardLayoutMetrics
+                        .filtersMenuContentTrailingPadding
+                )
+            )
+        )
+        .frame(
+            width: CGFloat(
+                DashboardLayoutMetrics.filtersMenuLabelWidth
+            ),
+            alignment: .trailing
+        )
+        .frame(minHeight: 24)
+        .background(
+            TokPeekTheme.surface,
+            in: RoundedRectangle(cornerRadius: 8)
+        )
+    }
+
+    private var activeFilterCount: Int {
+        UsageFormatting.activeFilterCount(
+            client: selectedClientID,
+            model: selectedModelID
+        )
+    }
+
+    private var selectedClientTitle: String {
+        selectedClientID.map(clientDisplayName)
+            ?? Localization.string("All clients")
+    }
+
+    private var selectedModelTitle: String {
+        selectedModelID.map(modelDisplayName)
+            ?? Localization.string("All models")
+    }
+
+    private var filterHelp: String {
+        guard activeFilterCount > 0 else {
+            return Localization.string("Filters")
+        }
+        return [selectedClientID.map(clientDisplayName),
+                selectedModelID.map(modelDisplayName)]
+            .compactMap { $0 }
+            .joined(separator: ", ")
+    }
+
+    private func filterOption(
+        title: String,
+        id: String?,
+        selection: Binding<String?>
+    ) -> some View {
+        Button {
+            withFilterAnimation {
+                selection.wrappedValue = id
+            }
+        } label: {
+            HStack {
+                Text(title)
+
+                if selection.wrappedValue == id {
+                    Image(systemName: "checkmark")
+                }
+            }
+        }
+    }
+
+    private func withFilterAnimation(
+        _ update: () -> Void
+    ) {
+        withAnimation(
+            reduceMotion ? nil : .easeOut(duration: 0.18),
+            update
+        )
+    }
+}
+
+private struct CustomRangePicker: View {
+    @State private var start: Date
+    @State private var end: Date
+    let apply: (UsageDateRange) -> Void
+
+    init(
+        range: UsageDateRange,
+        apply: @escaping (UsageDateRange) -> Void
+    ) {
+        _start = State(initialValue: range.start)
+        _end = State(initialValue: range.end)
+        self.apply = apply
+    }
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 14) {
+            Text("Custom range")
+                .font(.headline)
+
+            DatePicker(
+                "From",
+                selection: $start,
+                displayedComponents: .date
+            )
+            DatePicker(
+                "To",
+                selection: $end,
+                displayedComponents: .date
+            )
+
+            HStack {
+                Spacer()
+
+                Button("Apply") {
+                    apply(
+                        UsageDateRange(
+                            start: start,
+                            end: end
+                        )
+                    )
+                }
+                .buttonStyle(.borderedProminent)
+                .tint(.primary)
+            }
+        }
+        .padding(16)
+        .frame(width: 280)
     }
 }
 

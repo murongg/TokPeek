@@ -12,6 +12,22 @@ public enum UsageChartGranularity: Sendable, Equatable {
     }
 }
 
+public enum DashboardLayoutMetrics {
+    public static let contentWidth = 448.0
+    public static let filterSpacing = 8.0
+    public static let periodPickerWidth = 300.0
+    public static let calendarButtonWidth = 30.0
+    public static let filtersMenuWidth = 74.0
+    public static let filtersMenuLabelWidth = filtersMenuWidth
+    public static let filtersMenuContentLeadingPadding = 8.0
+    public static let filtersMenuContentTrailingPadding = 0.0
+
+    // NSSegmentedControl draws beyond its SwiftUI alignment rect on macOS.
+    // Budget both overflow edges so adjacent controls start after the native
+    // drawing boundary instead of merely shifting the overlap to the right.
+    public static let segmentedControlHorizontalAllowance = 14.0
+}
+
 public struct UsageChartPoint: Identifiable, Sendable, Equatable {
     public let id: String
     public let date: Date
@@ -159,7 +175,7 @@ public struct UsageChartLayout: Sendable, Equatable {
                     to: alignedLastHour
                 ) ?? alignedLastHour
 
-        case .week, .month, .quarter, .all:
+        case .week, .month, .quarter, .all, .custom:
             preconditionFailure(
                 "Daily periods cannot create an hourly chart"
             )

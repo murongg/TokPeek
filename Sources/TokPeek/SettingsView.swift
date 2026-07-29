@@ -108,6 +108,12 @@ struct SettingsView: View {
                     }
                 }
 
+                if settings.usagePeriod == .custom {
+                    Text(customRangeDescription)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+
                 Toggle(
                     "Include paths from Tokscale environment variables",
                     isOn: $settings.useEnvironmentRoots
@@ -176,5 +182,17 @@ struct SettingsView: View {
         Bundle.main.object(
             forInfoDictionaryKey: "CFBundleShortVersionString"
         ) as? String ?? "0.1.0"
+    }
+
+    private var customRangeDescription: String {
+        let start = settings.customDateRange.start.formatted(
+            date: .abbreviated,
+            time: .omitted
+        )
+        let end = settings.customDateRange.end.formatted(
+            date: .abbreviated,
+            time: .omitted
+        )
+        return "\(start) – \(end)"
     }
 }

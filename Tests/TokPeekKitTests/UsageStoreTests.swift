@@ -198,6 +198,51 @@ func modelCatalogLoadsAllTimeModels() async throws {
     #expect(requests[1].useEnvironmentRoots)
 }
 
+@MainActor
+@Test("Comparison reports load once per distinct previous-period request")
+func comparisonReportCachesByRequest() async throws {
+    let loader = CountingLoader(report: try fixtureReport(totalTokens: 450))
+    let store = UsageStore(loader: loader)
+    store.comparisonRequest = UsageRequest(
+        since: "2026-07-20",
+        until: "2026-07-26"
+    )
+
+    await store.refreshComparisonIfNeeded()
+    await store.refreshComparisonIfNeeded()
+
+    #expect(store.comparisonReport?.summary.totalTokens == 450)
+    #expect(await loader.loadCount == 1)
+
+    store.comparisonRequest = UsageRequest(
+        since: "2026-07-13",
+        until: "2026-07-19"
+    )
+    await store.refreshComparisonIfNeeded()
+
+    #expect(await loader.loadCount == 2)
+}
+
+@MainActor
+@Test("Removing the comparison request clears stale comparison data")
+func nilComparisonRequestClearsReport() async throws {
+    let store = UsageStore(
+        loader: StubLoader(
+            report: try fixtureReport(totalTokens: 450)
+        )
+    )
+    store.comparisonRequest = UsageRequest(
+        since: "2026-07-20",
+        until: "2026-07-26"
+    )
+    await store.refreshComparisonIfNeeded()
+
+    store.comparisonRequest = nil
+    await store.refreshComparisonIfNeeded()
+
+    #expect(store.comparisonReport == nil)
+}
+
 private struct StubLoader: UsageLoading {
     let report: UsageReport
 

@@ -3,6 +3,20 @@ import Foundation
 public struct MenuBarSummary: Sendable, Equatable {
     public let tokens: String
     public let cost: String
+    public let tokenTrendSymbol: String?
+    public let costTrendSymbol: String?
+
+    public init(
+        tokens: String,
+        cost: String,
+        tokenTrendSymbol: String? = nil,
+        costTrendSymbol: String? = nil
+    ) {
+        self.tokens = tokens
+        self.cost = cost
+        self.tokenTrendSymbol = tokenTrendSymbol
+        self.costTrendSymbol = costTrendSymbol
+    }
 
     public var stackedText: String {
         "\(cost)\n\(tokens)"
@@ -41,6 +55,13 @@ public enum UsageTooltipAppearance {
 }
 
 public enum UsageFormatting {
+    public static func activeFilterCount(
+        client: String?,
+        model: String?
+    ) -> Int {
+        [client, model].compactMap { $0 }.count
+    }
+
     public static func compactTokens(_ value: Int64) -> String {
         let magnitude = abs(value)
 
@@ -106,35 +127,101 @@ public enum UsageFormatting {
     }
 
     public static func menuBarSummary(
-        for report: UsageReport
+        for report: UsageReport,
+        comparison: UsageComparison? = nil
     ) -> MenuBarSummary {
         MenuBarSummary(
             tokens: compactTokens(report.summary.totalTokens),
-            cost: menuBarCost(report.summary.totalCost)
+            cost: menuBarCost(report.summary.totalCost),
+            tokenTrendSymbol: comparison.flatMap {
+                trendSymbol($0.tokens)
+            },
+            costTrendSymbol: comparison.flatMap {
+                trendSymbol($0.cost)
+            }
         )
     }
 
     public static func menuBarPresentation(
         for metric: MenuBarMetric,
-        report: UsageReport?
+        report: UsageReport?,
+        comparison: UsageComparison? = nil
     ) -> MenuBarPresentation {
         switch metric {
         case .summary:
-            .summary(report.map(menuBarSummary(for:)))
+            .summary(
+                report.map {
+                    menuBarSummary(
+                        for: $0,
+                        comparison: comparison
+                    )
+                }
+            )
         case .tokens:
             .tokens(
                 report.flatMap {
-                    menuBarTitle(for: .tokens, report: $0)
+                    menuBarTitle(for: .tokens, report: $0).map {
+                        $0 + (
+                            comparison.flatMap {
+                                trendSymbol($0.tokens)
+                            } ?? ""
+                        )
+                    }
                 }
             )
         case .cost:
             .cost(
                 report.flatMap {
-                    menuBarTitle(for: .cost, report: $0)
+                    menuBarTitle(for: .cost, report: $0).map {
+                        $0 + (
+                            comparison.flatMap {
+                                trendSymbol($0.cost)
+                            } ?? ""
+                        )
+                    }
                 }
             )
         case .iconOnly:
             .iconOnly
+        }
+    }
+
+    public static func trendText(
+        _ trend: UsageTrend
+    ) -> String {
+        switch trend.direction {
+        case .newActivity:
+            return "↑ \(Localization.string("New"))"
+        case .unchanged:
+            return "→ 0%"
+        case .increase, .decrease:
+            let symbol = trend.direction == .increase ? "↑" : "↓"
+            let percentage = abs(trend.fraction ?? 0) * 100
+            let value: String
+            if percentage > 0 && percentage < 1 {
+                value = String(
+                    format: "%.1f",
+                    locale: Locale(identifier: "en_US_POSIX"),
+                    percentage
+                )
+            } else {
+                value = String(
+                    format: "%.0f",
+                    locale: Locale(identifier: "en_US_POSIX"),
+                    percentage
+                )
+            }
+            return "\(symbol) \(value)%"
+        }
+    }
+
+    public static func trendSymbol(
+        _ trend: UsageTrend
+    ) -> String? {
+        switch trend.direction {
+        case .increase, .newActivity: "↑"
+        case .decrease: "↓"
+        case .unchanged: nil
         }
     }
 

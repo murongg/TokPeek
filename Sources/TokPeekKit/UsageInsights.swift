@@ -35,6 +35,44 @@ public struct ModelUsageSummary: Identifiable, Sendable, Equatable {
     public let messages: Int
 }
 
+public enum UsageTrendDirection: Sendable, Equatable {
+    case increase
+    case decrease
+    case unchanged
+    case newActivity
+}
+
+public struct UsageTrend: Sendable, Equatable {
+    public let direction: UsageTrendDirection
+    public let fraction: Double?
+
+    fileprivate init(
+        current: Double,
+        previous: Double
+    ) {
+        if previous == 0 {
+            direction = current == 0 ? .unchanged : .newActivity
+            fraction = current == 0 ? 0 : nil
+            return
+        }
+
+        let change = (current - previous) / abs(previous)
+        fraction = change
+        if change > 0 {
+            direction = .increase
+        } else if change < 0 {
+            direction = .decrease
+        } else {
+            direction = .unchanged
+        }
+    }
+}
+
+public struct UsageComparison: Sendable, Equatable {
+    public let tokens: UsageTrend
+    public let cost: UsageTrend
+}
+
 public enum ModelRankingLayout {
     public static let columnCount = 2
     public static let maximumVisibleItems = 8
@@ -72,8 +110,35 @@ extension UsageReport {
     public func filtered(
         modelId: String
     ) -> UsageReport {
+        filtered { $0.modelId == modelId }
+    }
+
+    public func filtered(
+        client: String
+    ) -> UsageReport {
+        filtered { $0.client == client }
+    }
+
+    public func compared(
+        to previous: UsageReport
+    ) -> UsageComparison {
+        UsageComparison(
+            tokens: UsageTrend(
+                current: Double(summary.totalTokens),
+                previous: Double(previous.summary.totalTokens)
+            ),
+            cost: UsageTrend(
+                current: summary.totalCost,
+                previous: previous.summary.totalCost
+            )
+        )
+    }
+
+    private func filtered(
+        where includes: (ClientContribution) -> Bool
+    ) -> UsageReport {
         var filteredContributions = contributions.map { day in
-            let clients = day.clients.forModel(modelId)
+            let clients = day.clients.filter(includes)
             let tokenBreakdown = clients.combinedTokenBreakdown
 
             return DailyContribution(
@@ -82,7 +147,7 @@ extension UsageReport {
                 intensity: 0,
                 tokenBreakdown: tokenBreakdown,
                 clients: clients,
-                // Tokscale reports active time per day, not per model.
+                // Tokscale reports active time per day, not per client/model.
                 // Keeping it would incorrectly attribute the whole day.
                 activeTimeMs: nil
             )
@@ -121,7 +186,7 @@ extension UsageReport {
         }
 
         let filteredHourlyContributions = hourlyContributions.map { hour in
-            let clients = hour.clients.forModel(modelId)
+            let clients = hour.clients.filter(includes)
             return HourlyContribution(
                 hour: hour.hour,
                 totals: clients.combinedTotals,
@@ -199,7 +264,7 @@ extension UsageReport {
                 totalDays: filteredContributions.count,
                 activeDays: activeDays,
                 averagePerDay: activeDays > 0
-                    ? totalCost / Double(activeDays)
+                    ? Double(totalTokens) / Double(activeDays)
                     : 0,
                 maxCostInSingleDay: maxCost,
                 clients: clients,
@@ -320,12 +385,6 @@ extension UsageReport {
 }
 
 private extension Array where Element == ClientContribution {
-    func forModel(
-        _ modelId: String
-    ) -> [ClientContribution] {
-        filter { $0.modelId == modelId }
-    }
-
     var combinedTokenBreakdown: TokenBreakdown {
         reduce(
             TokenBreakdown(

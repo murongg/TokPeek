@@ -8,6 +8,7 @@ public enum UsagePeriod: String, CaseIterable, Codable, Hashable, Identifiable, 
     case month
     case quarter
     case all
+    case custom
 
     public var id: String { rawValue }
 
@@ -19,6 +20,7 @@ public enum UsagePeriod: String, CaseIterable, Codable, Hashable, Identifiable, 
         case .month: Localization.string("Last 30 days")
         case .quarter: Localization.string("Last 90 days")
         case .all: Localization.string("All time")
+        case .custom: Localization.string("Custom range")
         }
     }
 
@@ -30,6 +32,7 @@ public enum UsagePeriod: String, CaseIterable, Codable, Hashable, Identifiable, 
         case .month: Localization.string("30D")
         case .quarter: Localization.string("90D")
         case .all: Localization.string("All")
+        case .custom: Localization.string("Custom")
         }
     }
 
@@ -40,12 +43,29 @@ public enum UsagePeriod: String, CaseIterable, Codable, Hashable, Identifiable, 
         case .week: 7
         case .month: 30
         case .quarter: 90
-        case .all: nil
+        case .all, .custom: nil
         }
     }
 
     public var usesHourlyChart: Bool {
         self == .today || self == .last24Hours
+    }
+
+    public static var presetCases: [UsagePeriod] {
+        allCases.filter { $0 != .custom }
+    }
+}
+
+public struct UsageDateRange: Codable, Sendable, Equatable, Hashable {
+    public let start: Date
+    public let end: Date
+
+    public init(
+        start: Date,
+        end: Date
+    ) {
+        self.start = min(start, end)
+        self.end = max(start, end)
     }
 }
 
@@ -93,17 +113,20 @@ public struct SettingsValues: Sendable, Equatable, Hashable {
     public var refreshFrequency: RefreshFrequency
     public var menuBarMetric: MenuBarMetric
     public var useEnvironmentRoots: Bool
+    public var customDateRange: UsageDateRange?
 
     public init(
         usagePeriod: UsagePeriod,
         refreshFrequency: RefreshFrequency,
         menuBarMetric: MenuBarMetric,
-        useEnvironmentRoots: Bool
+        useEnvironmentRoots: Bool,
+        customDateRange: UsageDateRange? = nil
     ) {
         self.usagePeriod = usagePeriod
         self.refreshFrequency = refreshFrequency
         self.menuBarMetric = menuBarMetric
         self.useEnvironmentRoots = useEnvironmentRoots
+        self.customDateRange = customDateRange
     }
 
     public func usageRequest(
@@ -114,6 +137,26 @@ public struct SettingsValues: Sendable, Equatable, Hashable {
             return hourlyUsageRequest(
                 now: now,
                 calendar: calendar
+            )
+        }
+
+        if usagePeriod == .custom {
+            guard let customDateRange else {
+                return UsageRequest(
+                    useEnvironmentRoots: useEnvironmentRoots
+                )
+            }
+
+            return UsageRequest(
+                since: Self.dateString(
+                    customDateRange.start,
+                    calendar: calendar
+                ),
+                until: Self.dateString(
+                    customDateRange.end,
+                    calendar: calendar
+                ),
+                useEnvironmentRoots: useEnvironmentRoots
             )
         }
 
@@ -130,15 +173,11 @@ public struct SettingsValues: Sendable, Equatable, Hashable {
             to: end
         )
 
-        let formatter = DateFormatter()
-        formatter.calendar = calendar
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = calendar.timeZone
-        formatter.dateFormat = "yyyy-MM-dd"
-
         return UsageRequest(
-            since: start.map(formatter.string(from:)),
-            until: formatter.string(from: end),
+            since: start.map {
+                Self.dateString($0, calendar: calendar)
+            },
+            until: Self.dateString(end, calendar: calendar),
             useEnvironmentRoots: useEnvironmentRoots
         )
     }
@@ -179,17 +218,11 @@ public struct SettingsValues: Sendable, Equatable, Hashable {
                     to: currentHour
                 ) ?? now
 
-        case .week, .month, .quarter, .all:
+        case .week, .month, .quarter, .all, .custom:
             preconditionFailure(
                 "Only hourly periods can build an hourly request"
             )
         }
-
-        let formatter = DateFormatter()
-        formatter.calendar = calendar
-        formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = calendar.timeZone
-        formatter.dateFormat = "yyyy-MM-dd"
 
         // Tokscale's date filter is inclusive, while the timestamp interval is
         // half-open. Subtracting one millisecond keeps the coarse date filter
@@ -197,8 +230,8 @@ public struct SettingsValues: Sendable, Equatable, Hashable {
         let inclusiveEnd = end.addingTimeInterval(-0.001)
 
         return UsageRequest(
-            since: formatter.string(from: start),
-            until: formatter.string(from: inclusiveEnd),
+            since: Self.dateString(start, calendar: calendar),
+            until: Self.dateString(inclusiveEnd, calendar: calendar),
             hourly: true,
             startTimeMs: Self.milliseconds(since1970: start),
             endTimeMs: Self.milliseconds(since1970: end),
@@ -210,6 +243,18 @@ public struct SettingsValues: Sendable, Equatable, Hashable {
         since1970 date: Date
     ) -> Int64 {
         Int64(date.timeIntervalSince1970 * 1_000)
+    }
+
+    private static func dateString(
+        _ date: Date,
+        calendar: Calendar
+    ) -> String {
+        let formatter = DateFormatter()
+        formatter.calendar = calendar
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = calendar.timeZone
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: date)
     }
 }
 
@@ -243,12 +288,26 @@ public final class SettingsStore: ObservableObject {
         }
     }
 
+    @Published public var customDateRange: UsageDateRange {
+        didSet {
+            defaults.set(
+                customDateRange.start,
+                forKey: Key.customRangeStart
+            )
+            defaults.set(
+                customDateRange.end,
+                forKey: Key.customRangeEnd
+            )
+        }
+    }
+
     public var values: SettingsValues {
         SettingsValues(
             usagePeriod: usagePeriod,
             refreshFrequency: refreshFrequency,
             menuBarMetric: menuBarMetric,
-            useEnvironmentRoots: useEnvironmentRoots
+            useEnvironmentRoots: useEnvironmentRoots,
+            customDateRange: customDateRange
         )
     }
 
@@ -273,6 +332,25 @@ public final class SettingsStore: ObservableObject {
                 rawValue: defaults.string(forKey: Key.menuBarMetric) ?? ""
             ) ?? .summary
         useEnvironmentRoots = defaults.bool(forKey: Key.useEnvironmentRoots)
+
+        let calendar = Calendar.current
+        let fallbackEnd = calendar.startOfDay(for: Date())
+        let fallbackStart =
+            calendar.date(
+                byAdding: .day,
+                value: -6,
+                to: fallbackEnd
+            ) ?? fallbackEnd
+        customDateRange = UsageDateRange(
+            start:
+                defaults.object(
+                    forKey: Key.customRangeStart
+                ) as? Date ?? fallbackStart,
+            end:
+                defaults.object(
+                    forKey: Key.customRangeEnd
+                ) as? Date ?? fallbackEnd
+        )
     }
 }
 
@@ -281,4 +359,6 @@ private enum Key {
     static let refreshFrequency = "refreshFrequency"
     static let menuBarMetric = "menuBarMetric"
     static let useEnvironmentRoots = "useEnvironmentRoots"
+    static let customRangeStart = "customRangeStart"
+    static let customRangeEnd = "customRangeEnd"
 }

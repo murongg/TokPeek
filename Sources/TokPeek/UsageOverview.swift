@@ -6,38 +6,34 @@ import SwiftUI
 
 struct UsageOverview: View {
     let report: UsageReport
+    let comparison: UsageComparison?
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            HStack(alignment: .firstTextBaseline) {
-                HStack(alignment: .firstTextBaseline, spacing: 5) {
-                    Text(
-                        UsageFormatting.compactTokens(
-                            report.summary.totalTokens
-                        )
-                    )
-                    .font(.title2.monospacedDigit().weight(.semibold))
+            HStack(alignment: .top, spacing: 16) {
+                SummaryMetric(
+                    title: Localization.string("Total tokens"),
+                    value: UsageFormatting.compactTokens(
+                        report.summary.totalTokens
+                    ),
+                    trend: comparison?.tokens,
+                    prominence: .primary
+                )
 
-                    Text("tokens")
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
+                Divider()
+                    .frame(height: 48)
 
-                Spacer()
-
-                Text(UsageFormatting.cost(report.summary.totalCost))
-                    .font(.body.monospacedDigit().weight(.semibold))
-                    .accessibilityLabel(
-                        Localization.format(
-                            "Estimated cost %@",
-                            [
-                                UsageFormatting.cost(
-                                    report.summary.totalCost
-                                )
-                            ]
-                        )
-                    )
+                SummaryMetric(
+                    title: Localization.string("Estimated cost"),
+                    value: UsageFormatting.cost(
+                        report.summary.totalCost
+                    ),
+                    trend: comparison?.cost,
+                    prominence: .secondary
+                )
             }
+
+            Divider()
 
             HStack(spacing: 0) {
                 metadata(
@@ -87,6 +83,65 @@ struct UsageOverview: View {
                 .foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, alignment: .leading)
+    }
+}
+
+private struct SummaryMetric: View {
+    enum Prominence {
+        case primary
+        case secondary
+    }
+
+    let title: String
+    let value: String
+    let trend: UsageTrend?
+    let prominence: Prominence
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 3) {
+            HStack(alignment: .firstTextBaseline, spacing: 6) {
+                Text(title)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+
+                Spacer(minLength: 4)
+
+                if let trend {
+                    UsageTrendLabel(trend: trend)
+                }
+            }
+
+            Text(value)
+                .font(valueFont)
+                .monospacedDigit()
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .accessibilityElement(children: .combine)
+    }
+
+    private var valueFont: Font {
+        switch prominence {
+        case .primary:
+            .title2.weight(.semibold)
+        case .secondary:
+            .title3.weight(.semibold)
+        }
+    }
+}
+
+private struct UsageTrendLabel: View {
+    let trend: UsageTrend
+
+    var body: some View {
+        Text(UsageFormatting.trendText(trend))
+            .font(.caption2.monospacedDigit().weight(.medium))
+            .foregroundStyle(.secondary)
+            .accessibilityLabel(
+                Localization.string("Compared with previous period")
+            )
+            .accessibilityValue(UsageFormatting.trendText(trend))
     }
 }
 

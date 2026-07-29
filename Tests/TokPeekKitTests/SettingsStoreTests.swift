@@ -17,6 +17,10 @@ func settingsPersistAndReload() throws {
     settings.refreshFrequency = .fiveMinutes
     settings.menuBarMetric = .cost
     settings.useEnvironmentRoots = true
+    settings.customDateRange = UsageDateRange(
+        start: Date(timeIntervalSince1970: 1_780_000_000),
+        end: Date(timeIntervalSince1970: 1_780_604_800)
+    )
 
     let reloaded = SettingsStore(defaults: defaults)
 
@@ -24,6 +28,7 @@ func settingsPersistAndReload() throws {
     #expect(reloaded.refreshFrequency == .fiveMinutes)
     #expect(reloaded.menuBarMetric == .cost)
     #expect(reloaded.useEnvironmentRoots)
+    #expect(reloaded.customDateRange == settings.customDateRange)
 }
 
 @MainActor
@@ -157,4 +162,81 @@ func allTimeUsageLeavesDatesEmpty() {
 
     #expect(request.since == nil)
     #expect(request.until == nil)
+}
+
+@Test("Custom usage ranges normalize dates and preserve inclusive bounds")
+func customUsageRangeBuildsRequest() throws {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = try #require(TimeZone(secondsFromGMT: 0))
+    let later = try #require(
+        ISO8601DateFormatter().date(from: "2026-07-27T18:00:00Z")
+    )
+    let earlier = try #require(
+        ISO8601DateFormatter().date(from: "2026-07-05T08:00:00Z")
+    )
+    let values = SettingsValues(
+        usagePeriod: .custom,
+        refreshFrequency: .minute,
+        menuBarMetric: .summary,
+        useEnvironmentRoots: false,
+        customDateRange: UsageDateRange(
+            start: later,
+            end: earlier
+        )
+    )
+
+    let request = values.usageRequest(
+        now: later,
+        calendar: calendar
+    )
+
+    #expect(request.since == "2026-07-05")
+    #expect(request.until == "2026-07-27")
+    #expect(request.hourly == false)
+}
+
+@Test("A daily request compares against the immediately preceding equal range")
+func dailyRequestBuildsPreviousPeriod() throws {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = try #require(TimeZone(secondsFromGMT: 0))
+    let request = UsageRequest(
+        clients: ["mock-client"],
+        since: "2026-07-21",
+        until: "2026-07-27",
+        useEnvironmentRoots: true
+    )
+
+    let previous = try #require(
+        request.previousPeriod(calendar: calendar)
+    )
+
+    #expect(previous.clients == ["mock-client"])
+    #expect(previous.since == "2026-07-14")
+    #expect(previous.until == "2026-07-20")
+    #expect(previous.useEnvironmentRoots)
+}
+
+@Test("An hourly request shifts its exact half-open interval")
+func hourlyRequestBuildsPreviousPeriod() throws {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = try #require(TimeZone(secondsFromGMT: 0))
+    let start: Int64 = 1_785_283_200_000
+    let end = start + 24 * 60 * 60 * 1_000
+    let request = UsageRequest(
+        since: "2026-07-29",
+        until: "2026-07-29",
+        hourly: true,
+        startTimeMs: start,
+        endTimeMs: end
+    )
+
+    let previous = try #require(
+        request.previousPeriod(calendar: calendar)
+    )
+
+    #expect(previous.hourly)
+    #expect(previous.startTimeMs == start - 24 * 60 * 60 * 1_000)
+    #expect(previous.endTimeMs == start)
+    #expect(previous.since == "2026-07-28")
+    #expect(previous.until == "2026-07-28")
 }

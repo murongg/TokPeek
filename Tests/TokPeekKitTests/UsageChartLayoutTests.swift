@@ -5,6 +5,36 @@ import Testing
     @testable import TokPeekKit
 #endif
 
+@Test("Dashboard tabs compensate the native segmented control alignment inset")
+func dashboardTabsAlignWithContent() {
+    #expect(
+        DashboardLayoutMetrics.segmentedControlHorizontalAllowance
+            == 14
+    )
+    #expect(DashboardLayoutMetrics.periodPickerWidth == 300)
+    #expect(DashboardLayoutMetrics.filtersMenuWidth == 74)
+    #expect(
+        DashboardLayoutMetrics.filtersMenuLabelWidth
+            == DashboardLayoutMetrics.filtersMenuWidth
+    )
+    #expect(
+        DashboardLayoutMetrics.filtersMenuContentLeadingPadding
+            == 8
+    )
+    #expect(
+        DashboardLayoutMetrics.filtersMenuContentTrailingPadding
+            == 0
+    )
+    #expect(
+        DashboardLayoutMetrics.periodPickerWidth
+            + DashboardLayoutMetrics.segmentedControlHorizontalAllowance * 2
+            + DashboardLayoutMetrics.calendarButtonWidth
+            + DashboardLayoutMetrics.filtersMenuWidth
+            + DashboardLayoutMetrics.filterSpacing * 2
+            == DashboardLayoutMetrics.contentWidth
+    )
+}
+
 @Test("Thirty and ninety day charts use thin bars and sparse date labels")
 func chartLayoutAdaptsToLongerRanges() throws {
     let calendar = chartCalendar()
