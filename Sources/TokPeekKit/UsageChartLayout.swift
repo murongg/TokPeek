@@ -109,24 +109,47 @@ public struct UsageChartLayout: Sendable, Equatable {
             Double(visibleTotalTokens)
             / Double(resolvedDayCount)
 
-        let domainStart =
-            calendar.date(
-                byAdding: .day,
-                value: -1,
-                to: resolvedStart
-            ) ?? resolvedStart
-        // A day-binned BarMark spans midnight to midnight and is centered at
-        // noon. Give the one-day view an extra trailing day so that center
-        // lands in the middle of the plot instead of half a day to the right.
-        let trailingGutterDays = resolvedDayCount == 1 ? 2 : 1
-        let domainEnd =
-            calendar.date(
-                byAdding: .day,
-                value: trailingGutterDays,
-                to: resolvedEnd
-            ) ?? resolvedEnd
-        // A full-day gutter keeps the endpoint bars and centered date labels
-        // inside the plot instead of letting Charts truncate the final label.
+        let domainStart: Date
+        let domainEnd: Date
+        if resolvedDayCount == 1 {
+            // A day-binned BarMark spans midnight to midnight. Full outer
+            // gutters keep the single bar centered without making it too wide.
+            domainStart =
+                calendar.date(
+                    byAdding: .day,
+                    value: -1,
+                    to: resolvedStart
+                ) ?? resolvedStart
+            domainEnd =
+                calendar.date(
+                    byAdding: .day,
+                    value: 2,
+                    to: resolvedEnd
+                ) ?? resolvedEnd
+        } else {
+            let firstBarCenter = Self.midpoint(
+                ofDayContaining: resolvedStart,
+                calendar: calendar
+            )
+            let lastBarCenter = Self.midpoint(
+                ofDayContaining: resolvedEnd,
+                calendar: calendar
+            )
+            // Equal center-to-edge insets leave only half a day-bin empty
+            // beyond the first and last bars.
+            domainStart =
+                calendar.date(
+                    byAdding: .day,
+                    value: -1,
+                    to: firstBarCenter
+                ) ?? resolvedStart
+            domainEnd =
+                calendar.date(
+                    byAdding: .day,
+                    value: 1,
+                    to: lastBarCenter
+                ) ?? resolvedEnd
+        }
         chartDomain = domainStart...domainEnd
     }
 

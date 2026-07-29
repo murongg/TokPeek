@@ -103,6 +103,16 @@ func sevenDayChartUsesAutomaticBarWidth() throws {
             calendar: calendar
         ) == "2026-07-31"
     )
+
+    let firstPoint = try #require(layout.points.first)
+    let lastPoint = try #require(layout.points.last)
+    let leadingInset = layout.indicatorDate(for: firstPoint)
+        .timeIntervalSince(layout.chartDomain.lowerBound)
+    let trailingInset = layout.chartDomain.upperBound
+        .timeIntervalSince(layout.indicatorDate(for: lastPoint))
+
+    #expect(leadingInset == trailingInset)
+    #expect(leadingInset == 24 * 60 * 60)
 }
 
 @Test("Daily hover indicators anchor to the center of their bars")
