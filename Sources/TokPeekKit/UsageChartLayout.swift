@@ -132,17 +132,9 @@ public struct UsageChartLayout: Sendable, Equatable {
     public func indicatorDate(
         for point: UsageChartPoint
     ) -> Date {
-        guard
-            let interval = calendar.dateInterval(
-                of: .day,
-                for: point.date
-            )
-        else {
-            return point.date
-        }
-
-        return interval.start.addingTimeInterval(
-            interval.duration / 2
+        Self.midpoint(
+            ofDayContaining: point.date,
+            calendar: calendar
         )
     }
 
@@ -185,7 +177,12 @@ public struct UsageChartLayout: Sendable, Equatable {
             dayCount <= 7 ? 7 : 5
         )
         guard labelCount > 1 else {
-            return [startDate]
+            return [
+                midpoint(
+                    ofDayContaining: startDate,
+                    calendar: calendar
+                ),
+            ]
         }
 
         return (0..<labelCount).compactMap { index in
@@ -194,12 +191,34 @@ public struct UsageChartLayout: Sendable, Equatable {
                     * Double(index)
                     / Double(labelCount - 1)).rounded()
             )
-            return calendar.date(
+            guard let date = calendar.date(
                 byAdding: .day,
                 value: offset,
                 to: startDate
+            ) else {
+                return nil
+            }
+            return midpoint(
+                ofDayContaining: date,
+                calendar: calendar
             )
         }
+    }
+
+    private static func midpoint(
+        ofDayContaining date: Date,
+        calendar: Calendar
+    ) -> Date {
+        guard let interval = calendar.dateInterval(
+            of: .day,
+            for: date
+        ) else {
+            return date
+        }
+
+        return interval.start.addingTimeInterval(
+            interval.duration / 2
+        )
     }
 
     private static func inclusiveDayCount(

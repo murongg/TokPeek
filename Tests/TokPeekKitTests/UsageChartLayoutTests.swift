@@ -129,6 +129,7 @@ func dailyIndicatorAnchorsToBarCenter() throws {
     #expect(calendar.component(.hour, from: anchor) == 12)
     #expect(calendar.component(.minute, from: anchor) == 0)
     #expect(anchor == domainMidpoint)
+    #expect(layout.axisDates == [anchor])
 }
 
 @Test("All-time charts stay focused on the most recent ninety days")
