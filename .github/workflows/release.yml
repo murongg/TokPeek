@@ -15,7 +15,7 @@ concurrency:
 jobs:
   release:
     name: Build and publish
-    runs-on: macos-15
+    runs-on: macos-26
     timeout-minutes: 45
 
     steps:
@@ -23,6 +23,12 @@ jobs:
         uses: actions/checkout@v7
         with:
           fetch-depth: 0
+
+      - name: Select Xcode 26.2
+        run: |
+          sudo xcode-select --switch /Applications/Xcode_26.2.app
+          xcodebuild -version
+          test "$(xcrun --sdk macosx --show-sdk-version)" = "26.2"
 
       - name: Resolve release version
         id: version
