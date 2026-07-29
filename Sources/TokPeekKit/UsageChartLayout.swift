@@ -17,6 +17,7 @@ public struct UsageChartLayout: Sendable, Equatable {
     public let totalTokens: Int64
     public let averageTokens: Double
     public let chartDomain: ClosedRange<Date>
+    public var axisValueLabelAnchorX: Double { 0.5 }
 
     private let calendar: Calendar
 

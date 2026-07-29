@@ -126,7 +126,13 @@ struct UsageChart: View {
         .chartLegend(.hidden)
         .chartXAxis {
             AxisMarks(values: layout.axisDates) { value in
-                AxisValueLabel {
+                AxisValueLabel(
+                    centered: false,
+                    anchor: UnitPoint(
+                        x: layout.axisValueLabelAnchorX,
+                        y: 0
+                    )
+                ) {
                     if let date = value.as(Date.self) {
                         Text(
                             date,
