@@ -71,6 +71,13 @@ func filtersReportByModel() {
     )
     #expect(report.modelSummaries.map(\.modelId) == ["mock-model-beta"])
     #expect(report.years.map(\.totalTokens) == [700])
+    #expect(report.hourlyContributions.map(\.totals.tokens) == [200, 500])
+    #expect(
+        report.hourlyContributions
+            .flatMap(\.clients)
+            .map(\.modelId)
+            == ["mock-model-beta", "mock-model-beta"]
+    )
 }
 
 @Test("Menu bar metrics produce compact stable labels")
@@ -215,7 +222,65 @@ private func modelRankingReport() -> UsageReport {
                     )
                 ]
             ),
+        ],
+        hourlyContributions: [
+            modelRankingHour(
+                hour: "2026-07-26 09:00",
+                clients: [
+                    modelRankingContribution(
+                        client: "mock-client-alpha",
+                        model: "mock-model-beta",
+                        tokens: 200,
+                        cost: 0.2,
+                        messages: 2
+                    ),
+                    modelRankingContribution(
+                        client: "mock-client-beta",
+                        model: "mock-model-alpha",
+                        tokens: 400,
+                        cost: 0.4,
+                        messages: 4
+                    ),
+                ]
+            ),
+            modelRankingHour(
+                hour: "2026-07-27 10:00",
+                clients: [
+                    modelRankingContribution(
+                        client: "mock-client-gamma",
+                        model: "mock-model-beta",
+                        tokens: 500,
+                        cost: 0.5,
+                        messages: 5
+                    )
+                ]
+            ),
         ]
+    )
+}
+
+private func modelRankingHour(
+    hour: String,
+    clients: [ClientContribution]
+) -> HourlyContribution {
+    let tokens = clients.reduce(0) {
+        $0 + $1.tokens.totalTokens
+    }
+    return HourlyContribution(
+        hour: hour,
+        totals: DailyTotals(
+            tokens: tokens,
+            cost: clients.reduce(0) { $0 + $1.cost },
+            messages: clients.reduce(0) { $0 + $1.messages }
+        ),
+        tokenBreakdown: TokenBreakdown(
+            input: tokens,
+            output: 0,
+            cacheRead: 0,
+            cacheWrite: 0,
+            reasoning: 0
+        ),
+        clients: clients
     )
 }
 

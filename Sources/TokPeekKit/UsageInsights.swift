@@ -73,44 +73,12 @@ extension UsageReport {
         modelId: String
     ) -> UsageReport {
         var filteredContributions = contributions.map { day in
-            let clients = day.clients.filter {
-                $0.modelId == modelId
-            }
-            let tokenBreakdown = clients.reduce(
-                TokenBreakdown(
-                    input: 0,
-                    output: 0,
-                    cacheRead: 0,
-                    cacheWrite: 0,
-                    reasoning: 0
-                )
-            ) { result, contribution in
-                TokenBreakdown(
-                    input: result.input.saturatingAdd(
-                        contribution.tokens.input
-                    ),
-                    output: result.output.saturatingAdd(
-                        contribution.tokens.output
-                    ),
-                    cacheRead: result.cacheRead.saturatingAdd(
-                        contribution.tokens.cacheRead
-                    ),
-                    cacheWrite: result.cacheWrite.saturatingAdd(
-                        contribution.tokens.cacheWrite
-                    ),
-                    reasoning: result.reasoning.saturatingAdd(
-                        contribution.tokens.reasoning
-                    )
-                )
-            }
+            let clients = day.clients.forModel(modelId)
+            let tokenBreakdown = clients.combinedTokenBreakdown
 
             return DailyContribution(
                 date: day.date,
-                totals: DailyTotals(
-                    tokens: tokenBreakdown.totalTokens,
-                    cost: clients.reduce(0) { $0 + $1.cost },
-                    messages: clients.reduce(0) { $0 + $1.messages }
-                ),
+                totals: clients.combinedTotals,
                 intensity: 0,
                 tokenBreakdown: tokenBreakdown,
                 clients: clients,
@@ -150,6 +118,16 @@ extension UsageReport {
                     activeTimeMs: day.activeTimeMs
                 )
             }
+        }
+
+        let filteredHourlyContributions = hourlyContributions.map { hour in
+            let clients = hour.clients.forModel(modelId)
+            return HourlyContribution(
+                hour: hour.hour,
+                totals: clients.combinedTotals,
+                tokenBreakdown: clients.combinedTokenBreakdown,
+                clients: clients
+            )
         }
 
         let totalTokens = filteredContributions.reduce(Int64(0)) {
@@ -228,7 +206,8 @@ extension UsageReport {
                 models: models
             ),
             years: years,
-            contributions: filteredContributions
+            contributions: filteredContributions,
+            hourlyContributions: filteredHourlyContributions
         )
     }
 
@@ -337,6 +316,52 @@ extension UsageReport {
                 }
                 return $0.providerId < $1.providerId
             }
+    }
+}
+
+private extension Array where Element == ClientContribution {
+    func forModel(
+        _ modelId: String
+    ) -> [ClientContribution] {
+        filter { $0.modelId == modelId }
+    }
+
+    var combinedTokenBreakdown: TokenBreakdown {
+        reduce(
+            TokenBreakdown(
+                input: 0,
+                output: 0,
+                cacheRead: 0,
+                cacheWrite: 0,
+                reasoning: 0
+            )
+        ) { result, contribution in
+            TokenBreakdown(
+                input: result.input.saturatingAdd(
+                    contribution.tokens.input
+                ),
+                output: result.output.saturatingAdd(
+                    contribution.tokens.output
+                ),
+                cacheRead: result.cacheRead.saturatingAdd(
+                    contribution.tokens.cacheRead
+                ),
+                cacheWrite: result.cacheWrite.saturatingAdd(
+                    contribution.tokens.cacheWrite
+                ),
+                reasoning: result.reasoning.saturatingAdd(
+                    contribution.tokens.reasoning
+                )
+            )
+        }
+    }
+
+    var combinedTotals: DailyTotals {
+        DailyTotals(
+            tokens: combinedTokenBreakdown.totalTokens,
+            cost: reduce(0) { $0 + $1.cost },
+            messages: reduce(0) { $0 + $1.messages }
+        )
     }
 }
 

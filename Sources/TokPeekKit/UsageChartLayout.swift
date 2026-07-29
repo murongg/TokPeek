@@ -1,10 +1,21 @@
 import Foundation
 
-public struct UsageChartPoint: Identifiable, Sendable, Equatable {
-    public var id: String { contribution.id }
+public enum UsageChartGranularity: Sendable, Equatable {
+    case hourly
+    case daily
 
+    public var calendarComponent: Calendar.Component {
+        switch self {
+        case .hourly: .hour
+        case .daily: .day
+        }
+    }
+}
+
+public struct UsageChartPoint: Identifiable, Sendable, Equatable {
+    public let id: String
     public let date: Date
-    public let contribution: DailyContribution
+    public let totals: DailyTotals
 }
 
 public struct UsageChartLayout: Sendable, Equatable {
@@ -17,20 +28,206 @@ public struct UsageChartLayout: Sendable, Equatable {
     public let totalTokens: Int64
     public let averageTokens: Double
     public let chartDomain: ClosedRange<Date>
-    public var axisValueLabelAnchorX: Double { 0.5 }
+    public let granularity: UsageChartGranularity
 
     private let calendar: Calendar
 
     public init(
         report: UsageReport,
+        period: UsagePeriod = .week,
         calendar: Calendar = .current
     ) {
-        self.calendar = calendar
+        if period.usesHourlyChart {
+            self = Self.hourlyLayout(
+                report: report,
+                period: period,
+                calendar: calendar
+            )
+        } else {
+            self = Self.dailyLayout(
+                report: report,
+                calendar: calendar
+            )
+        }
+    }
 
+    public func indicatorDate(
+        for point: UsageChartPoint
+    ) -> Date {
+        switch granularity {
+        case .hourly:
+            return point.date.addingTimeInterval(30 * 60)
+        case .daily:
+            return Self.midpoint(
+                ofDayContaining: point.date,
+                calendar: calendar
+            )
+        }
+    }
+
+    public func point(nearestTo date: Date) -> UsageChartPoint? {
+        let maximumDistance: TimeInterval =
+            granularity == .hourly
+            ? 30 * 60
+            : 12 * 60 * 60
+
+        guard
+            let point = points.min(by: {
+                abs(
+                    indicatorDate(for: $0)
+                        .timeIntervalSince(date)
+                )
+                    < abs(
+                        indicatorDate(for: $1)
+                            .timeIntervalSince(date)
+                    )
+            }),
+            abs(
+                indicatorDate(for: point)
+                    .timeIntervalSince(date)
+            ) <= maximumDistance
+        else {
+            return nil
+        }
+
+        return point
+    }
+
+    public func axisValueLabelAnchorX(
+        for date: Date
+    ) -> Double {
+        guard granularity == .hourly else {
+            return 0.5
+        }
+        if date == axisDates.first {
+            return 0
+        }
+        if date == axisDates.last {
+            return 1
+        }
+        return 0.5
+    }
+
+    private static func hourlyLayout(
+        report: UsageReport,
+        period: UsagePeriod,
+        calendar: Calendar
+    ) -> UsageChartLayout {
+        let parsed = report.hourlyContributions.compactMap {
+            contribution -> (Date, HourlyContribution)? in
+            guard
+                let date = hour(
+                    from: contribution.hour,
+                    calendar: calendar
+                )
+            else {
+                return nil
+            }
+            return (date, contribution)
+        }
+        .sorted { $0.0 < $1.0 }
+
+        let firstHour: Date
+        switch period {
+        case .today:
+            let reportDay =
+                date(
+                    from: report.meta.dateRangeEnd,
+                    calendar: calendar
+                )
+                ?? parsed.first?.0
+                ?? Date()
+            firstHour = calendar.startOfDay(for: reportDay)
+
+        case .last24Hours:
+            let lastHour =
+                parsed.last?.0
+                ?? generatedAt(
+                    from: report.meta.generatedAt,
+                    calendar: calendar
+                )
+                ?? Date()
+            let alignedLastHour =
+                calendar.dateInterval(
+                    of: .hour,
+                    for: lastHour
+                )?.start ?? lastHour
+            firstHour =
+                calendar.date(
+                    byAdding: .hour,
+                    value: -23,
+                    to: alignedLastHour
+                ) ?? alignedLastHour
+
+        case .week, .month, .quarter, .all:
+            preconditionFailure(
+                "Daily periods cannot create an hourly chart"
+            )
+        }
+
+        let contributionByHour = Dictionary(
+            uniqueKeysWithValues: parsed.map {
+                ($0.0, $0.1)
+            }
+        )
+        let points = (0..<24).compactMap { offset -> UsageChartPoint? in
+            guard
+                let pointDate = calendar.date(
+                    byAdding: .hour,
+                    value: offset,
+                    to: firstHour
+                )
+            else {
+                return nil
+            }
+
+            let contribution = contributionByHour[pointDate]
+            return UsageChartPoint(
+                id: hourString(
+                    from: pointDate,
+                    calendar: calendar
+                ),
+                date: pointDate,
+                totals: contribution?.totals ?? zeroTotals
+            )
+        }
+        let lastHour = points.last?.date ?? firstHour
+        let domainEnd =
+            calendar.date(
+                byAdding: .hour,
+                value: 1,
+                to: lastHour
+            ) ?? lastHour
+        let totalTokens = points.reduce(Int64(0)) {
+            saturatingAdd($0, $1.totals.tokens)
+        }
+
+        return UsageChartLayout(
+            points: points,
+            startDate: firstHour,
+            endDate: lastHour,
+            dayCount: 1,
+            fixedBarWidth: 6,
+            axisDates: hourlyAxisDates(
+                from: firstHour,
+                calendar: calendar
+            ),
+            totalTokens: totalTokens,
+            averageTokens: Double(totalTokens) / 24,
+            chartDomain: firstHour...domainEnd,
+            granularity: .hourly,
+            calendar: calendar
+        )
+    }
+
+    private static func dailyLayout(
+        report: UsageReport,
+        calendar: Calendar
+    ) -> UsageChartLayout {
         let parsedPoints = report.contributions
             .compactMap { contribution -> UsageChartPoint? in
                 guard
-                    let date = Self.date(
+                    let date = date(
                         from: contribution.date,
                         calendar: calendar
                     )
@@ -38,20 +235,21 @@ public struct UsageChartLayout: Sendable, Equatable {
                     return nil
                 }
                 return UsageChartPoint(
+                    id: contribution.id,
                     date: date,
-                    contribution: contribution
+                    totals: contribution.totals
                 )
             }
             .sorted { $0.date < $1.date }
 
         let fallbackDate = parsedPoints.last?.date ?? Date()
         var reportedStart =
-            Self.date(
+            date(
                 from: report.meta.dateRangeStart,
                 calendar: calendar
             ) ?? parsedPoints.first?.date ?? fallbackDate
         var reportedEnd =
-            Self.date(
+            date(
                 from: report.meta.dateRangeEnd,
                 calendar: calendar
             ) ?? parsedPoints.last?.date ?? reportedStart
@@ -60,7 +258,7 @@ public struct UsageChartLayout: Sendable, Equatable {
             swap(&reportedStart, &reportedEnd)
         }
 
-        let reportedDayCount = Self.inclusiveDayCount(
+        let reportedDayCount = inclusiveDayCount(
             from: reportedStart,
             through: reportedEnd,
             calendar: calendar
@@ -80,7 +278,7 @@ public struct UsageChartLayout: Sendable, Equatable {
 
         let resolvedStart = max(reportedStart, visibleStart)
         let resolvedEnd = reportedEnd
-        let resolvedDayCount = Self.inclusiveDayCount(
+        let resolvedDayCount = inclusiveDayCount(
             from: resolvedStart,
             through: resolvedEnd,
             calendar: calendar
@@ -88,32 +286,13 @@ public struct UsageChartLayout: Sendable, Equatable {
         let visiblePoints = parsedPoints.filter {
             $0.date >= resolvedStart && $0.date <= resolvedEnd
         }
-        let visibleTotalTokens = visiblePoints.reduce(0) {
-            $0 + $1.contribution.totals.tokens
+        let visibleTotalTokens = visiblePoints.reduce(Int64(0)) {
+            saturatingAdd($0, $1.totals.tokens)
         }
-
-        startDate = resolvedStart
-        endDate = resolvedEnd
-        dayCount = resolvedDayCount
-        points = visiblePoints
-        fixedBarWidth = Self.fixedBarWidth(
-            for: resolvedDayCount
-        )
-        axisDates = Self.axisDates(
-            from: resolvedStart,
-            dayCount: resolvedDayCount,
-            calendar: calendar
-        )
-        totalTokens = visibleTotalTokens
-        averageTokens =
-            Double(visibleTotalTokens)
-            / Double(resolvedDayCount)
 
         let domainStart: Date
         let domainEnd: Date
         if resolvedDayCount == 1 {
-            // A day-binned BarMark spans midnight to midnight. Full outer
-            // gutters keep the single bar centered without making it too wide.
             domainStart =
                 calendar.date(
                     byAdding: .day,
@@ -127,16 +306,14 @@ public struct UsageChartLayout: Sendable, Equatable {
                     to: resolvedEnd
                 ) ?? resolvedEnd
         } else {
-            let firstBarCenter = Self.midpoint(
+            let firstBarCenter = midpoint(
                 ofDayContaining: resolvedStart,
                 calendar: calendar
             )
-            let lastBarCenter = Self.midpoint(
+            let lastBarCenter = midpoint(
                 ofDayContaining: resolvedEnd,
                 calendar: calendar
             )
-            // Equal center-to-edge insets leave only half a day-bin empty
-            // beyond the first and last bars.
             domainStart =
                 calendar.date(
                     byAdding: .day,
@@ -150,32 +327,62 @@ public struct UsageChartLayout: Sendable, Equatable {
                     to: lastBarCenter
                 ) ?? resolvedEnd
         }
-        chartDomain = domainStart...domainEnd
-    }
 
-    public func indicatorDate(
-        for point: UsageChartPoint
-    ) -> Date {
-        Self.midpoint(
-            ofDayContaining: point.date,
+        return UsageChartLayout(
+            points: visiblePoints,
+            startDate: resolvedStart,
+            endDate: resolvedEnd,
+            dayCount: resolvedDayCount,
+            fixedBarWidth: fixedBarWidth(
+                for: resolvedDayCount
+            ),
+            axisDates: dailyAxisDates(
+                from: resolvedStart,
+                dayCount: resolvedDayCount,
+                calendar: calendar
+            ),
+            totalTokens: visibleTotalTokens,
+            averageTokens:
+                Double(visibleTotalTokens)
+                / Double(resolvedDayCount),
+            chartDomain: domainStart...domainEnd,
+            granularity: .daily,
             calendar: calendar
         )
     }
 
-    public func point(nearestTo date: Date) -> UsageChartPoint? {
-        guard
-            let point = points.min(by: {
-                abs($0.date.timeIntervalSince(date))
-                    < abs($1.date.timeIntervalSince(date))
-            }),
-            // Do not snap a tooltip across empty calendar days.
-            abs(point.date.timeIntervalSince(date))
-                <= 12 * 60 * 60
-        else {
-            return nil
-        }
+    private init(
+        points: [UsageChartPoint],
+        startDate: Date,
+        endDate: Date,
+        dayCount: Int,
+        fixedBarWidth: Double?,
+        axisDates: [Date],
+        totalTokens: Int64,
+        averageTokens: Double,
+        chartDomain: ClosedRange<Date>,
+        granularity: UsageChartGranularity,
+        calendar: Calendar
+    ) {
+        self.points = points
+        self.startDate = startDate
+        self.endDate = endDate
+        self.dayCount = dayCount
+        self.fixedBarWidth = fixedBarWidth
+        self.axisDates = axisDates
+        self.totalTokens = totalTokens
+        self.averageTokens = averageTokens
+        self.chartDomain = chartDomain
+        self.granularity = granularity
+        self.calendar = calendar
+    }
 
-        return point
+    private static var zeroTotals: DailyTotals {
+        DailyTotals(
+            tokens: 0,
+            cost: 0,
+            messages: 0
+        )
     }
 
     private static func fixedBarWidth(
@@ -191,7 +398,20 @@ public struct UsageChartLayout: Sendable, Equatable {
         }
     }
 
-    private static func axisDates(
+    private static func hourlyAxisDates(
+        from startDate: Date,
+        calendar: Calendar
+    ) -> [Date] {
+        [0, 6, 12, 18, 23].compactMap { offset in
+            calendar.date(
+                byAdding: .minute,
+                value: offset * 60 + 30,
+                to: startDate
+            )
+        }
+    }
+
+    private static func dailyAxisDates(
         from startDate: Date,
         dayCount: Int,
         calendar: Calendar
@@ -259,6 +479,17 @@ public struct UsageChartLayout: Sendable, Equatable {
         return max(difference + 1, 1)
     }
 
+    private static func saturatingAdd(
+        _ lhs: Int64,
+        _ rhs: Int64
+    ) -> Int64 {
+        let (value, overflow) = lhs.addingReportingOverflow(rhs)
+        guard overflow else {
+            return value
+        }
+        return rhs >= 0 ? .max : .min
+    }
+
     private static func date(
         from rawValue: String,
         calendar: Calendar
@@ -281,5 +512,52 @@ public struct UsageChartLayout: Sendable, Equatable {
                 day: day
             )
         )
+    }
+
+    private static func hour(
+        from rawValue: String,
+        calendar: Calendar
+    ) -> Date? {
+        let components = rawValue.split(separator: " ")
+        guard
+            components.count == 2,
+            let day = date(
+                from: String(components[0]),
+                calendar: calendar
+            ),
+            let hour = Int(
+                components[1].split(separator: ":").first ?? ""
+            )
+        else {
+            return nil
+        }
+
+        return calendar.date(
+            bySettingHour: hour,
+            minute: 0,
+            second: 0,
+            of: day
+        )
+    }
+
+    private static func hourString(
+        from date: Date,
+        calendar: Calendar
+    ) -> String {
+        let formatter = DateFormatter()
+        formatter.calendar = calendar
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = calendar.timeZone
+        formatter.dateFormat = "yyyy-MM-dd HH:00"
+        return formatter.string(from: date)
+    }
+
+    private static func generatedAt(
+        from rawValue: String,
+        calendar: Calendar
+    ) -> Date? {
+        let formatter = ISO8601DateFormatter()
+        formatter.timeZone = calendar.timeZone
+        return formatter.date(from: rawValue)
     }
 }

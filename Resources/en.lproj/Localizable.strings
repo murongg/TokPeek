@@ -10,6 +10,7 @@
 "active day" = "active day";
 "active days" = "active days";
 "All" = "All";
+"24H" = "24H";
 "All models" = "All models";
 "All time" = "All time";
 "Automatically check for updates" = "Automatically check for updates";
@@ -23,6 +24,8 @@
 "Cost" = "Cost";
 "Daily token usage chart" = "Daily token usage chart";
 "Daily usage" = "Daily usage";
+"Hourly token usage chart" = "Hourly token usage chart";
+"Hourly usage" = "Hourly usage";
 "Data" = "Data";
 "Date" = "Date";
 "daily avg" = "daily avg";
@@ -42,6 +45,7 @@
 "Last %lld days" = "Last %lld days";
 "Last 30 days" = "Last 30 days";
 "Last 7 days" = "Last 7 days";
+"Last 24 hours" = "Last 24 hours";
 "Last 90 days" = "Last 90 days";
 "Launch TokPeek at login" = "Launch TokPeek at login";
 "Loading local usage" = "Loading local usage";
@@ -81,6 +85,7 @@
 "Token composition" = "Token composition";
 "tokens" = "tokens";
 "Today" = "Today";
+"%lld total tokens over 24 displayed hours" = "%lld total tokens over 24 displayed hours";
 "Tokens" = "Tokens";
 "Total tokens" = "Total tokens";
 "Usage period" = "Usage period";

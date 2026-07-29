@@ -8,25 +8,30 @@ import SwiftUI
 
 struct UsageChart: View {
     let report: UsageReport
+    let period: UsagePeriod
 
     @State private var hoveredPoint: UsageChartPoint?
 
     var body: some View {
-        let layout = UsageChartLayout(report: report)
+        let layout = UsageChartLayout(
+            report: report,
+            period: period
+        )
 
         VStack(alignment: .leading, spacing: 10) {
             HStack {
-                Text("Daily usage")
+                Text(
+                    Localization.string(
+                        layout.granularity == .hourly
+                            ? "Hourly usage"
+                            : "Daily usage"
+                    )
+                )
                     .font(.subheadline.weight(.semibold))
 
                 Spacer()
 
-                Text(
-                    Localization.format(
-                        "Last %lld days",
-                        [Int64(layout.dayCount)]
-                    )
-                )
+                Text(rangeTitle(for: layout))
                 .font(.caption2)
                 .foregroundStyle(.secondary)
             }
@@ -58,13 +63,15 @@ struct UsageChart: View {
 
                 BarMark(
                     x: .value(
-                        "Date",
+                        layout.granularity == .hourly
+                            ? "Hour"
+                            : "Date",
                         point.date,
-                        unit: .day
+                        unit: layout.granularity.calendarComponent
                     ),
                     y: .value(
                         "Tokens",
-                        point.contribution.totals.tokens
+                        point.totals.tokens
                     ),
                     width: layout.fixedBarWidth.map {
                         .fixed(CGFloat($0))
@@ -129,16 +136,18 @@ struct UsageChart: View {
                 AxisValueLabel(
                     centered: false,
                     anchor: UnitPoint(
-                        x: layout.axisValueLabelAnchorX,
+                        x: value.as(Date.self).map {
+                            layout.axisValueLabelAnchorX(
+                                for: $0
+                            )
+                        } ?? 0.5,
                         y: 0
                     )
                 ) {
                     if let date = value.as(Date.self) {
-                        Text(
-                            date,
-                            format: .dateTime
-                                .month(.defaultDigits)
-                                .day(.defaultDigits)
+                        axisLabel(
+                            for: date,
+                            granularity: layout.granularity
                         )
                     }
                 }
@@ -183,16 +192,14 @@ struct UsageChart: View {
         }
         .frame(height: 158)
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Daily token usage chart")
-        .accessibilityValue(
-            Localization.format(
-                "%lld total tokens over %lld displayed days",
-                [
-                    layout.totalTokens,
-                    Int64(layout.dayCount),
-                ]
+        .accessibilityLabel(
+            Localization.string(
+                layout.granularity == .hourly
+                    ? "Hourly token usage chart"
+                    : "Daily token usage chart"
             )
         )
+        .accessibilityValue(accessibilityValue(for: layout))
     }
 
     private func updateHover(
@@ -254,30 +261,86 @@ struct UsageChart: View {
     ) -> some View {
         UsageTooltip(
             title: point.date.formatted(
-                .dateTime
-                    .year()
-                    .month(.abbreviated)
-                    .day()
+                period.usesHourlyChart
+                    ? .dateTime
+                        .year()
+                        .month(.abbreviated)
+                        .day()
+                        .hour()
+                    : .dateTime
+                        .year()
+                        .month(.abbreviated)
+                        .day()
             ),
             rows: [
                 UsageTooltipRow(
                     label: Localization.string("Token"),
                     value: UsageFormatting.compactTokens(
-                        point.contribution.totals.tokens
+                        point.totals.tokens
                     )
                 ),
                 UsageTooltipRow(
                     label: Localization.string("Cost"),
                     value: UsageFormatting.cost(
-                        point.contribution.totals.cost
+                        point.totals.cost
                     )
                 ),
                 UsageTooltipRow(
                     label: Localization.string("Messages"),
                     value: String(
-                        point.contribution.totals.messages
+                        point.totals.messages
                     )
                 ),
+            ]
+        )
+    }
+
+    private func rangeTitle(
+        for layout: UsageChartLayout
+    ) -> String {
+        if layout.granularity == .hourly {
+            return period.title
+        }
+        return Localization.format(
+            "Last %lld days",
+            [Int64(layout.dayCount)]
+        )
+    }
+
+    @ViewBuilder
+    private func axisLabel(
+        for date: Date,
+        granularity: UsageChartGranularity
+    ) -> some View {
+        if granularity == .hourly {
+            Text(
+                date,
+                format: .dateTime.hour(.twoDigits(amPM: .omitted))
+            )
+        } else {
+            Text(
+                date,
+                format: .dateTime
+                    .month(.defaultDigits)
+                    .day(.defaultDigits)
+            )
+        }
+    }
+
+    private func accessibilityValue(
+        for layout: UsageChartLayout
+    ) -> String {
+        if layout.granularity == .hourly {
+            return Localization.format(
+                "%lld total tokens over 24 displayed hours",
+                [layout.totalTokens]
+            )
+        }
+        return Localization.format(
+            "%lld total tokens over %lld displayed days",
+            [
+                layout.totalTokens,
+                Int64(layout.dayCount),
             ]
         )
     }

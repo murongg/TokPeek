@@ -10,6 +10,7 @@
 "active day" = "活跃天";
 "active days" = "活跃天";
 "All" = "全部";
+"24H" = "24小时";
 "All models" = "全部模型";
 "All time" = "全部时间";
 "Automatically check for updates" = "自动检查更新";
@@ -23,6 +24,8 @@
 "Cost" = "费用";
 "Daily token usage chart" = "每日 Token 用量图表";
 "Daily usage" = "每日用量";
+"Hourly token usage chart" = "分时 Token 用量图表";
+"Hourly usage" = "分时用量";
 "Data" = "数据";
 "Date" = "日期";
 "daily avg" = "日均";
@@ -42,6 +45,7 @@
 "Last %lld days" = "最近 %lld 天";
 "Last 30 days" = "最近 30 天";
 "Last 7 days" = "最近 7 天";
+"Last 24 hours" = "最近 24 小时";
 "Last 90 days" = "最近 90 天";
 "Launch TokPeek at login" = "登录时启动 TokPeek";
 "Loading local usage" = "正在加载本地用量";
@@ -81,6 +85,7 @@
 "Token composition" = "Token 构成";
 "tokens" = "Token";
 "Today" = "今天";
+"%lld total tokens over 24 displayed hours" = "24 小时内共 %lld Token";
 "Tokens" = "Token";
 "Total tokens" = "Token 总量";
 "Usage period" = "使用周期";

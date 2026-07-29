@@ -62,8 +62,8 @@ func usagePeriodBuildsRequest() throws {
     #expect(request.useEnvironmentRoots)
 }
 
-@Test("Today is the first period and requests only the current local day")
-func todayUsageBuildsSingleDayRequest() throws {
+@Test("Today is the first period and requests hourly data for the natural day")
+func todayUsageBuildsHourlyNaturalDayRequest() throws {
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = try #require(
         TimeZone(secondsFromGMT: 8 * 60 * 60)
@@ -83,6 +83,65 @@ func todayUsageBuildsSingleDayRequest() throws {
     #expect(UsagePeriod.allCases.first == .today)
     #expect(request.since == "2026-07-28")
     #expect(request.until == "2026-07-28")
+    #expect(request.hourly)
+    #expect(
+        request.startTimeMs
+            == Int64(
+                calendar.startOfDay(for: now).timeIntervalSince1970
+                    * 1_000
+            )
+    )
+    #expect(
+        request.endTimeMs
+            == Int64(
+                try #require(
+                    calendar.date(
+                        byAdding: .day,
+                        value: 1,
+                        to: calendar.startOfDay(for: now)
+                    )
+                ).timeIntervalSince1970 * 1_000
+            )
+    )
+}
+
+@Test("Last 24 hours requests 24 aligned hourly buckets")
+func last24HoursBuildsAlignedHourlyRequest() throws {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = try #require(TimeZone(secondsFromGMT: 0))
+    let now = try #require(
+        ISO8601DateFormatter().date(from: "2026-07-27T12:34:56Z")
+    )
+    let values = SettingsValues(
+        usagePeriod: .last24Hours,
+        refreshFrequency: .minute,
+        menuBarMetric: .summary,
+        useEnvironmentRoots: false
+    )
+
+    let request = values.usageRequest(now: now, calendar: calendar)
+    let currentHour = try #require(
+        calendar.dateInterval(of: .hour, for: now)?.start
+    )
+    let expectedStart = try #require(
+        calendar.date(byAdding: .hour, value: -23, to: currentHour)
+    )
+    let expectedEnd = try #require(
+        calendar.date(byAdding: .hour, value: 1, to: currentHour)
+    )
+
+    #expect(Array(UsagePeriod.allCases.prefix(2)) == [.today, .last24Hours])
+    #expect(request.since == "2026-07-26")
+    #expect(request.until == "2026-07-27")
+    #expect(request.hourly)
+    #expect(
+        request.startTimeMs
+            == Int64(expectedStart.timeIntervalSince1970 * 1_000)
+    )
+    #expect(
+        request.endTimeMs
+            == Int64(expectedEnd.timeIntervalSince1970 * 1_000)
+    )
 }
 
 @Test("All-time usage leaves Tokscale date filters empty")

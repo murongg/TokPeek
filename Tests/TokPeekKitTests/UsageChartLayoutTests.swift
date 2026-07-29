@@ -140,7 +140,11 @@ func dailyIndicatorAnchorsToBarCenter() throws {
     #expect(calendar.component(.minute, from: anchor) == 0)
     #expect(anchor == domainMidpoint)
     #expect(layout.axisDates == [anchor])
-    #expect(layout.axisValueLabelAnchorX == 0.5)
+    #expect(
+        layout.axisValueLabelAnchorX(
+            for: layout.axisDates[0]
+        ) == 0.5
+    )
 }
 
 @Test("All-time charts stay focused on the most recent ninety days")
@@ -163,8 +167,90 @@ func chartLayoutCapsLongRanges() throws {
     #expect(layout.points.last?.id == "2026-07-30")
 }
 
+@Test("Today chart renders all 24 hourly slots with sparse hour labels")
+func todayChartUsesHourlySlots() throws {
+    let calendar = chartCalendar()
+    let report = chartReport(
+        contributionDates: ["2026-07-30"],
+        hourlyContributions: [
+            chartHourlyContribution(
+                hour: "2026-07-30 09:00",
+                tokens: 120
+            ),
+            chartHourlyContribution(
+                hour: "2026-07-30 14:00",
+                tokens: 240
+            ),
+        ]
+    )
+
+    let layout = UsageChartLayout(
+        report: report,
+        period: .today,
+        calendar: calendar
+    )
+
+    #expect(layout.granularity == .hourly)
+    #expect(layout.points.count == 24)
+    #expect(layout.points[9].totals.tokens == 120)
+    #expect(layout.points[14].totals.tokens == 240)
+    #expect(layout.axisDates.count == 5)
+    #expect(calendar.component(.hour, from: layout.axisDates[0]) == 0)
+    #expect(calendar.component(.hour, from: layout.axisDates[1]) == 6)
+    #expect(calendar.component(.hour, from: layout.axisDates[2]) == 12)
+    #expect(calendar.component(.hour, from: layout.axisDates[3]) == 18)
+    #expect(calendar.component(.hour, from: layout.axisDates[4]) == 23)
+    #expect(
+        layout.axisValueLabelAnchorX(
+            for: layout.axisDates[0]
+        ) == 0
+    )
+    #expect(
+        layout.axisValueLabelAnchorX(
+            for: layout.axisDates[2]
+        ) == 0.5
+    )
+    #expect(
+        layout.axisValueLabelAnchorX(
+            for: layout.axisDates[4]
+        ) == 1
+    )
+}
+
+@Test("Last 24 hour chart keeps rolling hour order across midnight")
+func last24HourChartKeepsRollingOrder() throws {
+    let calendar = chartCalendar()
+    let report = chartReport(
+        contributionDates: ["2026-07-29", "2026-07-30"],
+        hourlyContributions: [
+            chartHourlyContribution(
+                hour: "2026-07-29 13:00",
+                tokens: 10
+            ),
+            chartHourlyContribution(
+                hour: "2026-07-30 12:00",
+                tokens: 20
+            ),
+        ]
+    )
+
+    let layout = UsageChartLayout(
+        report: report,
+        period: .last24Hours,
+        calendar: calendar
+    )
+
+    #expect(layout.granularity == .hourly)
+    #expect(layout.points.count == 24)
+    #expect(layout.points.first?.id == "2026-07-29 13:00")
+    #expect(layout.points.last?.id == "2026-07-30 12:00")
+    #expect(layout.points.first?.totals.tokens == 10)
+    #expect(layout.points.last?.totals.tokens == 20)
+}
+
 private func chartReport(
-    contributionDates: [String]
+    contributionDates: [String],
+    hourlyContributions: [HourlyContribution] = []
 ) -> UsageReport {
     let contributions = contributionDates.map { date in
         DailyContribution(
@@ -206,7 +292,30 @@ private func chartReport(
             models: ["synthetic-model"]
         ),
         years: [],
-        contributions: contributions
+        contributions: contributions,
+        hourlyContributions: hourlyContributions
+    )
+}
+
+private func chartHourlyContribution(
+    hour: String,
+    tokens: Int64
+) -> HourlyContribution {
+    HourlyContribution(
+        hour: hour,
+        totals: DailyTotals(
+            tokens: tokens,
+            cost: 0.01,
+            messages: 2
+        ),
+        tokenBreakdown: TokenBreakdown(
+            input: tokens,
+            output: 0,
+            cacheRead: 0,
+            cacheWrite: 0,
+            reasoning: 0
+        ),
+        clients: []
     )
 }
 

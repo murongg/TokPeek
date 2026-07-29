@@ -131,7 +131,8 @@ struct DashboardView: View {
         }
         .pickerStyle(.segmented)
         .labelsHidden()
-        .frame(width: 280)
+        .frame(width: 288)
+        .padding(.leading, 16)
         .accessibilityLabel("Usage period")
     }
 
@@ -179,7 +180,7 @@ struct DashboardView: View {
             }
             .font(.caption.weight(.medium))
             .padding(.horizontal, 8)
-            .frame(width: 142, height: 24, alignment: .leading)
+            .frame(width: 118, height: 24, alignment: .leading)
             .background(
                 TokPeekTheme.surface,
                 in: RoundedRectangle(cornerRadius: 8)
@@ -274,7 +275,10 @@ struct DashboardView: View {
     @ViewBuilder
     private func reportContent(_ report: UsageReport) -> some View {
         UsageOverview(report: report)
-        UsageChart(report: report)
+        UsageChart(
+            report: report,
+            period: settings.usagePeriod
+        )
         ClientBreakdown(summaries: report.clientSummaries)
         ModelRanking(summaries: report.modelSummaries)
     }

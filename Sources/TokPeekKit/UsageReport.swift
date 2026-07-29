@@ -5,6 +5,56 @@ public struct UsageReport: Decodable, Sendable, Equatable {
     public let summary: UsageSummary
     public let years: [YearSummary]
     public let contributions: [DailyContribution]
+    public let hourlyContributions: [HourlyContribution]
+
+    public init(
+        meta: ReportMetadata,
+        summary: UsageSummary,
+        years: [YearSummary],
+        contributions: [DailyContribution],
+        hourlyContributions: [HourlyContribution] = []
+    ) {
+        self.meta = meta
+        self.summary = summary
+        self.years = years
+        self.contributions = contributions
+        self.hourlyContributions = hourlyContributions
+    }
+
+    private enum CodingKeys: String, CodingKey {
+        case meta
+        case summary
+        case years
+        case contributions
+        case hourlyContributions
+    }
+
+    public init(from decoder: any Decoder) throws {
+        let container = try decoder.container(
+            keyedBy: CodingKeys.self
+        )
+        meta = try container.decode(
+            ReportMetadata.self,
+            forKey: .meta
+        )
+        summary = try container.decode(
+            UsageSummary.self,
+            forKey: .summary
+        )
+        years = try container.decode(
+            [YearSummary].self,
+            forKey: .years
+        )
+        contributions = try container.decode(
+            [DailyContribution].self,
+            forKey: .contributions
+        )
+        hourlyContributions =
+            try container.decodeIfPresent(
+                [HourlyContribution].self,
+                forKey: .hourlyContributions
+            ) ?? []
+    }
 
     public var latestContribution: DailyContribution? {
         contributions.max { $0.date < $1.date }
@@ -47,6 +97,27 @@ public struct DailyContribution: Decodable, Sendable, Equatable, Identifiable {
     public let tokenBreakdown: TokenBreakdown
     public let clients: [ClientContribution]
     public let activeTimeMs: Int64?
+}
+
+public struct HourlyContribution: Decodable, Sendable, Equatable, Identifiable {
+    public var id: String { hour }
+
+    public let hour: String
+    public let totals: DailyTotals
+    public let tokenBreakdown: TokenBreakdown
+    public let clients: [ClientContribution]
+
+    public init(
+        hour: String,
+        totals: DailyTotals,
+        tokenBreakdown: TokenBreakdown,
+        clients: [ClientContribution]
+    ) {
+        self.hour = hour
+        self.totals = totals
+        self.tokenBreakdown = tokenBreakdown
+        self.clients = clients
+    }
 }
 
 public struct DailyTotals: Decodable, Sendable, Equatable {
