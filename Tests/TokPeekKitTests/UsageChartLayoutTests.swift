@@ -119,9 +119,16 @@ func dailyIndicatorAnchorsToBarCenter() throws {
     )
     let point = try #require(layout.points.first)
     let anchor = layout.indicatorDate(for: point)
+    let domainMidpoint =
+        layout.chartDomain.lowerBound.addingTimeInterval(
+            layout.chartDomain.upperBound.timeIntervalSince(
+                layout.chartDomain.lowerBound
+            ) / 2
+        )
 
     #expect(calendar.component(.hour, from: anchor) == 12)
     #expect(calendar.component(.minute, from: anchor) == 0)
+    #expect(anchor == domainMidpoint)
 }
 
 @Test("All-time charts stay focused on the most recent ninety days")

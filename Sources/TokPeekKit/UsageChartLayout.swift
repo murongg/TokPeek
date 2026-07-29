@@ -114,10 +114,14 @@ public struct UsageChartLayout: Sendable, Equatable {
                 value: -1,
                 to: resolvedStart
             ) ?? resolvedStart
+        // A day-binned BarMark spans midnight to midnight and is centered at
+        // noon. Give the one-day view an extra trailing day so that center
+        // lands in the middle of the plot instead of half a day to the right.
+        let trailingGutterDays = resolvedDayCount == 1 ? 2 : 1
         let domainEnd =
             calendar.date(
                 byAdding: .day,
-                value: 1,
+                value: trailingGutterDays,
                 to: resolvedEnd
             ) ?? resolvedEnd
         // A full-day gutter keeps the endpoint bars and centered date labels
