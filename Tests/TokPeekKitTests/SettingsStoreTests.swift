@@ -35,7 +35,7 @@ func freshSettingsUseDefaults() throws {
 
     let settings = SettingsStore(defaults: defaults)
 
-    #expect(settings.usagePeriod == .month)
+    #expect(settings.usagePeriod == .today)
     #expect(settings.refreshFrequency == .minute)
     #expect(settings.menuBarMetric == .summary)
     #expect(settings.useEnvironmentRoots == false)
@@ -60,6 +60,29 @@ func usagePeriodBuildsRequest() throws {
     #expect(request.since == "2026-06-28")
     #expect(request.until == "2026-07-27")
     #expect(request.useEnvironmentRoots)
+}
+
+@Test("Today is the first period and requests only the current local day")
+func todayUsageBuildsSingleDayRequest() throws {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = try #require(
+        TimeZone(secondsFromGMT: 8 * 60 * 60)
+    )
+    let now = try #require(
+        ISO8601DateFormatter().date(from: "2026-07-27T18:00:00Z")
+    )
+    let values = SettingsValues(
+        usagePeriod: .today,
+        refreshFrequency: .minute,
+        menuBarMetric: .summary,
+        useEnvironmentRoots: false
+    )
+
+    let request = values.usageRequest(now: now, calendar: calendar)
+
+    #expect(UsagePeriod.allCases.first == .today)
+    #expect(request.since == "2026-07-28")
+    #expect(request.until == "2026-07-28")
 }
 
 @Test("All-time usage leaves Tokscale date filters empty")

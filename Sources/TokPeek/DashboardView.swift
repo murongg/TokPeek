@@ -131,7 +131,7 @@ struct DashboardView: View {
         }
         .pickerStyle(.segmented)
         .labelsHidden()
-        .frame(width: 220)
+        .frame(width: 280)
         .accessibilityLabel("Usage period")
     }
 

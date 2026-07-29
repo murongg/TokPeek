@@ -2,6 +2,7 @@ import Combine
 import Foundation
 
 public enum UsagePeriod: String, CaseIterable, Codable, Hashable, Identifiable, Sendable {
+    case today
     case week
     case month
     case quarter
@@ -11,6 +12,7 @@ public enum UsagePeriod: String, CaseIterable, Codable, Hashable, Identifiable, 
 
     public var title: String {
         switch self {
+        case .today: Localization.string("Today")
         case .week: Localization.string("Last 7 days")
         case .month: Localization.string("Last 30 days")
         case .quarter: Localization.string("Last 90 days")
@@ -20,6 +22,7 @@ public enum UsagePeriod: String, CaseIterable, Codable, Hashable, Identifiable, 
 
     public var shortTitle: String {
         switch self {
+        case .today: Localization.string("Today")
         case .week: Localization.string("7D")
         case .month: Localization.string("30D")
         case .quarter: Localization.string("90D")
@@ -29,6 +32,7 @@ public enum UsagePeriod: String, CaseIterable, Codable, Hashable, Identifiable, 
 
     fileprivate var dayCount: Int? {
         switch self {
+        case .today: 1
         case .week: 7
         case .month: 30
         case .quarter: 90
@@ -171,7 +175,7 @@ public final class SettingsStore: ObservableObject {
         usagePeriod =
             UsagePeriod(
                 rawValue: defaults.string(forKey: Key.usagePeriod) ?? ""
-            ) ?? .month
+            ) ?? .today
         if defaults.object(forKey: Key.refreshFrequency) != nil {
             refreshFrequency =
                 RefreshFrequency(
