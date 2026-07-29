@@ -447,6 +447,18 @@ private struct UsageFilterBar: View {
             .frame(
                 width: CGFloat(
                     DashboardLayoutMetrics.filtersMenuWidth
+                ),
+                height: CGFloat(
+                    DashboardLayoutMetrics.filtersMenuHitTargetHeight
+                )
+            )
+            // A borderless native Menu reserves trailing indicator space even
+            // when the indicator is hidden. Move the complete control so its
+            // visible label aligns right without separating it from its hit area.
+            .offset(
+                x: CGFloat(
+                    DashboardLayoutMetrics
+                        .filtersMenuNativeTrailingAllowance
                 )
             )
             .disabled(!isEnabled)
@@ -557,31 +569,18 @@ private struct UsageFiltersMenu: View {
                 }
             }
         } label: {
-            Rectangle()
-                .fill(Color.primary.opacity(0.001))
-                .contentShape(Rectangle())
-                .frame(
-                    width: CGFloat(
-                        DashboardLayoutMetrics.filtersMenuLabelWidth
-                    ),
-                    height: 24
-                )
+            filtersMenuLabel
         }
         .menuStyle(.borderlessButton)
         .menuIndicator(.hidden)
         .frame(
             width: CGFloat(
-                DashboardLayoutMetrics.filtersMenuWidth
+                DashboardLayoutMetrics.filtersMenuHitTargetWidth
             ),
-            height: 24
+            height: CGFloat(
+                DashboardLayoutMetrics.filtersMenuHitTargetHeight
+            )
         )
-        // Native Menu keeps space for its indicator even when hidden. Drawing
-        // the visual label as an overlay makes its trailing edge follow our
-        // dashboard grid while the transparent Menu retains native behavior.
-        .overlay(alignment: .trailing) {
-            filtersMenuLabel
-                .allowsHitTesting(false)
-        }
         .help(filterHelp)
         .accessibilityLabel("Filters")
         .accessibilityValue(filterHelp)
@@ -616,15 +615,18 @@ private struct UsageFiltersMenu: View {
         )
         .frame(
             width: CGFloat(
-                DashboardLayoutMetrics.filtersMenuLabelWidth
+                DashboardLayoutMetrics.filtersMenuHitTargetWidth
+            ),
+            height: CGFloat(
+                DashboardLayoutMetrics.filtersMenuHitTargetHeight
             ),
             alignment: .trailing
         )
-        .frame(minHeight: 24)
         .background(
             TokPeekTheme.surface,
             in: RoundedRectangle(cornerRadius: 8)
         )
+        .contentShape(Rectangle())
     }
 
     private var activeFilterCount: Int {

@@ -18,6 +18,18 @@ func dashboardTabsAlignWithContent() {
             == DashboardLayoutMetrics.filtersMenuWidth
     )
     #expect(
+        DashboardLayoutMetrics.filtersMenuHitTargetWidth
+            == DashboardLayoutMetrics.filtersMenuWidth
+    )
+    #expect(
+        DashboardLayoutMetrics.filtersMenuHitTargetHeight
+            == 24
+    )
+    #expect(
+        DashboardLayoutMetrics.filtersMenuNativeTrailingAllowance
+            == 15
+    )
+    #expect(
         DashboardLayoutMetrics.filtersMenuContentLeadingPadding
             == 8
     )
