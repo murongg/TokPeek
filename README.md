@@ -1,25 +1,75 @@
 # TokPeek
 
-[![CI](https://github.com/murongg/TokPeek/actions/workflows/ci.yml/badge.svg)](https://github.com/murongg/TokPeek/actions/workflows/ci.yml)
+<p align="center">
+  <img src="docs/images/tokpeek-hero.png" alt="TokPeek product overview showing the native macOS menu bar status and usage dashboard">
+</p>
 
-TokPeek is a native macOS menu bar app for viewing local AI token usage. The
-interface is written in SwiftUI, while session discovery, parsing, pricing, and
-aggregation come from
-[`tokscale-core`](https://github.com/junhoyeo/tokscale).
+<p align="center">
+  <strong>Your AI token usage at a glance.</strong>
+</p>
 
-> Your AI token usage at a glance.
+<p align="center">
+  <a href="https://github.com/murongg/TokPeek/releases/latest"><img alt="Latest release" src="https://img.shields.io/github/v/release/murongg/TokPeek?sort=semver"></a>
+  <a href="https://github.com/murongg/TokPeek/releases"><img alt="Downloads" src="https://img.shields.io/github/downloads/murongg/TokPeek/total"></a>
+  <a href="https://github.com/murongg/TokPeek/actions/workflows/ci.yml"><img alt="CI" src="https://github.com/murongg/TokPeek/actions/workflows/ci.yml/badge.svg"></a>
+  <a href="https://github.com/murongg/TokPeek/releases/latest"><img alt="macOS 14 or later" src="https://img.shields.io/badge/macOS-14%2B-000000?logo=apple&logoColor=white"></a>
+  <a href="https://github.com/murongg/TokPeek/releases/latest"><img alt="Signed and notarized by Apple" src="https://img.shields.io/badge/Apple-Signed%20%26%20Notarized-000000?logo=apple&logoColor=white"></a>
+  <a href="LICENSE"><img alt="MIT License" src="https://img.shields.io/github/license/murongg/TokPeek"></a>
+</p>
 
-## Highlights
+<p align="center">
+  <a href="https://github.com/murongg/TokPeek/releases/latest"><strong>Download the latest release</strong></a>
+  ·
+  <a href="https://github.com/murongg/TokPeek/releases">All releases</a>
+  ·
+  <a href="README.zh-CN.md">简体中文</a>
+</p>
 
-- Native `MenuBarExtra` interface on macOS 14 or later
-- Configurable menu bar display: token and cost, token total, estimated cost,
-  or icon only
-- 7-day, 30-day, 90-day, and all-time reporting
-- Token composition, daily activity chart, and client ranking
-- Native Settings window with refresh interval and default range controls
+TokPeek turns local AI usage logs into a glanceable macOS menu bar dashboard.
+See token totals, estimated cost, daily trends, client share, and model rankings
+without sending session contents to a server.
+
+## Download
+
+| Package | Link |
+| --- | --- |
+| Latest macOS Universal 2 ZIP — Apple Silicon and Intel | [Download from the latest release](https://github.com/murongg/TokPeek/releases/latest) |
+| SHA-256 checksum and release notes | [Open the latest release](https://github.com/murongg/TokPeek/releases/latest) |
+| Previous versions | [Browse all releases](https://github.com/murongg/TokPeek/releases) |
+
+Published releases require **macOS 14 or later**, include native support for
+Apple Silicon and Intel Macs, and are signed with Developer ID and notarized by
+Apple.
+
+### Install
+
+1. Open the [latest release](https://github.com/murongg/TokPeek/releases/latest)
+   and download the `TokPeek-<version>-macOS-universal.zip` asset.
+2. Move `TokPeek.app` to the Applications folder.
+3. Open TokPeek and keep its status in the menu bar.
+
+TokPeek checks for signed updates through Sparkle. Updates are never installed
+without confirmation.
+
+## Why TokPeek
+
+| Native and glanceable | Local by default | Useful breakdowns |
+| --- | --- | --- |
+| A real SwiftUI `MenuBarExtra` that stays one click away. | Session discovery, parsing, pricing, and aggregation run on your Mac. | Compare periods, filter by model, and inspect daily, client, and model usage. |
+
+## Features
+
+- Two-line menu bar status with estimated cost and token usage
+- Alternate menu bar modes for tokens, cost, or the app icon
+- Today, 7-day, 30-day, 90-day, and all-time reporting
+- Model filtering across totals, charts, clients, and rankings
+- Token composition, daily usage, client share, and two-column model ranking
+- Tooltips for chart values and detailed usage metadata
+- Configurable refresh interval and default reporting period
 - Optional launch at login through `SMAppService`
+- English and Simplified Chinese localization
 - Light and dark appearance, keyboard access, and VoiceOver labels
-- Local-only session processing
+- Secure in-app updates through Sparkle
 
 ## Architecture
 
@@ -38,7 +88,7 @@ tokscale-core
 TokPeek currently calls `generate_local_graph_report`, so Swift does not parse
 session files or recalculate usage totals.
 
-## Requirements
+## Development
 
 - macOS 14 or later
 - Xcode 16 or later
@@ -52,7 +102,7 @@ Install both release targets with:
 rustup target add aarch64-apple-darwin x86_64-apple-darwin
 ```
 
-## Open in Xcode
+### Open in Xcode
 
 TokPeek includes a shared Xcode project and scheme:
 
@@ -71,7 +121,7 @@ with the `xcodeproj` Ruby gem can regenerate it with:
 make project
 ```
 
-## Build and run
+### Build and run
 
 ```bash
 make run
@@ -103,7 +153,7 @@ The app target intentionally does not enable App Sandbox because Tokscale Core
 must discover session files belonging to supported coding tools. Hardened
 runtime remains enabled for signed builds.
 
-## Automation
+## Releases and updates
 
 The CI workflow runs the Rust, Swift Package Manager, and Xcode test suites for
 pushes to `main` and pull requests. It also creates and verifies a Universal 2
@@ -126,7 +176,7 @@ Apple and Sparkle signing credentials are supplied only through encrypted
 GitHub Secrets and are removed from the ephemeral runner after every release.
 See [RELEASING.md](RELEASING.md) for certificate, API key, and secret setup.
 
-## Tokscale version
+## Tokscale Core
 
 The Rust bridge pins Tokscale to commit
 `f36931d33a61bf07c788fbbd2dacb0266277acf6`. Upgrades should be reviewed and
