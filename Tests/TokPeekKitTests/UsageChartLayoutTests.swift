@@ -47,6 +47,16 @@ func dashboardTabsAlignWithContent() {
     )
 }
 
+@Test("Custom range calendar suppresses the large native focus ring")
+func customRangeCalendarHidesFocusEffect() {
+    #expect(DashboardLayoutMetrics.calendarFocusEffectDisabled)
+}
+
+@Test("Custom range calendar uses the native accent for selected date contrast")
+func customRangeCalendarUsesNativeAccent() {
+    #expect(DashboardLayoutMetrics.calendarUsesSystemAccent)
+}
+
 @Test("Thirty and ninety day charts use thin bars and sparse date labels")
 func chartLayoutAdaptsToLongerRanges() throws {
     let calendar = chartCalendar()

@@ -195,6 +195,40 @@ func customUsageRangeBuildsRequest() throws {
     #expect(request.hourly == false)
 }
 
+@Test("Date range drafts edit one boundary and normalize only when applied")
+func dateRangeDraftUpdatesSelectedBoundary() {
+    let originalStart = Date(timeIntervalSince1970: 1_780_000_000)
+    let originalEnd = Date(timeIntervalSince1970: 1_780_604_800)
+    let editedStart = Date(timeIntervalSince1970: 1_781_209_600)
+    var draft = UsageDateRangeDraft(
+        range: UsageDateRange(
+            start: originalStart,
+            end: originalEnd
+        )
+    )
+
+    draft[.start] = editedStart
+
+    #expect(draft[.start] == editedStart)
+    #expect(draft[.end] == originalEnd)
+    #expect(draft.normalizedRange.start == originalEnd)
+    #expect(draft.normalizedRange.end == editedStart)
+}
+
+@Test("Date range picker expands one boundary and collapses repeated selection")
+func dateRangePickerStateTogglesOneBoundary() {
+    var state = UsageDatePickerState()
+
+    state.toggle(.start)
+    #expect(state.expandedBoundary == .start)
+
+    state.toggle(.end)
+    #expect(state.expandedBoundary == .end)
+
+    state.toggle(.end)
+    #expect(state.expandedBoundary == nil)
+}
+
 @Test("A daily request compares against the immediately preceding equal range")
 func dailyRequestBuildsPreviousPeriod() throws {
     var calendar = Calendar(identifier: .gregorian)

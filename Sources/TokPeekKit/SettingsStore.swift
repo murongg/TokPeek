@@ -69,6 +69,55 @@ public struct UsageDateRange: Codable, Sendable, Equatable, Hashable {
     }
 }
 
+public enum UsageDateBoundary: Sendable, Hashable {
+    case start
+    case end
+}
+
+public struct UsageDateRangeDraft: Sendable, Equatable, Hashable {
+    public var start: Date
+    public var end: Date
+
+    public init(range: UsageDateRange) {
+        start = range.start
+        end = range.end
+    }
+
+    public subscript(boundary: UsageDateBoundary) -> Date {
+        get {
+            switch boundary {
+            case .start: start
+            case .end: end
+            }
+        }
+        set {
+            switch boundary {
+            case .start: start = newValue
+            case .end: end = newValue
+            }
+        }
+    }
+
+    public var normalizedRange: UsageDateRange {
+        UsageDateRange(start: start, end: end)
+    }
+}
+
+public struct UsageDatePickerState: Sendable, Equatable, Hashable {
+    public private(set) var expandedBoundary: UsageDateBoundary?
+
+    public init() {}
+
+    public mutating func toggle(
+        _ boundary: UsageDateBoundary
+    ) {
+        expandedBoundary =
+            expandedBoundary == boundary
+            ? nil
+            : boundary
+    }
+}
+
 public enum RefreshFrequency: Int, CaseIterable, Codable, Hashable, Identifiable, Sendable {
     case manual = 0
     case thirtySeconds = 30

@@ -24,6 +24,8 @@ public enum DashboardLayoutMetrics {
     public static let filtersMenuContentLeadingPadding = 8.0
     public static let filtersMenuContentTrailingPadding = 0.0
     public static let filtersMenuNativeTrailingAllowance = 15.0
+    public static let calendarFocusEffectDisabled = true
+    public static let calendarUsesSystemAccent = true
 
     // NSSegmentedControl draws beyond its SwiftUI alignment rect on macOS.
     // Budget both overflow edges so adjacent controls start after the native

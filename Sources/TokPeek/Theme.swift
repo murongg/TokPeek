@@ -15,6 +15,16 @@ enum TokPeekTheme {
     static let compositionReasoning = Color.primary.opacity(0.26)
     static let surface = Color.primary.opacity(0.055)
     static let divider = Color(nsColor: .separatorColor)
+    static let calendarSelectionTint =
+        DashboardLayoutMetrics.calendarUsesSystemAccent
+        ? Color(nsColor: .controlAccentColor)
+        : .primary
+
+    static func prominentForeground(
+        for colorScheme: ColorScheme
+    ) -> Color {
+        colorScheme == .dark ? .black : .white
+    }
 }
 
 struct AppMark: View {

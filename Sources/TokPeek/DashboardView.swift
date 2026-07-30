@@ -687,16 +687,18 @@ private struct UsageFiltersMenu: View {
 }
 
 private struct CustomRangePicker: View {
-    @State private var start: Date
-    @State private var end: Date
+    @Environment(\.colorScheme) private var colorScheme
+    @State private var draft: UsageDateRangeDraft
+    @State private var pickerState = UsageDatePickerState()
     let apply: (UsageDateRange) -> Void
 
     init(
         range: UsageDateRange,
         apply: @escaping (UsageDateRange) -> Void
     ) {
-        _start = State(initialValue: range.start)
-        _end = State(initialValue: range.end)
+        _draft = State(
+            initialValue: UsageDateRangeDraft(range: range)
+        )
         self.apply = apply
     }
 
@@ -705,34 +707,99 @@ private struct CustomRangePicker: View {
             Text("Custom range")
                 .font(.headline)
 
-            DatePicker(
-                "From",
-                selection: $start,
-                displayedComponents: .date
-            )
-            DatePicker(
-                "To",
-                selection: $end,
-                displayedComponents: .date
-            )
+            HStack(spacing: 8) {
+                boundaryButton(
+                    title: "From",
+                    boundary: .start
+                )
+                boundaryButton(
+                    title: "To",
+                    boundary: .end
+                )
+            }
+
+            if let boundary = pickerState.expandedBoundary {
+                // A second NSPopover steals focus from MenuBarExtra and closes
+                // the whole menu, so reveal the calendar inside this popover.
+                DatePicker(
+                    "Date",
+                    selection: selectedDate(for: boundary),
+                    displayedComponents: .date
+                )
+                .datePickerStyle(.graphical)
+                .labelsHidden()
+                .tint(TokPeekTheme.calendarSelectionTint)
+                .focusEffectDisabled(
+                    DashboardLayoutMetrics
+                        .calendarFocusEffectDisabled
+                )
+                .id(boundary)
+            }
 
             HStack {
                 Spacer()
 
-                Button("Apply") {
-                    apply(
-                        UsageDateRange(
-                            start: start,
-                            end: end
+                Button {
+                    apply(draft.normalizedRange)
+                } label: {
+                    Text("Apply")
+                        .foregroundStyle(
+                            TokPeekTheme.prominentForeground(
+                                for: colorScheme
+                            )
                         )
-                    )
                 }
                 .buttonStyle(.borderedProminent)
                 .tint(.primary)
             }
         }
         .padding(16)
-        .frame(width: 280)
+        .frame(width: 320)
+    }
+
+    private func selectedDate(
+        for boundary: UsageDateBoundary
+    ) -> Binding<Date> {
+        Binding(
+            get: {
+                draft[boundary]
+            },
+            set: {
+                draft[boundary] = $0
+            }
+        )
+    }
+
+    private func boundaryButton(
+        title: LocalizedStringKey,
+        boundary: UsageDateBoundary
+    ) -> some View {
+        Button {
+            pickerState.toggle(boundary)
+        } label: {
+            VStack(alignment: .leading, spacing: 2) {
+                Text(title)
+                    .font(.caption2)
+                    .foregroundStyle(.secondary)
+                Text(
+                    draft[boundary].formatted(
+                        date: .abbreviated,
+                        time: .omitted
+                    )
+                )
+                .font(.callout.weight(.medium))
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, 10)
+            .padding(.vertical, 7)
+            .background(
+                pickerState.expandedBoundary == boundary
+                    ? Color.primary.opacity(0.14)
+                    : TokPeekTheme.surface,
+                in: RoundedRectangle(cornerRadius: 8)
+            )
+        }
+        .buttonStyle(.plain)
     }
 }
 
@@ -781,6 +848,7 @@ private struct LoadingView: View {
 }
 
 private struct EmptyUsageView: View {
+    @Environment(\.colorScheme) private var colorScheme
     let refresh: () -> Void
 
     var body: some View {
@@ -802,9 +870,16 @@ private struct EmptyUsageView: View {
             .multilineTextAlignment(.center)
             .frame(maxWidth: 280)
 
-            Button("Scan again", action: refresh)
-                .buttonStyle(.borderedProminent)
-                .tint(.primary)
+            Button(action: refresh) {
+                Text("Scan again")
+                    .foregroundStyle(
+                        TokPeekTheme.prominentForeground(
+                            for: colorScheme
+                        )
+                    )
+            }
+            .buttonStyle(.borderedProminent)
+            .tint(.primary)
         }
         .frame(maxWidth: .infinity, minHeight: 220)
     }
