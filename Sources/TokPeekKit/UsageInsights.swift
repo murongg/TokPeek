@@ -74,7 +74,10 @@ public struct UsageComparison: Sendable, Equatable {
 }
 
 public enum ModelRankingLayout {
-    public static let columnCount = 2
+    public static func columnCount(for itemCount: Int) -> Int {
+        itemCount <= 4 ? 1 : 2
+    }
+
     public static let maximumVisibleItems = 8
 }
 

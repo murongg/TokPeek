@@ -35,9 +35,16 @@ func aggregatesAndRanksModels() throws {
     #expect(report.modelSummaries.first?.messages == 7)
 }
 
-@Test("Model ranking uses two columns and shows up to eight items")
-func modelRankingUsesTwoColumnsAndShowsEightItems() {
-    #expect(ModelRankingLayout.columnCount == 2)
+@Test("Model ranking fills one column up to four items")
+func modelRankingFillsOneColumnUpToFourItems() {
+    #expect(ModelRankingLayout.columnCount(for: 1) == 1)
+    #expect(ModelRankingLayout.columnCount(for: 4) == 1)
+}
+
+@Test("Model ranking uses two columns above four items")
+func modelRankingUsesTwoColumnsAboveFourItems() {
+    #expect(ModelRankingLayout.columnCount(for: 5) == 2)
+    #expect(ModelRankingLayout.columnCount(for: 8) == 2)
     #expect(ModelRankingLayout.maximumVisibleItems == 8)
 }
 

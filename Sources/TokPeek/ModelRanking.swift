@@ -14,7 +14,9 @@ struct ModelRanking: View {
                 spacing: 16,
                 alignment: .top
             ),
-            count: ModelRankingLayout.columnCount
+            count: ModelRankingLayout.columnCount(
+                for: rankedSummaries.count
+            )
         )
     }
 
