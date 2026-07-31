@@ -143,6 +143,7 @@ public enum MenuBarMetric: String, CaseIterable, Codable, Hashable, Identifiable
     case summary
     case tokens
     case cost
+    case budgetProgress
     case iconOnly
 
     public var id: String { rawValue }
@@ -152,6 +153,7 @@ public enum MenuBarMetric: String, CaseIterable, Codable, Hashable, Identifiable
         case .summary: Localization.string("Token and cost")
         case .tokens: Localization.string("Total tokens")
         case .cost: Localization.string("Estimated cost")
+        case .budgetProgress: Localization.string("Budget progress")
         case .iconOnly: Localization.string("Icon only")
         }
     }

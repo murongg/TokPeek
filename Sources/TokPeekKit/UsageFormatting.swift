@@ -27,11 +27,12 @@ public enum MenuBarPresentation: Sendable, Equatable {
     case summary(MenuBarSummary?)
     case tokens(String?)
     case cost(String?)
+    case budgetProgress(Double?)
     case iconOnly
 
     public var singleLineText: String? {
         switch self {
-        case .summary, .iconOnly:
+        case .summary, .budgetProgress, .iconOnly:
             nil
         case let .tokens(tokens):
             tokens ?? "—"
@@ -133,6 +134,8 @@ public enum UsageFormatting {
             compactTokens(report.summary.totalTokens)
         case .cost:
             menuBarCost(report.summary.totalCost)
+        case .budgetProgress:
+            nil
         case .iconOnly:
             nil
         }
@@ -157,7 +160,8 @@ public enum UsageFormatting {
     public static func menuBarPresentation(
         for metric: MenuBarMetric,
         report: UsageReport?,
-        comparison: UsageComparison? = nil
+        comparison: UsageComparison? = nil,
+        budgetProgress: Double? = nil
     ) -> MenuBarPresentation {
         switch metric {
         case .summary:
@@ -193,6 +197,8 @@ public enum UsageFormatting {
                     }
                 }
             )
+        case .budgetProgress:
+            .budgetProgress(budgetProgress)
         case .iconOnly:
             .iconOnly
         }

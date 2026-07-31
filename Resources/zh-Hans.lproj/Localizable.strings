@@ -25,6 +25,7 @@
 "Budget alerts are delivered by macOS and calculated entirely on this Mac." = "预算提醒由 macOS 发送，所有计算均在本机完成。";
 "Budget is 80% used" = "预算已使用 80%";
 "Budget limit reached" = "已达到预算上限";
+"Budget progress" = "预算进度";
 "Cache" = "缓存";
 "Check for Updates…" = "检查更新…";
 "Client details are not available for this period." = "此时间段暂无客户端明细。";

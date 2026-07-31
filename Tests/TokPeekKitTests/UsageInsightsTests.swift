@@ -175,6 +175,12 @@ func menuBarMetricsProduceLabels() throws {
     #expect(UsageFormatting.menuBarTitle(for: .tokens, report: report) == "1.5K")
     #expect(UsageFormatting.menuBarTitle(for: .cost, report: report) == "$1.25")
     #expect(UsageFormatting.menuBarTitle(for: .summary, report: report) == nil)
+    #expect(
+        UsageFormatting.menuBarTitle(
+            for: .budgetProgress,
+            report: report
+        ) == nil
+    )
     #expect(UsageFormatting.menuBarTitle(for: .iconOnly, report: report) == nil)
 
     let summary = UsageFormatting.menuBarSummary(for: report)
@@ -211,6 +217,13 @@ func menuBarDisplaySettingsResolveDistinctPresentations() throws {
     )
     #expect(
         UsageFormatting.menuBarPresentation(
+            for: .budgetProgress,
+            report: report,
+            budgetProgress: 0.6
+        ) == .budgetProgress(0.6)
+    )
+    #expect(
+        UsageFormatting.menuBarPresentation(
             for: .iconOnly,
             report: report
         ) == .iconOnly
@@ -227,9 +240,15 @@ func menuBarDisplaySettingsResolveDistinctPresentations() throws {
             report: nil
         ) == .cost(nil)
     )
+    #expect(
+        UsageFormatting.menuBarPresentation(
+            for: .budgetProgress,
+            report: nil
+        ) == .budgetProgress(nil)
+    )
 }
 
-@Test("Only single-metric menu bar modes expose visible text")
+@Test("Only single-line menu bar modes expose visible text")
 func singleMetricMenuBarModesExposeVisibleText() {
     #expect(
         MenuBarPresentation.tokens("1.5K").singleLineText == "1.5K"
@@ -242,6 +261,12 @@ func singleMetricMenuBarModesExposeVisibleText() {
     )
     #expect(
         MenuBarPresentation.cost(nil).singleLineText == "$—"
+    )
+    #expect(
+        MenuBarPresentation.budgetProgress(0.6).singleLineText == nil
+    )
+    #expect(
+        MenuBarPresentation.budgetProgress(nil).singleLineText == nil
     )
     #expect(
         MenuBarPresentation.summary(nil).singleLineText == nil

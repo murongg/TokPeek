@@ -60,7 +60,7 @@ without confirmation.
 ## Features
 
 - Two-line menu bar status with estimated cost and token usage
-- Alternate menu bar modes for tokens, cost, or the app icon
+- Alternate menu bar modes for tokens, cost, budget progress, or the app icon
 - Today, 7-day, 30-day, 90-day, and all-time reporting
 - Model filtering across totals, charts, clients, and rankings
 - Token composition, daily usage, client share, and two-column model ranking

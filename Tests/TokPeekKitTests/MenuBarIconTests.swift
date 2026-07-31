@@ -21,6 +21,26 @@ func menuBarIconUsesSystemSymbol() throws {
     #expect(image.isTemplate)
 }
 
+@Test("Budget progress artwork maps usage into its compact track")
+func budgetProgressArtworkMapsUsageIntoTrack() {
+    #expect(MenuBarBudgetProgressLayout.trackWidth == 22)
+    #expect(MenuBarBudgetProgressLayout.artworkWidth == 24)
+    #expect(
+        MenuBarBudgetProgressLayout.fillWidth(for: nil) == 0
+    )
+    #expect(
+        MenuBarBudgetProgressLayout.fillWidth(for: 0.6)
+            == MenuBarBudgetProgressLayout.trackWidth * 0.6
+    )
+    #expect(
+        MenuBarBudgetProgressLayout.fillWidth(for: -0.2) == 0
+    )
+    #expect(
+        MenuBarBudgetProgressLayout.fillWidth(for: 1.2)
+            == MenuBarBudgetProgressLayout.trackWidth
+    )
+}
+
 @Test("App icon artwork fills the canvas without losing rounded corners")
 func appIconArtworkFillsCanvas() throws {
     let repositoryRoot = URL(fileURLWithPath: #filePath)

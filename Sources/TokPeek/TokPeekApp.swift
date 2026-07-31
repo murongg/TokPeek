@@ -156,10 +156,16 @@ private struct MenuBarStatusLabel: View {
                 current.compared(to: $0)
             }
         }
+        // Budget cycles can differ from the visible usage period, so progress
+        // must come from the dedicated budget report.
+        let budgetProgress = store.budgetReport.flatMap {
+            settings.budget.snapshot(report: $0)?.progress
+        }
         let presentation = UsageFormatting.menuBarPresentation(
             for: settings.menuBarMetric,
             report: store.report,
-            comparison: comparison
+            comparison: comparison,
+            budgetProgress: budgetProgress
         )
 
         switch presentation {
@@ -178,6 +184,8 @@ private struct MenuBarStatusLabel: View {
                 )
                 .lineLimit(1)
                 .fixedSize(horizontal: true, vertical: false)
+        case let .budgetProgress(progress):
+            MenuBarBudgetProgressLabel(progress: progress)
         case .iconOnly:
             Image(nsImage: iconOnlyArtwork)
                 .accessibilityLabel("TokPeek")
@@ -204,6 +212,69 @@ private struct MenuBarStatusLabel: View {
 
         image.isTemplate = true
         return image
+    }
+}
+
+private struct MenuBarBudgetProgressLabel: View {
+    let progress: Double?
+
+    var body: some View {
+        Image(nsImage: artwork)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel("Budget progress")
+            .accessibilityValue(accessibilityValue)
+    }
+
+    private var artwork: NSImage {
+        let renderer = ImageRenderer(
+            content: MenuBarBudgetProgressArtwork(progress: progress)
+        )
+        renderer.scale = NSScreen.main?.backingScaleFactor ?? 2
+
+        guard let image = renderer.nsImage else {
+            return NSImage()
+        }
+
+        image.isTemplate = true
+        return image
+    }
+
+    private var accessibilityValue: String {
+        guard let progress else {
+            return Localization.string("Refreshing usage")
+        }
+
+        return UsageFormatting.percentage(progress)
+    }
+}
+
+private struct MenuBarBudgetProgressArtwork: View {
+    let progress: Double?
+
+    var body: some View {
+        let fillWidth = MenuBarBudgetProgressLayout.fillWidth(
+            for: progress
+        )
+
+        ZStack(alignment: .leading) {
+            Capsule()
+                .fill(.black.opacity(0.3))
+
+            if fillWidth > 0 {
+                Rectangle()
+                    .fill(.black)
+                    .frame(width: fillWidth)
+            }
+        }
+        .frame(
+            width: MenuBarBudgetProgressLayout.trackWidth,
+            height: MenuBarBudgetProgressLayout.trackHeight
+        )
+        .clipShape(Capsule())
+        .frame(
+            width: MenuBarBudgetProgressLayout.artworkWidth,
+            height: MenuBarBudgetProgressLayout.artworkHeight
+        )
     }
 }
 

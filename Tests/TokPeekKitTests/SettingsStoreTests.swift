@@ -15,7 +15,7 @@ func settingsPersistAndReload() throws {
     let settings = SettingsStore(defaults: defaults)
     settings.usagePeriod = .month
     settings.refreshFrequency = .fiveMinutes
-    settings.menuBarMetric = .cost
+    settings.menuBarMetric = .budgetProgress
     settings.useEnvironmentRoots = true
     settings.customDateRange = UsageDateRange(
         start: Date(timeIntervalSince1970: 1_780_000_000),
@@ -31,7 +31,7 @@ func settingsPersistAndReload() throws {
 
     #expect(reloaded.usagePeriod == .month)
     #expect(reloaded.refreshFrequency == .fiveMinutes)
-    #expect(reloaded.menuBarMetric == .cost)
+    #expect(reloaded.menuBarMetric == .budgetProgress)
     #expect(reloaded.useEnvironmentRoots)
     #expect(reloaded.customDateRange == settings.customDateRange)
     #expect(reloaded.isBudgetEnabled)
