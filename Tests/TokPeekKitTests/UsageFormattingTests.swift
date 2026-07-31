@@ -31,6 +31,22 @@ func formatsChartTooltipMetrics() {
     #expect(metrics.percentage == "12%")
 }
 
+@Test("Budget values follow the selected cost or token metric")
+func formatsBudgetValues() {
+    #expect(
+        UsageFormatting.budgetValue(
+            12.5,
+            metric: .cost
+        ) == UsageFormatting.cost(12.5)
+    )
+    #expect(
+        UsageFormatting.budgetValue(
+            1_250_000,
+            metric: .tokens
+        ) == "1.3M"
+    )
+}
+
 @Test("Chart tooltip surface is fully opaque in every appearance")
 func chartTooltipSurfaceIsOpaque() {
     #expect(UsageTooltipAppearance.backgroundOpacity == 1)

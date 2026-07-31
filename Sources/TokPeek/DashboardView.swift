@@ -221,6 +221,9 @@ struct DashboardView: View {
             report: report,
             comparison: comparison
         )
+        if let budgetSnapshot {
+            BudgetOverview(snapshot: budgetSnapshot)
+        }
         UsageChart(
             report: report,
             period: settings.usagePeriod
@@ -300,16 +303,28 @@ struct DashboardView: View {
     }
 
     private var refreshTaskID: String {
-        let request = settings.values.usageRequest()
-        return [
+        let values = settings.values
+        let request = values.usageRequest()
+        let budgetRequest = values.budget.analyticsRequest(
+            useEnvironmentRoots: values.useEnvironmentRoots
+        )
+        let components: [String] = [
             settings.usagePeriod.rawValue,
             String(settings.refreshFrequency.rawValue),
             String(settings.useEnvironmentRoots),
+            String(settings.isBudgetEnabled),
+            settings.budgetPeriod.rawValue,
+            settings.budgetMetric.rawValue,
+            String(settings.budgetLimit),
+            String(settings.budgetNotificationsEnabled),
             request.since ?? "",
             request.until ?? "",
             request.startTimeMs.map(String.init) ?? "",
             request.endTimeMs.map(String.init) ?? "",
-        ].joined(separator: "|")
+            budgetRequest?.since ?? "",
+            budgetRequest?.until ?? "",
+        ]
+        return components.joined(separator: "|")
     }
 
     private func refresh() {
@@ -325,6 +340,7 @@ struct DashboardView: View {
         configureRequests()
         await store.refresh()
         await store.refreshComparisonIfNeeded()
+        await store.refreshBudgetIfNeeded(maxAge: 0)
     }
 
     private func refreshLoop() async {
@@ -333,6 +349,9 @@ struct DashboardView: View {
             maxAge: settings.refreshFrequency.seconds
         )
         await store.refreshComparisonIfNeeded()
+        await store.refreshBudgetIfNeeded(
+            maxAge: settings.refreshFrequency.seconds
+        )
         await store.refreshModelCatalogIfNeeded(
             maxAge: 300
         )
@@ -354,10 +373,24 @@ struct DashboardView: View {
         }
     }
 
-    private func configureRequests() {
-        let request = settings.values.usageRequest()
+    private func configureRequests(
+        now: Date = Date()
+    ) {
+        let values = settings.values
+        let request = values.usageRequest(now: now)
         store.request = request
         store.comparisonRequest = request.previousPeriod()
+        store.budgetRequest = values.budget.analyticsRequest(
+            now: now,
+            useEnvironmentRoots: values.useEnvironmentRoots
+        )
+    }
+
+    private var budgetSnapshot: UsageBudgetSnapshot? {
+        guard let report = store.budgetReport else {
+            return nil
+        }
+        return settings.budget.snapshot(report: report)
     }
 }
 

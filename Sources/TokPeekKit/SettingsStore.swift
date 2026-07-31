@@ -163,19 +163,22 @@ public struct SettingsValues: Sendable, Equatable, Hashable {
     public var menuBarMetric: MenuBarMetric
     public var useEnvironmentRoots: Bool
     public var customDateRange: UsageDateRange?
+    public var budget: UsageBudget
 
     public init(
         usagePeriod: UsagePeriod,
         refreshFrequency: RefreshFrequency,
         menuBarMetric: MenuBarMetric,
         useEnvironmentRoots: Bool,
-        customDateRange: UsageDateRange? = nil
+        customDateRange: UsageDateRange? = nil,
+        budget: UsageBudget = .default
     ) {
         self.usagePeriod = usagePeriod
         self.refreshFrequency = refreshFrequency
         self.menuBarMetric = menuBarMetric
         self.useEnvironmentRoots = useEnvironmentRoots
         self.customDateRange = customDateRange
+        self.budget = budget
     }
 
     public func usageRequest(
@@ -350,13 +353,69 @@ public final class SettingsStore: ObservableObject {
         }
     }
 
+    @Published public var isBudgetEnabled: Bool {
+        didSet {
+            defaults.set(
+                isBudgetEnabled,
+                forKey: Key.isBudgetEnabled
+            )
+        }
+    }
+
+    @Published public var budgetPeriod: UsageBudgetPeriod {
+        didSet {
+            defaults.set(
+                budgetPeriod.rawValue,
+                forKey: Key.budgetPeriod
+            )
+        }
+    }
+
+    @Published public var budgetMetric: UsageBudgetMetric {
+        didSet {
+            defaults.set(
+                budgetMetric.rawValue,
+                forKey: Key.budgetMetric
+            )
+        }
+    }
+
+    @Published public var budgetLimit: Double {
+        didSet {
+            defaults.set(
+                budgetLimit,
+                forKey: Key.budgetLimit
+            )
+        }
+    }
+
+    @Published public var budgetNotificationsEnabled: Bool {
+        didSet {
+            defaults.set(
+                budgetNotificationsEnabled,
+                forKey: Key.budgetNotificationsEnabled
+            )
+        }
+    }
+
+    public var budget: UsageBudget {
+        UsageBudget(
+            isEnabled: isBudgetEnabled,
+            period: budgetPeriod,
+            metric: budgetMetric,
+            limit: budgetLimit,
+            notificationsEnabled: budgetNotificationsEnabled
+        )
+    }
+
     public var values: SettingsValues {
         SettingsValues(
             usagePeriod: usagePeriod,
             refreshFrequency: refreshFrequency,
             menuBarMetric: menuBarMetric,
             useEnvironmentRoots: useEnvironmentRoots,
-            customDateRange: customDateRange
+            customDateRange: customDateRange,
+            budget: budget
         )
     }
 
@@ -400,6 +459,33 @@ public final class SettingsStore: ObservableObject {
                     forKey: Key.customRangeEnd
                 ) as? Date ?? fallbackEnd
         )
+        isBudgetEnabled = defaults.bool(
+            forKey: Key.isBudgetEnabled
+        )
+        budgetPeriod =
+            UsageBudgetPeriod(
+                rawValue: defaults.string(
+                    forKey: Key.budgetPeriod
+                ) ?? ""
+            ) ?? .month
+        budgetMetric =
+            UsageBudgetMetric(
+                rawValue: defaults.string(
+                    forKey: Key.budgetMetric
+                ) ?? ""
+            ) ?? .cost
+        budgetLimit =
+            defaults.object(forKey: Key.budgetLimit) == nil
+            ? UsageBudget.default.limit
+            : defaults.double(forKey: Key.budgetLimit)
+        budgetNotificationsEnabled =
+            defaults.object(
+                forKey: Key.budgetNotificationsEnabled
+            ) == nil
+            ? UsageBudget.default.notificationsEnabled
+            : defaults.bool(
+                forKey: Key.budgetNotificationsEnabled
+            )
     }
 }
 
@@ -410,4 +496,10 @@ private enum Key {
     static let useEnvironmentRoots = "useEnvironmentRoots"
     static let customRangeStart = "customRangeStart"
     static let customRangeEnd = "customRangeEnd"
+    static let isBudgetEnabled = "isBudgetEnabled"
+    static let budgetPeriod = "budgetPeriod"
+    static let budgetMetric = "budgetMetric"
+    static let budgetLimit = "budgetLimit"
+    static let budgetNotificationsEnabled =
+        "budgetNotificationsEnabled"
 }

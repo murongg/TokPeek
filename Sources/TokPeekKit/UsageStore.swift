@@ -9,6 +9,7 @@ public protocol UsageLoading: Sendable {
 public final class UsageStore: ObservableObject {
     @Published public private(set) var report: UsageReport?
     @Published public private(set) var comparisonReport: UsageReport?
+    @Published public private(set) var budgetReport: UsageReport?
     @Published public private(set) var modelCatalog: [String] = []
     @Published public private(set) var isLoading = false
     @Published public private(set) var errorMessage: String?
@@ -27,13 +28,27 @@ public final class UsageStore: ObservableObject {
             }
         }
     }
+    public var budgetRequest: UsageRequest? {
+        didSet {
+            guard budgetRequest != oldValue else {
+                return
+            }
+            budgetGeneration &+= 1
+            if budgetRequest != lastSuccessfulBudgetRequest {
+                budgetReport = nil
+            }
+        }
+    }
     private var refreshGeneration: UInt64 = 0
     private var comparisonGeneration: UInt64 = 0
+    private var budgetGeneration: UInt64 = 0
     private var modelCatalogGeneration: UInt64 = 0
     private var lastSuccessfulRequest: UsageRequest?
     private var lastSuccessfulRefreshAt: Date?
     private var lastSuccessfulComparisonRequest: UsageRequest?
     private var lastSuccessfulComparisonRefreshAt: Date?
+    private var lastSuccessfulBudgetRequest: UsageRequest?
+    private var lastSuccessfulBudgetRefreshAt: Date?
     private var lastSuccessfulModelCatalogRequest: UsageRequest?
     private var lastSuccessfulModelCatalogRefreshAt: Date?
 
@@ -52,6 +67,7 @@ public final class UsageStore: ObservableObject {
         self.loader = loader
         self.request = request
         comparisonRequest = nil
+        budgetRequest = nil
     }
 
     public func refreshIfNeeded(
@@ -134,6 +150,44 @@ public final class UsageStore: ObservableObject {
         } catch {
             // Comparison is supplementary; the current report remains useful
             // when an older range cannot be loaded.
+        }
+    }
+
+    public func refreshBudgetIfNeeded(
+        maxAge: TimeInterval? = nil,
+        now: Date = Date()
+    ) async {
+        guard let budgetRequest else {
+            budgetReport = nil
+            lastSuccessfulBudgetRequest = nil
+            lastSuccessfulBudgetRefreshAt = nil
+            return
+        }
+        guard shouldRefreshBudget(
+            request: budgetRequest,
+            maxAge: maxAge,
+            now: now
+        ) else {
+            return
+        }
+
+        budgetGeneration &+= 1
+        let generation = budgetGeneration
+        let activeLoader = loader
+
+        do {
+            let loadedReport = try await activeLoader.loadReport(
+                request: budgetRequest
+            )
+            guard generation == budgetGeneration else {
+                return
+            }
+            budgetReport = loadedReport
+            lastSuccessfulBudgetRequest = budgetRequest
+            lastSuccessfulBudgetRefreshAt = now
+        } catch {
+            // Budget analytics are supplementary; the main report remains
+            // available if their broader date scan cannot be loaded.
         }
     }
 
@@ -234,6 +288,28 @@ public final class UsageStore: ObservableObject {
 
         return now.timeIntervalSince(
             lastSuccessfulComparisonRefreshAt
+        ) >= maxAge
+    }
+
+    private func shouldRefreshBudget(
+        request: UsageRequest,
+        maxAge: TimeInterval?,
+        now: Date
+    ) -> Bool {
+        guard
+            budgetReport != nil,
+            lastSuccessfulBudgetRequest == request,
+            let lastSuccessfulBudgetRefreshAt
+        else {
+            return true
+        }
+
+        guard let maxAge else {
+            return false
+        }
+
+        return now.timeIntervalSince(
+            lastSuccessfulBudgetRefreshAt
         ) >= maxAge
     }
 }

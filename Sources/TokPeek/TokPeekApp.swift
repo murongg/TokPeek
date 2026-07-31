@@ -19,6 +19,8 @@ struct TokPeekApp: App {
     @StateObject private var settings = SettingsStore()
     @StateObject private var launchAtLogin = LaunchAtLoginController()
     @StateObject private var updates: UpdateCoordinator
+    @StateObject private var budgetNotifications =
+        BudgetNotificationCoordinator()
 
     init() {
         _updates = StateObject(
@@ -41,7 +43,22 @@ struct TokPeekApp: App {
                 store: store
             )
                 .task(id: menuBarRefreshTaskID) {
-                    await refreshMenuBarUsage()
+                    await monitorMenuBarUsage()
+                }
+                .onChange(of: store.budgetReport) {
+                    guard
+                        let report = store.budgetReport,
+                        let snapshot = settings.budget.snapshot(
+                            report: report
+                        )
+                    else {
+                        return
+                    }
+                    Task {
+                        await budgetNotifications.evaluate(
+                            snapshot: snapshot
+                        )
+                    }
                 }
         }
         .menuBarExtraStyle(.window)
@@ -56,26 +73,75 @@ struct TokPeekApp: App {
     }
 
     private var menuBarRefreshTaskID: String {
-        let request = settings.values.usageRequest()
-        return [
+        let values = settings.values
+        let request = values.usageRequest()
+        let budgetRequest = values.budget.analyticsRequest(
+            useEnvironmentRoots: values.useEnvironmentRoots
+        )
+        let components: [String] = [
             settings.usagePeriod.rawValue,
             String(settings.refreshFrequency.rawValue),
             String(settings.useEnvironmentRoots),
+            String(settings.isBudgetEnabled),
+            settings.budgetPeriod.rawValue,
+            settings.budgetMetric.rawValue,
+            String(settings.budgetLimit),
+            String(settings.budgetNotificationsEnabled),
             request.since ?? "",
             request.until ?? "",
             request.startTimeMs.map(String.init) ?? "",
             request.endTimeMs.map(String.init) ?? "",
-        ].joined(separator: "|")
+            budgetRequest?.since ?? "",
+            budgetRequest?.until ?? "",
+        ]
+        return components.joined(separator: "|")
+    }
+
+    private func monitorMenuBarUsage() async {
+        await refreshMenuBarUsage()
+
+        guard let seconds = settings.refreshFrequency.seconds else {
+            return
+        }
+
+        while !Task.isCancelled {
+            do {
+                try await Task.sleep(for: .seconds(seconds))
+            } catch {
+                return
+            }
+            await refreshMenuBarUsage()
+        }
     }
 
     private func refreshMenuBarUsage() async {
-        let request = settings.values.usageRequest()
+        let now = Date()
+        let values = settings.values
+        let request = values.usageRequest(now: now)
         store.request = request
         store.comparisonRequest = request.previousPeriod()
+        store.budgetRequest = values.budget.analyticsRequest(
+            now: now,
+            useEnvironmentRoots: values.useEnvironmentRoots
+        )
         await store.refreshIfNeeded(
             maxAge: settings.refreshFrequency.seconds
         )
         await store.refreshComparisonIfNeeded()
+        await store.refreshBudgetIfNeeded(
+            maxAge: settings.refreshFrequency.seconds
+        )
+
+        guard
+            let budgetReport = store.budgetReport,
+            let snapshot = values.budget.snapshot(
+                report: budgetReport,
+                now: now
+            )
+        else {
+            return
+        }
+        await budgetNotifications.evaluate(snapshot: snapshot)
     }
 }
 

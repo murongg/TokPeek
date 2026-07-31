@@ -243,6 +243,53 @@ func nilComparisonRequestClearsReport() async throws {
     #expect(store.comparisonReport == nil)
 }
 
+@MainActor
+@Test("Budget reports load once per distinct analytics request")
+func budgetReportCachesByRequest() async throws {
+    let loader = CountingLoader(
+        report: try fixtureReport(totalTokens: 7_500)
+    )
+    let store = UsageStore(loader: loader)
+    store.budgetRequest = UsageRequest(
+        since: "2026-07-01",
+        until: "2026-07-30"
+    )
+
+    await store.refreshBudgetIfNeeded()
+    await store.refreshBudgetIfNeeded()
+
+    #expect(store.budgetReport?.summary.totalTokens == 7_500)
+    #expect(await loader.loadCount == 1)
+
+    store.budgetRequest = UsageRequest(
+        since: "2026-08-01",
+        until: "2026-08-01"
+    )
+    await store.refreshBudgetIfNeeded()
+
+    #expect(await loader.loadCount == 2)
+}
+
+@MainActor
+@Test("Removing the budget request clears stale budget data")
+func nilBudgetRequestClearsReport() async throws {
+    let store = UsageStore(
+        loader: StubLoader(
+            report: try fixtureReport(totalTokens: 7_500)
+        )
+    )
+    store.budgetRequest = UsageRequest(
+        since: "2026-07-01",
+        until: "2026-07-30"
+    )
+    await store.refreshBudgetIfNeeded()
+
+    store.budgetRequest = nil
+    await store.refreshBudgetIfNeeded()
+
+    #expect(store.budgetReport == nil)
+}
+
 private struct StubLoader: UsageLoading {
     let report: UsageReport
 

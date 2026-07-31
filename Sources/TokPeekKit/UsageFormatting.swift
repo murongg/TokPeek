@@ -96,6 +96,18 @@ public enum UsageFormatting {
         )
     }
 
+    public static func budgetValue(
+        _ value: Double,
+        metric: UsageBudgetMetric
+    ) -> String {
+        switch metric {
+        case .cost:
+            cost(value)
+        case .tokens:
+            compactTokens(Int64(value.rounded()))
+        }
+    }
+
     public static func tooltipMetrics(
         tokens: Int64,
         cost: Double,

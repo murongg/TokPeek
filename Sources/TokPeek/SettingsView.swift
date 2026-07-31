@@ -16,6 +16,14 @@ struct SettingsView: View {
                     Label("General", systemImage: "gearshape")
                 }
 
+            budget
+                .tabItem {
+                    Label(
+                        "Budget",
+                        systemImage: "gauge.with.dots.needle.67percent"
+                    )
+                }
+
             data
                 .tabItem {
                     Label("Data", systemImage: "externaldrive")
@@ -26,7 +34,7 @@ struct SettingsView: View {
                     Label("About", systemImage: "info.circle")
                 }
         }
-        .frame(width: 520, height: 360)
+        .frame(width: 520, height: 390)
         .tint(.primary)
         .onAppear {
             launchAtLogin.refresh()
@@ -92,6 +100,77 @@ struct SettingsView: View {
                 )
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            }
+        }
+        .formStyle(.grouped)
+        .padding()
+    }
+
+    private var budget: some View {
+        Form {
+            Section("Budget") {
+                Toggle(
+                    "Enable budget tracking",
+                    isOn: $settings.isBudgetEnabled
+                )
+
+                if settings.isBudgetEnabled {
+                    Picker(
+                        "Metric",
+                        selection: $settings.budgetMetric
+                    ) {
+                        ForEach(UsageBudgetMetric.allCases) { metric in
+                            Text(metric.title)
+                                .tag(metric)
+                        }
+                    }
+
+                    Picker(
+                        "Period",
+                        selection: $settings.budgetPeriod
+                    ) {
+                        ForEach(UsageBudgetPeriod.allCases) { period in
+                            Text(period.title)
+                                .tag(period)
+                        }
+                    }
+
+                    LabeledContent("Limit") {
+                        HStack(spacing: 6) {
+                            TextField(
+                                "Limit",
+                                value: $settings.budgetLimit,
+                                format: .number.precision(
+                                    .fractionLength(0...2)
+                                )
+                            )
+                            .multilineTextAlignment(.trailing)
+                            .frame(width: 120)
+
+                            Text(
+                                settings.budgetMetric == .cost
+                                    ? "USD"
+                                    : Localization.string("tokens")
+                            )
+                            .foregroundStyle(.secondary)
+                        }
+                    }
+                }
+            }
+
+            if settings.isBudgetEnabled {
+                Section("Alerts") {
+                    Toggle(
+                        "Notify at 80% and 100%",
+                        isOn: $settings.budgetNotificationsEnabled
+                    )
+
+                    Text(
+                        "Budget alerts are delivered by macOS and calculated entirely on this Mac."
+                    )
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                }
             }
         }
         .formStyle(.grouped)

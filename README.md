@@ -64,6 +64,8 @@ without confirmation.
 - Today, 7-day, 30-day, 90-day, and all-time reporting
 - Model filtering across totals, charts, clients, and rankings
 - Token composition, daily usage, client share, and two-column model ranking
+- Daily, weekly, or monthly cost and token budgets with month-end forecasting
+- Local macOS alerts when budget usage reaches 80% and 100%
 - Tooltips for chart values and detailed usage metadata
 - Configurable refresh interval and default reporting period
 - Optional launch at login through `SMAppService`

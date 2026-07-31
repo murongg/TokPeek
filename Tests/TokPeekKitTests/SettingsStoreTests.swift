@@ -21,6 +21,11 @@ func settingsPersistAndReload() throws {
         start: Date(timeIntervalSince1970: 1_780_000_000),
         end: Date(timeIntervalSince1970: 1_780_604_800)
     )
+    settings.isBudgetEnabled = true
+    settings.budgetPeriod = .week
+    settings.budgetMetric = .tokens
+    settings.budgetLimit = 2_500_000
+    settings.budgetNotificationsEnabled = false
 
     let reloaded = SettingsStore(defaults: defaults)
 
@@ -29,6 +34,21 @@ func settingsPersistAndReload() throws {
     #expect(reloaded.menuBarMetric == .cost)
     #expect(reloaded.useEnvironmentRoots)
     #expect(reloaded.customDateRange == settings.customDateRange)
+    #expect(reloaded.isBudgetEnabled)
+    #expect(reloaded.budgetPeriod == .week)
+    #expect(reloaded.budgetMetric == .tokens)
+    #expect(reloaded.budgetLimit == 2_500_000)
+    #expect(reloaded.budgetNotificationsEnabled == false)
+    #expect(
+        reloaded.budget
+            == UsageBudget(
+                isEnabled: true,
+                period: .week,
+                metric: .tokens,
+                limit: 2_500_000,
+                notificationsEnabled: false
+            )
+    )
 }
 
 @MainActor
@@ -44,6 +64,11 @@ func freshSettingsUseDefaults() throws {
     #expect(settings.refreshFrequency == .minute)
     #expect(settings.menuBarMetric == .summary)
     #expect(settings.useEnvironmentRoots == false)
+    #expect(settings.isBudgetEnabled == false)
+    #expect(settings.budgetPeriod == .month)
+    #expect(settings.budgetMetric == .cost)
+    #expect(settings.budgetLimit == 50)
+    #expect(settings.budgetNotificationsEnabled)
 }
 
 @Test("Usage periods build an inclusive Tokscale request")
