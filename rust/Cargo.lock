@@ -1308,8 +1308,8 @@ dependencies = [
 
 [[package]]
 name = "tokscale-core"
-version = "4.7.0"
-source = "git+https://github.com/junhoyeo/tokscale?rev=f36931d33a61bf07c788fbbd2dacb0266277acf6#f36931d33a61bf07c788fbbd2dacb0266277acf6"
+version = "4.8.1"
+source = "git+https://github.com/junhoyeo/tokscale?rev=45b3b3e4ccf58f9eee4fc4159003f5f884af79b3#45b3b3e4ccf58f9eee4fc4159003f5f884af79b3"
 dependencies = [
  "bincode",
  "chrono",
