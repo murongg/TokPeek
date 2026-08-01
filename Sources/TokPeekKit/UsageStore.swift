@@ -51,6 +51,8 @@ public final class UsageStore: ObservableObject {
     private var lastSuccessfulBudgetRefreshAt: Date?
     private var lastSuccessfulModelCatalogRequest: UsageRequest?
     private var lastSuccessfulModelCatalogRefreshAt: Date?
+    private let reportCache: (any UsageReportCaching)?
+    private var lastCacheRestoreRequest: UsageRequest?
 
     public var isLoadingNewRequest: Bool {
         // Scheduled refreshes keep the current report visible. A changed
@@ -62,10 +64,12 @@ public final class UsageStore: ObservableObject {
 
     public init(
         loader: any UsageLoading,
-        request: UsageRequest = UsageRequest()
+        request: UsageRequest = UsageRequest(),
+        reportCache: (any UsageReportCaching)? = nil
     ) {
         self.loader = loader
         self.request = request
+        self.reportCache = reportCache
         comparisonRequest = nil
         budgetRequest = nil
     }
@@ -74,6 +78,12 @@ public final class UsageStore: ObservableObject {
         maxAge: TimeInterval?,
         now: Date = Date()
     ) async {
+        await restoreCachedReportIfNeeded()
+        // The persistent menu label and a newly opened dashboard can start
+        // together; sharing this in-flight request avoids duplicate FFI scans.
+        guard !isLoading || loadingRequest != request else {
+            return
+        }
         guard shouldRefresh(maxAge: maxAge, now: now) else {
             return
         }
@@ -106,13 +116,50 @@ public final class UsageStore: ObservableObject {
             }
             report = loadedReport
             lastSuccessfulRequest = requestedReport
-            lastSuccessfulRefreshAt = Date()
+            let refreshedAt = Date()
+            lastSuccessfulRefreshAt = refreshedAt
+            if let reportCache {
+                await reportCache.save(
+                    UsageReportSnapshot(
+                        request: requestedReport,
+                        report: loadedReport,
+                        refreshedAt: refreshedAt
+                    )
+                )
+            }
         } catch {
             guard generation == refreshGeneration else {
                 return
             }
             errorMessage = error.localizedDescription
         }
+    }
+
+    private func restoreCachedReportIfNeeded() async {
+        let requestedReport = request
+        guard
+            report == nil,
+            lastCacheRestoreRequest != requestedReport,
+            let reportCache
+        else {
+            return
+        }
+
+        lastCacheRestoreRequest = requestedReport
+        // Usage periods are encoded in the request, so restoring a mismatched
+        // snapshot would show stale totals under the wrong period label.
+        guard
+            let snapshot = await reportCache.load(),
+            snapshot.request == requestedReport,
+            request == requestedReport,
+            report == nil
+        else {
+            return
+        }
+
+        report = snapshot.report
+        lastSuccessfulRequest = snapshot.request
+        lastSuccessfulRefreshAt = snapshot.refreshedAt
     }
 
     public func refreshComparisonIfNeeded(

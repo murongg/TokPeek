@@ -11,6 +11,8 @@
 		0477EB946A46B9A6943407917E44B380 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4CCC971AAD5048A5C4B06882C97D5E7A /* Sparkle */; };
 		04ACDF24B7F1BE5CFD508822DD90DD92 /* UpdateCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3667C769C3700BB997049297E3C1E27 /* UpdateCoordinatorTests.swift */; };
 		0570B6075FD6A7E2570476FC88631322 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E77DA364C7AA3E1B69E07435D709CD97 /* CoreFoundation.framework */; };
+		0C9F0F3D6A5243128F2A1002 /* UsageReportCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F0F3D6A5243128F2A1001 /* UsageReportCache.swift */; };
+		0C9F0F3D6A5243128F2A1003 /* UsageReportCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9F0F3D6A5243128F2A1001 /* UsageReportCache.swift */; };
 		1350D8C4C4385A0A46D4436DF234261C /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1976B9C1DAD1290CA6525E409A738916 /* SystemConfiguration.framework */; };
 		156B2B2811D494E9C1847E6B710CE53E /* libtokpeek_core_ffi.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 60E3A57259E6455FF1D7BF77F7744EDE /* libtokpeek_core_ffi.a */; };
 		19BC73DBD2B9EC947BBBABEF49BFA2AC /* UsageOverview.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4E099BEA9E0CC5DF9A02FA9AD3C5FC4 /* UsageOverview.swift */; };
@@ -77,6 +79,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0C9F0F3D6A5243128F2A1001 /* UsageReportCache.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageReportCache.swift; path = TokPeekKit/UsageReportCache.swift; sourceTree = "<group>"; };
 		10077C83AF7BBFCEFB23BFDA94816F68 /* BudgetOverview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BudgetOverview.swift; path = TokPeek/BudgetOverview.swift; sourceTree = "<group>"; };
 		11D3344648555DAD5F9C0105E68485CB /* TokPeekTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TokPeekTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		139F2BEAF258794938ED1DB042BB0D59 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -269,6 +272,7 @@
 				55066C97ACC1BCFCFE9B2FF2F239B5EC /* UsageFormatting.swift */,
 				6A971F3ADA3D0CA76DE740E37A91B79D /* UsageInsights.swift */,
 				2BF69944B8971A82BFB493138ECA9714 /* UsageReport.swift */,
+				0C9F0F3D6A5243128F2A1001 /* UsageReportCache.swift */,
 				355940114A516A53634806D7AD832B9D /* UsageRequest.swift */,
 				FB87DD866E93B4047E9EBB506EC6B5F7 /* UsageStore.swift */,
 				32D29E744F47CAB0FA1F2E6282829C50 /* tokpeek_core.h */,
@@ -424,6 +428,7 @@
 				D5966B4C8D05818B451673F943B1EC71 /* UsageFormatting.swift in Sources */,
 				F21D87806B9AECAFA08B260D207A6F6A /* UsageInsights.swift in Sources */,
 				21CF368766BF85F812E37C094A385FF2 /* UsageReport.swift in Sources */,
+				0C9F0F3D6A5243128F2A1002 /* UsageReportCache.swift in Sources */,
 				F421DF10AECEC6ED4C946CA8091070A2 /* UsageRequest.swift in Sources */,
 				545601EA32565830FBC2E02F274C6608 /* UsageStore.swift in Sources */,
 			);
@@ -447,6 +452,7 @@
 				5B036BCBAFEF9998F81FD8B4B05C92AF /* UsageFormatting.swift in Sources */,
 				71FB55A08A592B7B36847A5AF7272F6B /* UsageInsights.swift in Sources */,
 				464DA1F62A9081FCBB74B151CC8E93E1 /* UsageReport.swift in Sources */,
+				0C9F0F3D6A5243128F2A1003 /* UsageReportCache.swift in Sources */,
 				A614347260460A44E8E2E40CE02D2878 /* UsageRequest.swift in Sources */,
 				3E18342C30B6E3456E7945624768BA65 /* UsageStore.swift in Sources */,
 				6F3A2CD3E2ACC68F08433B708E6CD0C6 /* ClientBreakdownLayoutTests.swift in Sources */,

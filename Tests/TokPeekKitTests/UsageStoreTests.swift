@@ -127,6 +127,120 @@ func freshCacheSkipsRefresh() async throws {
 }
 
 @MainActor
+@Test("Concurrent refresh checks share the same core scan")
+func concurrentRefreshChecksShareScan() async throws {
+    let loader = DelayedCountingLoader(report: try fixtureReport())
+    let store = UsageStore(loader: loader)
+
+    let firstRefresh = Task {
+        await store.refreshIfNeeded(maxAge: 60)
+    }
+    try await Task.sleep(for: .milliseconds(5))
+    let secondRefresh = Task {
+        await store.refreshIfNeeded(maxAge: 60)
+    }
+
+    await firstRefresh.value
+    await secondRefresh.value
+
+    #expect(await loader.loadCount == 1)
+}
+
+@MainActor
+@Test("A persisted report is restored before another core scan")
+func persistedReportRestoresBeforeRefresh() async throws {
+    let cachedAt = Date(timeIntervalSince1970: 1_785_283_200)
+    let request = UsageRequest(since: "2026-07-28")
+    let cachedReport = try fixtureReport(totalTokens: 450)
+    let loader = CountingLoader(
+        report: try fixtureReport(totalTokens: 900)
+    )
+    let cache = MemoryUsageReportCache(
+        snapshot: UsageReportSnapshot(
+            request: request,
+            report: cachedReport,
+            refreshedAt: cachedAt
+        )
+    )
+    let store = UsageStore(
+        loader: loader,
+        request: request,
+        reportCache: cache
+    )
+
+    await store.refreshIfNeeded(
+        maxAge: 60,
+        now: cachedAt.addingTimeInterval(30)
+    )
+
+    #expect(store.report == cachedReport)
+    #expect(await loader.loadCount == 0)
+}
+
+@MainActor
+@Test("A persisted report for another request is not displayed")
+func mismatchedPersistedReportIsIgnored() async throws {
+    let requestedReport = try fixtureReport(totalTokens: 900)
+    let loader = CountingLoader(report: requestedReport)
+    let cache = MemoryUsageReportCache(
+        snapshot: UsageReportSnapshot(
+            request: UsageRequest(since: "2026-07-27"),
+            report: try fixtureReport(totalTokens: 450),
+            refreshedAt: Date(timeIntervalSince1970: 1_785_196_800)
+        )
+    )
+    let store = UsageStore(
+        loader: loader,
+        request: UsageRequest(since: "2026-07-28"),
+        reportCache: cache
+    )
+
+    await store.refreshIfNeeded(maxAge: 60)
+
+    #expect(store.report == requestedReport)
+    #expect(await loader.loadCount == 1)
+    #expect(await cache.savedSnapshot?.report == requestedReport)
+}
+
+@Test("The file report cache round-trips a synthetic snapshot")
+func fileReportCacheRoundTripsSnapshot() async throws {
+    let cacheDirectory = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let cacheURL = cacheDirectory
+        .appendingPathComponent("usage-report.json", isDirectory: false)
+    defer { try? FileManager.default.removeItem(at: cacheDirectory) }
+
+    let cache = FileUsageReportCache(fileURL: cacheURL)
+    let snapshot = UsageReportSnapshot(
+        request: UsageRequest(since: "2026-07-28"),
+        report: try fixtureReport(totalTokens: 450),
+        refreshedAt: Date(timeIntervalSince1970: 1_785_283_200)
+    )
+
+    await cache.save(snapshot)
+
+    #expect(await cache.load() == snapshot)
+}
+
+@Test("The file report cache ignores malformed data")
+func fileReportCacheIgnoresMalformedData() async throws {
+    let cacheDirectory = FileManager.default.temporaryDirectory
+        .appendingPathComponent(UUID().uuidString, isDirectory: true)
+    let cacheURL = cacheDirectory
+        .appendingPathComponent("usage-report.json", isDirectory: false)
+    defer { try? FileManager.default.removeItem(at: cacheDirectory) }
+    try FileManager.default.createDirectory(
+        at: cacheDirectory,
+        withIntermediateDirectories: true
+    )
+    try Data("not-json".utf8).write(to: cacheURL)
+
+    let cache = FileUsageReportCache(fileURL: cacheURL)
+
+    #expect(await cache.load() == nil)
+}
+
+@MainActor
 @Test("An expired cached report is refreshed")
 func expiredCacheRefreshes() async throws {
     let loader = CountingLoader(report: try fixtureReport())
@@ -309,6 +423,38 @@ private actor CountingLoader: UsageLoading {
     func loadReport(request: UsageRequest) async throws -> UsageReport {
         loadCount += 1
         return report
+    }
+}
+
+private actor DelayedCountingLoader: UsageLoading {
+    let report: UsageReport
+    private(set) var loadCount = 0
+
+    init(report: UsageReport) {
+        self.report = report
+    }
+
+    func loadReport(request: UsageRequest) async throws -> UsageReport {
+        loadCount += 1
+        try await Task.sleep(for: .milliseconds(50))
+        return report
+    }
+}
+
+private actor MemoryUsageReportCache: UsageReportCaching {
+    private let snapshot: UsageReportSnapshot?
+    private(set) var savedSnapshot: UsageReportSnapshot?
+
+    init(snapshot: UsageReportSnapshot?) {
+        self.snapshot = snapshot
+    }
+
+    func load() async -> UsageReportSnapshot? {
+        snapshot
+    }
+
+    func save(_ snapshot: UsageReportSnapshot) async {
+        savedSnapshot = snapshot
     }
 }
 

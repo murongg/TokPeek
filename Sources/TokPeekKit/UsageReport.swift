@@ -1,6 +1,6 @@
 import Foundation
 
-public struct UsageReport: Decodable, Sendable, Equatable {
+public struct UsageReport: Codable, Sendable, Equatable {
     public let meta: ReportMetadata
     public let summary: UsageSummary
     public let years: [YearSummary]
@@ -61,7 +61,7 @@ public struct UsageReport: Decodable, Sendable, Equatable {
     }
 }
 
-public struct ReportMetadata: Decodable, Sendable, Equatable {
+public struct ReportMetadata: Codable, Sendable, Equatable {
     public let generatedAt: String
     public let version: String
     public let dateRangeStart: String
@@ -69,7 +69,7 @@ public struct ReportMetadata: Decodable, Sendable, Equatable {
     public let processingTimeMs: UInt32
 }
 
-public struct UsageSummary: Decodable, Sendable, Equatable {
+public struct UsageSummary: Codable, Sendable, Equatable {
     public let totalTokens: Int64
     public let totalCost: Double
     public let totalDays: Int
@@ -80,7 +80,7 @@ public struct UsageSummary: Decodable, Sendable, Equatable {
     public let models: [String]
 }
 
-public struct YearSummary: Decodable, Sendable, Equatable {
+public struct YearSummary: Codable, Sendable, Equatable {
     public let year: String
     public let totalTokens: Int64
     public let totalCost: Double
@@ -88,7 +88,7 @@ public struct YearSummary: Decodable, Sendable, Equatable {
     public let rangeEnd: String
 }
 
-public struct DailyContribution: Decodable, Sendable, Equatable, Identifiable {
+public struct DailyContribution: Codable, Sendable, Equatable, Identifiable {
     public var id: String { date }
 
     public let date: String
@@ -99,7 +99,7 @@ public struct DailyContribution: Decodable, Sendable, Equatable, Identifiable {
     public let activeTimeMs: Int64?
 }
 
-public struct HourlyContribution: Decodable, Sendable, Equatable, Identifiable {
+public struct HourlyContribution: Codable, Sendable, Equatable, Identifiable {
     public var id: String { hour }
 
     public let hour: String
@@ -120,13 +120,13 @@ public struct HourlyContribution: Decodable, Sendable, Equatable, Identifiable {
     }
 }
 
-public struct DailyTotals: Decodable, Sendable, Equatable {
+public struct DailyTotals: Codable, Sendable, Equatable {
     public let tokens: Int64
     public let cost: Double
     public let messages: Int
 }
 
-public struct TokenBreakdown: Decodable, Sendable, Equatable {
+public struct TokenBreakdown: Codable, Sendable, Equatable {
     public let input: Int64
     public let output: Int64
     public let cacheRead: Int64
@@ -134,7 +134,7 @@ public struct TokenBreakdown: Decodable, Sendable, Equatable {
     public let reasoning: Int64
 }
 
-public struct ClientContribution: Decodable, Sendable, Equatable, Identifiable {
+public struct ClientContribution: Codable, Sendable, Equatable, Identifiable {
     public var id: String {
         "\(client)|\(providerId)|\(modelId)"
     }

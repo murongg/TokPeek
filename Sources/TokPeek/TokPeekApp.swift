@@ -14,7 +14,8 @@ struct TokPeekApp: App {
     private var appDelegate
 
     @StateObject private var store = UsageStore(
-        loader: TokscaleClient()
+        loader: TokscaleClient(),
+        reportCache: FileUsageReportCache()
     )
     @StateObject private var settings = SettingsStore()
     @StateObject private var launchAtLogin = LaunchAtLoginController()
