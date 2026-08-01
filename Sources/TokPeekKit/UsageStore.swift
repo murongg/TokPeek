@@ -7,6 +7,11 @@ public protocol UsageLoading: Sendable {
 
 @MainActor
 public final class UsageStore: ObservableObject {
+    private enum ReportLoadOutcome: Sendable {
+        case success(UsageReport)
+        case failure(String)
+    }
+
     @Published public private(set) var report: UsageReport?
     @Published public private(set) var comparisonReport: UsageReport?
     @Published public private(set) var budgetReport: UsageReport?
@@ -53,6 +58,9 @@ public final class UsageStore: ObservableObject {
     private var lastSuccessfulModelCatalogRefreshAt: Date?
     private let reportCache: (any UsageReportCaching)?
     private var lastCacheRestoreRequest: UsageRequest?
+    private var inFlightReportLoads: [
+        UsageRequest: Task<ReportLoadOutcome, Never>
+    ] = [:]
 
     public var isLoadingNewRequest: Bool {
         // Scheduled refreshes keep the current report visible. A changed
@@ -79,11 +87,6 @@ public final class UsageStore: ObservableObject {
         now: Date = Date()
     ) async {
         await restoreCachedReportIfNeeded()
-        // The persistent menu label and a newly opened dashboard can start
-        // together; sharing this in-flight request avoids duplicate FFI scans.
-        guard !isLoading || loadingRequest != request else {
-            return
-        }
         guard shouldRefresh(maxAge: maxAge, now: now) else {
             return
         }
@@ -105,10 +108,11 @@ public final class UsageStore: ObservableObject {
             }
         }
 
-        do {
-            let loadedReport = try await activeLoader.loadReport(
-                request: requestedReport
-            )
+        switch await loadReport(
+            for: requestedReport,
+            using: activeLoader
+        ) {
+        case let .success(loadedReport):
             // A period change can start another scan before the detached FFI
             // call returns. Only the newest request is allowed to publish.
             guard generation == refreshGeneration else {
@@ -127,11 +131,11 @@ public final class UsageStore: ObservableObject {
                     )
                 )
             }
-        } catch {
+        case let .failure(message):
             guard generation == refreshGeneration else {
                 return
             }
-            errorMessage = error.localizedDescription
+            errorMessage = message
         }
     }
 
@@ -184,19 +188,21 @@ public final class UsageStore: ObservableObject {
         let generation = comparisonGeneration
         let activeLoader = loader
 
-        do {
-            let loadedReport = try await activeLoader.loadReport(
-                request: comparisonRequest
-            )
+        switch await loadReport(
+            for: comparisonRequest,
+            using: activeLoader
+        ) {
+        case let .success(loadedReport):
             guard generation == comparisonGeneration else {
                 return
             }
             comparisonReport = loadedReport
             lastSuccessfulComparisonRequest = comparisonRequest
             lastSuccessfulComparisonRefreshAt = now
-        } catch {
+        case .failure:
             // Comparison is supplementary; the current report remains useful
             // when an older range cannot be loaded.
+            break
         }
     }
 
@@ -222,19 +228,21 @@ public final class UsageStore: ObservableObject {
         let generation = budgetGeneration
         let activeLoader = loader
 
-        do {
-            let loadedReport = try await activeLoader.loadReport(
-                request: budgetRequest
-            )
+        switch await loadReport(
+            for: budgetRequest,
+            using: activeLoader
+        ) {
+        case let .success(loadedReport):
             guard generation == budgetGeneration else {
                 return
             }
             budgetReport = loadedReport
             lastSuccessfulBudgetRequest = budgetRequest
             lastSuccessfulBudgetRefreshAt = now
-        } catch {
+        case .failure:
             // Budget analytics are supplementary; the main report remains
             // available if their broader date scan cannot be loaded.
+            break
         }
     }
 
@@ -259,10 +267,11 @@ public final class UsageStore: ObservableObject {
         let generation = modelCatalogGeneration
         let activeLoader = loader
 
-        do {
-            let catalogReport = try await activeLoader.loadReport(
-                request: requestedCatalog
-            )
+        switch await loadReport(
+            for: requestedCatalog,
+            using: activeLoader
+        ) {
+        case let .success(catalogReport):
             guard generation == modelCatalogGeneration else {
                 return
             }
@@ -270,10 +279,39 @@ public final class UsageStore: ObservableObject {
             modelCatalog = catalogReport.modelFilterOptions
             lastSuccessfulModelCatalogRequest = requestedCatalog
             lastSuccessfulModelCatalogRefreshAt = now
-        } catch {
+        case .failure:
             // The current-period report remains usable when the optional
             // all-time catalog scan fails.
+            break
         }
+    }
+
+    private func loadReport(
+        for request: UsageRequest,
+        using loader: any UsageLoading
+    ) async -> ReportLoadOutcome {
+        if let inFlightLoad = inFlightReportLoads[request] {
+            return await inFlightLoad.value
+        }
+
+        // Every report lane goes through this request-keyed task so matching
+        // dashboard and menu-bar work cannot start duplicate core scans.
+        let load = Task {
+            do {
+                return ReportLoadOutcome.success(
+                    try await loader.loadReport(request: request)
+                )
+            } catch {
+                return ReportLoadOutcome.failure(
+                    error.localizedDescription
+                )
+            }
+        }
+        inFlightReportLoads[request] = load
+
+        let outcome = await load.value
+        inFlightReportLoads[request] = nil
+        return outcome
     }
 
     private func shouldRefresh(

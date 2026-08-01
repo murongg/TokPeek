@@ -127,22 +127,83 @@ func freshCacheSkipsRefresh() async throws {
 }
 
 @MainActor
-@Test("Concurrent refresh checks share the same core scan")
-func concurrentRefreshChecksShareScan() async throws {
-    let loader = DelayedCountingLoader(report: try fixtureReport())
+@Test("Concurrent refresh checks wait for the shared core scan")
+func concurrentRefreshChecksWaitForSharedScan() async throws {
+    let loader = SuspendedCountingLoader(report: try fixtureReport())
     let store = UsageStore(loader: loader)
 
     let firstRefresh = Task {
         await store.refreshIfNeeded(maxAge: 60)
     }
-    try await Task.sleep(for: .milliseconds(5))
-    let secondRefresh = Task {
+    await loader.waitUntilStarted()
+
+    var secondRefreshStarted = false
+    var secondRefreshCompleted = false
+    let secondRefresh = Task { @MainActor in
+        secondRefreshStarted = true
         await store.refreshIfNeeded(maxAge: 60)
+        secondRefreshCompleted = true
     }
+    while !secondRefreshStarted {
+        await Task.yield()
+    }
+
+    #expect(secondRefreshCompleted == false)
+
+    await loader.release()
 
     await firstRefresh.value
     await secondRefresh.value
 
+    #expect(secondRefreshCompleted)
+    #expect(await loader.loadCount == 1)
+}
+
+@MainActor
+@Test("Matching report kinds share one core scan")
+func matchingReportKindsShareCoreScan() async throws {
+    let report = try fixtureReport(models: ["mock-model"])
+    let loader = SuspendedCountingLoader(report: report)
+    let request = UsageRequest()
+    let store = UsageStore(loader: loader, request: request)
+    store.comparisonRequest = request
+    store.budgetRequest = request
+
+    let currentRefresh = Task {
+        await store.refresh()
+    }
+    await loader.waitUntilStarted()
+
+    var comparisonStarted = false
+    var budgetStarted = false
+    var catalogStarted = false
+    let comparisonRefresh = Task { @MainActor in
+        comparisonStarted = true
+        await store.refreshComparisonIfNeeded()
+    }
+    let budgetRefresh = Task { @MainActor in
+        budgetStarted = true
+        await store.refreshBudgetIfNeeded()
+    }
+    let catalogRefresh = Task { @MainActor in
+        catalogStarted = true
+        await store.refreshModelCatalogIfNeeded(maxAge: nil)
+    }
+    while !comparisonStarted || !budgetStarted || !catalogStarted {
+        await Task.yield()
+    }
+
+    await loader.release()
+
+    await currentRefresh.value
+    await comparisonRefresh.value
+    await budgetRefresh.value
+    await catalogRefresh.value
+
+    #expect(store.report == report)
+    #expect(store.comparisonReport == report)
+    #expect(store.budgetReport == report)
+    #expect(store.modelCatalog == ["mock-model"])
     #expect(await loader.loadCount == 1)
 }
 
@@ -438,6 +499,50 @@ private actor DelayedCountingLoader: UsageLoading {
         loadCount += 1
         try await Task.sleep(for: .milliseconds(50))
         return report
+    }
+}
+
+private actor SuspendedCountingLoader: UsageLoading {
+    let report: UsageReport
+    private(set) var loadCount = 0
+    private var isStarted = false
+    private var isReleased = false
+    private var startWaiters: [CheckedContinuation<Void, Never>] = []
+    private var releaseWaiters: [CheckedContinuation<Void, Never>] = []
+
+    init(report: UsageReport) {
+        self.report = report
+    }
+
+    func loadReport(request: UsageRequest) async throws -> UsageReport {
+        loadCount += 1
+        isStarted = true
+        let waiters = startWaiters
+        startWaiters.removeAll()
+        waiters.forEach { $0.resume() }
+
+        if !isReleased {
+            await withCheckedContinuation { continuation in
+                releaseWaiters.append(continuation)
+            }
+        }
+        return report
+    }
+
+    func waitUntilStarted() async {
+        guard !isStarted else {
+            return
+        }
+        await withCheckedContinuation { continuation in
+            startWaiters.append(continuation)
+        }
+    }
+
+    func release() {
+        isReleased = true
+        let waiters = releaseWaiters
+        releaseWaiters.removeAll()
+        waiters.forEach { $0.resume() }
     }
 }
 
