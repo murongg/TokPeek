@@ -1,6 +1,6 @@
 import Foundation
 
-public struct UsageRequest: Codable, Sendable, Equatable {
+public struct UsageRequest: Codable, Sendable, Hashable {
     public var homeDirectory: String?
     public var clients: [String]?
     public var since: String?
