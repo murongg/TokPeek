@@ -241,11 +241,11 @@ public struct SettingsValues: Sendable, Equatable, Hashable {
         calendar: Calendar = .current
     ) -> UsageRequest {
         let inclusiveEnd = calendar.startOfDay(for: now)
-        // Today plus the preceding 29 dates forms the fixed 30-day activity window.
+        // Today plus the preceding six dates forms the fixed seven-day activity window.
         let start =
             calendar.date(
                 byAdding: .day,
-                value: -29,
+                value: -6,
                 to: inclusiveEnd
             ) ?? inclusiveEnd
         let end =

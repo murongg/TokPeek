@@ -63,7 +63,7 @@ struct ActivityHeatmap: View {
                 Label("Activity by hour", systemImage: "calendar")
                     .font(.subheadline.weight(.semibold))
 
-                Text("Last 30 days")
+                Text("Last 7 days")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
             }

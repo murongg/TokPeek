@@ -273,7 +273,7 @@ public final class UsageStore: ObservableObject {
                 return
             }
             // Activity is supplementary; the main report remains useful
-            // when the fixed monthly hourly scan cannot be loaded.
+            // when the fixed weekly hourly scan cannot be loaded.
             activityErrorMessage = message
         }
     }

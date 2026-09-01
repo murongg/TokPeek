@@ -95,8 +95,8 @@ func usagePeriodBuildsRequest() throws {
     #expect(request.useEnvironmentRoots)
 }
 
-@Test("Activity usage always requests the latest thirty natural days")
-func activityUsageBuildsFixedMonthlyRequest() throws {
+@Test("Activity usage always requests the latest seven natural days")
+func activityUsageBuildsFixedWeeklyRequest() throws {
     var calendar = Calendar(identifier: .gregorian)
     calendar.timeZone = try #require(TimeZone(secondsFromGMT: 0))
     let now = try #require(
@@ -125,7 +125,7 @@ func activityUsageBuildsFixedMonthlyRequest() throws {
     )
 
     #expect(todayRequest == allTimeRequest)
-    #expect(todayRequest.since == "2026-08-03")
+    #expect(todayRequest.since == "2026-08-26")
     #expect(todayRequest.until == "2026-09-01")
     #expect(todayRequest.hourly)
     #expect(todayRequest.useEnvironmentRoots)
@@ -134,7 +134,7 @@ func activityUsageBuildsFixedMonthlyRequest() throws {
             == Int64(
                 try #require(
                     ISO8601DateFormatter().date(
-                        from: "2026-08-03T00:00:00Z"
+                        from: "2026-08-26T00:00:00Z"
                     )
                 ).timeIntervalSince1970 * 1_000
             )
