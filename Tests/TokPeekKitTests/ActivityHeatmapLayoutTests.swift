@@ -5,6 +5,43 @@ import Testing
     @testable import TokPeekKit
 #endif
 
+@Test("Activity heatmap columns fill the available card width")
+func activityHeatmapFillsCardWidth() {
+    let geometry = ActivityHeatmapGeometry(contentWidth: 424)
+
+    #expect(geometry.cellSize > 12)
+    #expect(abs(geometry.gridWidth - 386) < 0.000_001)
+    #expect(abs(geometry.totalWidth - 424) < 0.000_001)
+}
+
+@Test("Activity heatmap resolves one hovered cell from the whole grid")
+func activityHeatmapResolvesHoveredCell() {
+    let geometry = ActivityHeatmapGeometry(contentWidth: 424)
+    let gridLeading =
+        ActivityHeatmapGeometry.weekdayLabelWidth
+        + ActivityHeatmapGeometry.labelSpacing
+    let columnStep =
+        geometry.cellSize
+        + ActivityHeatmapGeometry.cellSpacing
+    let rowStep =
+        geometry.cellSize
+        + ActivityHeatmapGeometry.rowSpacing
+
+    let index = geometry.cellIndex(
+        atX: gridLeading + columnStep * 12 + geometry.cellSize / 2,
+        y: rowStep * 3 + geometry.cellSize / 2
+    )
+    let horizontalGap = geometry.cellIndex(
+        atX: gridLeading + geometry.cellSize
+            + ActivityHeatmapGeometry.cellSpacing / 2,
+        y: geometry.cellSize / 2
+    )
+
+    #expect(index == 3 * 24 + 12)
+    #expect(geometry.cellIndex(atX: 20, y: 10) == nil)
+    #expect(horizontalGap == nil)
+}
+
 @Test("Activity heatmap aggregates matching weekday and hour slots")
 func activityHeatmapAggregatesWeekdayHours() throws {
     let calendar = heatmapCalendar()

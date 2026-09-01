@@ -5,6 +5,8 @@ import SwiftUI
 #endif
 
 struct ActivityHeatmap: View {
+    private static let contentPadding = 12.0
+
     let report: UsageReport?
     let isLoading: Bool
     let errorMessage: String?
@@ -12,11 +14,11 @@ struct ActivityHeatmap: View {
 
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var metric = ActivityMetric.tokens
-    @State private var hoveredCellID: Int?
 
-    private let cellSize: CGFloat = 12
-    private let cellSpacing: CGFloat = 3
-    private let weekdayLabelWidth: CGFloat = 30
+    private let geometry = ActivityHeatmapGeometry(
+        contentWidth: DashboardLayoutMetrics.contentWidth
+            - contentPadding * 2
+    )
 
     init(
         report: UsageReport?,
@@ -44,7 +46,7 @@ struct ActivityHeatmap: View {
                 emptyReportState
             }
         }
-        .padding(12)
+        .padding(CGFloat(Self.contentPadding))
         .background(
             TokPeekTheme.surface,
             in: RoundedRectangle(cornerRadius: 12)
@@ -53,12 +55,6 @@ struct ActivityHeatmap: View {
             reduceMotion ? nil : .easeOut(duration: 0.18),
             value: metric
         )
-        .onChange(of: report?.meta.generatedAt) {
-            hoveredCellID = nil
-        }
-        .onChange(of: metric) {
-            hoveredCellID = nil
-        }
     }
 
     private var header: some View {
@@ -76,7 +72,7 @@ struct ActivityHeatmap: View {
 
             Picker("Metric", selection: $metric) {
                 ForEach(ActivityMetric.allCases) { metric in
-                    Text(metricTitle(metric))
+                    Text(metric.localizedTitle)
                         .tag(metric)
                 }
             }
@@ -93,8 +89,11 @@ struct ActivityHeatmap: View {
         _ layout: ActivityHeatmapLayout
     ) -> some View {
         if layout.isMetricAvailable {
-            heatmap(layout)
-            intensityLegend
+            ActivityHeatmapGrid(
+                layout: layout,
+                geometry: geometry,
+                metric: metric
+            )
         } else {
             unavailableState
         }
@@ -113,112 +112,6 @@ struct ActivityHeatmap: View {
                 systemImage: "exclamationmark.triangle",
                 showsRetry: true
             )
-        }
-    }
-
-    private func heatmap(
-        _ layout: ActivityHeatmapLayout
-    ) -> some View {
-        VStack(alignment: .leading, spacing: 6) {
-            ForEach(ActivityHeatmapLayout.weekdays, id: \.self) { weekday in
-                HStack(spacing: 8) {
-                    Text(weekdayTitle(weekday))
-                        .font(.caption2)
-                        .foregroundStyle(.secondary)
-                        .frame(
-                            width: weekdayLabelWidth,
-                            alignment: .leading
-                        )
-
-                    HStack(spacing: cellSpacing) {
-                        ForEach(ActivityHeatmapLayout.hours, id: \.self) { hour in
-                            if let cell = layout.cell(
-                                weekday: weekday,
-                                hour: hour
-                            ) {
-                                heatmapCell(cell)
-                            }
-                        }
-                    }
-                }
-            }
-
-            HStack(spacing: 8) {
-                Color.clear
-                    .frame(width: weekdayLabelWidth, height: 1)
-
-                hourAxis
-            }
-        }
-    }
-
-    private func heatmapCell(
-        _ cell: ActivityHeatmapCell
-    ) -> some View {
-        RoundedRectangle(cornerRadius: 3)
-            .fill(cellColor(cell.intensity))
-            .frame(width: cellSize, height: cellSize)
-            .contentShape(RoundedRectangle(cornerRadius: 3))
-            .onHover { isHovering in
-                hoveredCellID = isHovering ? cell.id : nil
-            }
-            .overlay(alignment: tooltipAlignment(for: cell.hour)) {
-                if hoveredCellID == cell.id {
-                    tooltip(for: cell)
-                        .offset(y: -76)
-                }
-            }
-            .zIndex(hoveredCellID == cell.id ? 2 : 0)
-            .accessibilityElement(children: .ignore)
-            .accessibilityLabel(
-                Localization.format(
-                    "%@ at %@",
-                    [
-                        weekdayTitle(cell.weekday),
-                        hourTitle(cell.hour),
-                    ]
-                )
-            )
-            .accessibilityValue(valueTitle(cell.value))
-    }
-
-    private var hourAxis: some View {
-        ZStack(alignment: .topLeading) {
-            ForEach(Array(stride(from: 0, through: 21, by: 3)), id: \.self) { hour in
-                Text(String(format: "%02d", hour))
-                    .font(.caption2.monospacedDigit())
-                    .foregroundStyle(.secondary)
-                    .fixedSize()
-                    .offset(
-                        x: CGFloat(hour) * (cellSize + cellSpacing) - 1
-                    )
-            }
-        }
-        .frame(
-            width: gridWidth,
-            height: 12,
-            alignment: .topLeading
-        )
-    }
-
-    private var intensityLegend: some View {
-        HStack(spacing: 5) {
-            Spacer()
-
-            Text("Less")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
-
-            ForEach(0...ActivityHeatmapLayout.maximumIntensity, id: \.self) {
-                intensity in
-                RoundedRectangle(cornerRadius: 2.5)
-                    .fill(cellColor(intensity))
-                    .frame(width: 10, height: 10)
-            }
-
-            Text("More")
-                .font(.caption2)
-                .foregroundStyle(.secondary)
         }
     }
 
@@ -292,6 +185,186 @@ struct ActivityHeatmap: View {
         .help(errorMessage ?? "")
     }
 
+}
+
+private struct ActivityHeatmapGrid: View {
+    let layout: ActivityHeatmapLayout
+    let geometry: ActivityHeatmapGeometry
+    let metric: ActivityMetric
+
+    @State private var hoveredCellID: Int?
+
+    var body: some View {
+        VStack(alignment: .leading, spacing: 10) {
+            heatmap
+            intensityLegend
+        }
+        .onChange(of: layout) {
+            hoveredCellID = nil
+        }
+        .onChange(of: metric) {
+            hoveredCellID = nil
+        }
+    }
+
+    private var heatmap: some View {
+        VStack(
+            alignment: .leading,
+            spacing: CGFloat(ActivityHeatmapGeometry.rowSpacing)
+        ) {
+            ForEach(ActivityHeatmapLayout.weekdays, id: \.self) { weekday in
+                HStack(
+                    spacing: CGFloat(
+                        ActivityHeatmapGeometry.labelSpacing
+                    )
+                ) {
+                    Text(weekdayTitle(weekday))
+                        .font(.caption2)
+                        .foregroundStyle(.secondary)
+                        .frame(
+                            width: CGFloat(
+                                ActivityHeatmapGeometry
+                                    .weekdayLabelWidth
+                            ),
+                            alignment: .leading
+                        )
+
+                    HStack(
+                        spacing: CGFloat(
+                            ActivityHeatmapGeometry.cellSpacing
+                        )
+                    ) {
+                        ForEach(ActivityHeatmapLayout.hours, id: \.self) { hour in
+                            if let cell = layout.cell(
+                                weekday: weekday,
+                                hour: hour
+                            ) {
+                                heatmapCell(cell)
+                            }
+                        }
+                    }
+                }
+            }
+
+            HStack(
+                spacing: CGFloat(
+                    ActivityHeatmapGeometry.labelSpacing
+                )
+            ) {
+                Color.clear
+                    .frame(
+                        width: CGFloat(
+                            ActivityHeatmapGeometry.weekdayLabelWidth
+                        ),
+                        height: 1
+                    )
+
+                hourAxis
+            }
+        }
+        .contentShape(Rectangle())
+        // One tracker avoids 168 cell-level tracking areas churning while the
+        // ScrollView moves underneath a stationary pointer.
+        .onContinuousHover(perform: updateHover)
+    }
+
+    private func heatmapCell(
+        _ cell: ActivityHeatmapCell
+    ) -> some View {
+        RoundedRectangle(cornerRadius: 3)
+            .fill(cellColor(cell.intensity))
+            .frame(
+                width: CGFloat(geometry.cellSize),
+                height: CGFloat(geometry.cellSize)
+            )
+            .overlay(alignment: tooltipAlignment(for: cell.hour)) {
+                if hoveredCellID == cell.id {
+                    tooltip(for: cell)
+                        .offset(y: -76)
+                }
+            }
+            .zIndex(hoveredCellID == cell.id ? 2 : 0)
+            .accessibilityElement(children: .ignore)
+            .accessibilityLabel(
+                Localization.format(
+                    "%@ at %@",
+                    [
+                        weekdayTitle(cell.weekday),
+                        hourTitle(cell.hour),
+                    ]
+                )
+            )
+            .accessibilityValue(metric.valueTitle(cell.value))
+    }
+
+    private var hourAxis: some View {
+        ZStack(alignment: .topLeading) {
+            ForEach(Array(stride(from: 0, through: 21, by: 3)), id: \.self) { hour in
+                Text(String(format: "%02d", hour))
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(.secondary)
+                    .fixedSize()
+                    .offset(
+                        x: CGFloat(hour)
+                            * CGFloat(
+                                geometry.cellSize
+                                    + ActivityHeatmapGeometry.cellSpacing
+                            ) - 1
+                    )
+            }
+        }
+        .frame(
+            width: CGFloat(geometry.gridWidth),
+            height: 12,
+            alignment: .topLeading
+        )
+    }
+
+    private var intensityLegend: some View {
+        HStack(spacing: 5) {
+            Spacer()
+
+            Text("Less")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+
+            ForEach(0...ActivityHeatmapLayout.maximumIntensity, id: \.self) {
+                intensity in
+                RoundedRectangle(cornerRadius: 2.5)
+                    .fill(cellColor(intensity))
+                    .frame(width: 10, height: 10)
+            }
+
+            Text("More")
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private func updateHover(
+        _ phase: HoverPhase
+    ) {
+        let nextID: Int?
+        switch phase {
+        case .active(let location):
+            if let index = geometry.cellIndex(
+                atX: Double(location.x),
+                y: Double(location.y)
+            ), layout.cells.indices.contains(index) {
+                nextID = layout.cells[index].id
+            } else {
+                nextID = nil
+            }
+        case .ended:
+            nextID = nil
+        }
+
+        guard hoveredCellID != nextID else {
+            return
+        }
+        hoveredCellID = nextID
+    }
+
     private func tooltip(
         for cell: ActivityHeatmapCell
     ) -> some View {
@@ -305,41 +378,11 @@ struct ActivityHeatmap: View {
             ),
             rows: [
                 UsageTooltipRow(
-                    label: metricTitle(metric),
-                    value: valueTitle(cell.value)
+                    label: metric.localizedTitle,
+                    value: metric.valueTitle(cell.value)
                 )
             ]
         )
-    }
-
-    private func metricTitle(
-        _ metric: ActivityMetric
-    ) -> String {
-        switch metric {
-        case .tokens:
-            Localization.string("Token")
-        case .cost:
-            Localization.string("Cost")
-        case .duration:
-            Localization.string("Duration")
-        }
-    }
-
-    private func valueTitle(
-        _ value: Double
-    ) -> String {
-        switch metric {
-        case .tokens:
-            UsageFormatting.compactTokens(
-                Int64(value.rounded())
-            )
-        case .cost:
-            UsageFormatting.cost(value)
-        case .duration:
-            UsageFormatting.activeDuration(
-                milliseconds: Int64(value.rounded())
-            )
-        }
     }
 
     private func weekdayTitle(
@@ -384,9 +427,34 @@ struct ActivityHeatmap: View {
     ) -> Alignment {
         hour >= 16 ? .topTrailing : .topLeading
     }
+}
 
-    private var gridWidth: CGFloat {
-        cellSize * CGFloat(ActivityHeatmapLayout.hours.count)
-            + cellSpacing * CGFloat(ActivityHeatmapLayout.hours.count - 1)
+extension ActivityMetric {
+    fileprivate var localizedTitle: String {
+        switch self {
+        case .tokens:
+            Localization.string("Token")
+        case .cost:
+            Localization.string("Cost")
+        case .duration:
+            Localization.string("Duration")
+        }
+    }
+
+    fileprivate func valueTitle(
+        _ value: Double
+    ) -> String {
+        switch self {
+        case .tokens:
+            UsageFormatting.compactTokens(
+                Int64(value.rounded())
+            )
+        case .cost:
+            UsageFormatting.cost(value)
+        case .duration:
+            UsageFormatting.activeDuration(
+                milliseconds: Int64(value.rounded())
+            )
+        }
     }
 }

@@ -8,6 +8,72 @@ public enum ActivityMetric: String, CaseIterable, Identifiable, Sendable {
     public var id: String { rawValue }
 }
 
+public struct ActivityHeatmapGeometry: Sendable, Equatable {
+    public static let weekdayLabelWidth = 30.0
+    public static let labelSpacing = 8.0
+    public static let cellSpacing = 3.0
+    public static let rowSpacing = 6.0
+    public static let columnCount = 24
+    public static let rowCount = 7
+
+    public let cellSize: Double
+    public let gridWidth: Double
+    public let totalWidth: Double
+
+    public init(contentWidth: Double) {
+        let gridSpacing =
+            Self.cellSpacing
+            * Double(Self.columnCount - 1)
+        let availableCellWidth =
+            contentWidth
+            - Self.weekdayLabelWidth
+            - Self.labelSpacing
+            - gridSpacing
+        cellSize = max(
+            availableCellWidth / Double(Self.columnCount),
+            0
+        )
+        gridWidth =
+            cellSize * Double(Self.columnCount)
+            + gridSpacing
+        totalWidth =
+            Self.weekdayLabelWidth
+            + Self.labelSpacing
+            + gridWidth
+    }
+
+    public func cellIndex(
+        atX x: Double,
+        y: Double
+    ) -> Int? {
+        guard cellSize > 0, y >= 0 else {
+            return nil
+        }
+
+        let gridX = x - Self.weekdayLabelWidth - Self.labelSpacing
+        guard gridX >= 0 else {
+            return nil
+        }
+
+        let columnStep = cellSize + Self.cellSpacing
+        let rowStep = cellSize + Self.rowSpacing
+        let column = Int(gridX / columnStep)
+        let row = Int(y / rowStep)
+        guard
+            column >= 0,
+            column < Self.columnCount,
+            row >= 0,
+            row < Self.rowCount,
+            gridX - Double(column) * columnStep < cellSize,
+            y - Double(row) * rowStep < cellSize
+        else {
+            return nil
+        }
+
+        return row * Self.columnCount + column
+    }
+}
+
 public struct ActivityHeatmapCell: Identifiable, Sendable, Equatable {
     public var id: Int { weekday * 24 + hour }
 
