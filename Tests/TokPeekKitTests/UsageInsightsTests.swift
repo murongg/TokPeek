@@ -126,6 +126,39 @@ func comparesUsagePeriods() {
     #expect(UsageFormatting.trendText(newUsage.tokens) == "↑ New")
 }
 
+@Test("Usage trend copy names the previous period")
+func usageTrendCopyNamesPreviousPeriod() throws {
+    let current = comparisonReport(tokens: 1_500, cost: 0.75)
+    let previous = comparisonReport(tokens: 1_000, cost: 1.00)
+    let comparison = current.compared(to: previous)
+    let root = FileManager.default.temporaryDirectory
+        .appendingPathComponent("TokPeekTrendTests-\(UUID().uuidString)")
+    let localizedResources = root.appendingPathComponent("en.lproj")
+
+    try FileManager.default.createDirectory(
+        at: localizedResources,
+        withIntermediateDirectories: true
+    )
+    defer {
+        try? FileManager.default.removeItem(at: root)
+    }
+
+    let strings = #""%@ vs previous period" = "%@ vs previous period";"#
+    try Data(strings.utf8).write(
+        to: localizedResources.appendingPathComponent("Localizable.strings")
+    )
+
+    let bundle = try #require(Bundle(url: localizedResources))
+
+    #expect(
+        UsageFormatting.trendComparisonText(
+            comparison.cost,
+            bundle: bundle,
+            locale: Locale(identifier: "en")
+        ) == "↓ 25% vs previous period"
+    )
+}
+
 @Test("Menu bar summaries append compact trend symbols when available")
 func menuBarSummaryIncludesTrends() {
     let current = comparisonReport(tokens: 1_500, cost: 0.75)

@@ -2,6 +2,7 @@
 "%lld tokens in %lld messages" = "%lld tokens in %lld messages";
 "%lld total tokens over %lld displayed days" = "%lld total tokens over %lld displayed days";
 "%@ tokens, %@ estimated cost" = "%@ tokens, %@ estimated cost";
+"%@ vs previous period" = "%@ vs previous period";
 "30D" = "30D";
 "7D" = "7D";
 "90D" = "90D";

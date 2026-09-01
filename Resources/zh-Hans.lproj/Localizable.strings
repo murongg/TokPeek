@@ -2,6 +2,7 @@
 "%lld tokens in %lld messages" = "%1$lld 个 Token，%2$lld 条消息";
 "%lld total tokens over %lld displayed days" = "显示的 %2$lld 天内共 %1$lld 个 Token";
 "%@ tokens, %@ estimated cost" = "%1$@ Token，预估费用 %2$@";
+"%@ vs previous period" = "较上期 %@";
 "30D" = "30天";
 "7D" = "7天";
 "90D" = "90天";

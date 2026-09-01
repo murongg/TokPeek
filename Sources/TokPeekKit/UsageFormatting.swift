@@ -236,11 +236,12 @@ public enum UsageFormatting {
     }
 
     public static func trendText(
-        _ trend: UsageTrend
+        _ trend: UsageTrend,
+        bundle: Bundle = .main
     ) -> String {
         switch trend.direction {
         case .newActivity:
-            return "↑ \(Localization.string("New"))"
+            return "↑ \(Localization.string("New", bundle: bundle))"
         case .unchanged:
             return "→ 0%"
         case .increase, .decrease:
@@ -262,6 +263,19 @@ public enum UsageFormatting {
             }
             return "\(symbol) \(value)%"
         }
+    }
+
+    public static func trendComparisonText(
+        _ trend: UsageTrend,
+        bundle: Bundle = .main,
+        locale: Locale = .current
+    ) -> String {
+        Localization.format(
+            "%@ vs previous period",
+            [trendText(trend, bundle: bundle)],
+            bundle: bundle,
+            locale: locale
+        )
     }
 
     public static func trendSymbol(

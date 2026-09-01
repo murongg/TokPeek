@@ -99,23 +99,19 @@ private struct SummaryMetric: View {
 
     var body: some View {
         VStack(alignment: .leading, spacing: 3) {
-            HStack(alignment: .firstTextBaseline, spacing: 6) {
-                Text(title)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-
-                Spacer(minLength: 4)
-
-                if let trend {
-                    UsageTrendLabel(trend: trend)
-                }
-            }
+            Text(title)
+                .font(.caption)
+                .foregroundStyle(.secondary)
 
             Text(value)
                 .font(valueFont)
                 .monospacedDigit()
                 .lineLimit(1)
                 .minimumScaleFactor(0.8)
+
+            if let trend {
+                UsageTrendLabel(trend: trend)
+            }
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .accessibilityElement(children: .combine)
@@ -135,13 +131,11 @@ private struct UsageTrendLabel: View {
     let trend: UsageTrend
 
     var body: some View {
-        Text(UsageFormatting.trendText(trend))
+        Text(UsageFormatting.trendComparisonText(trend))
             .font(.caption2.monospacedDigit().weight(.medium))
             .foregroundStyle(.secondary)
-            .accessibilityLabel(
-                Localization.string("Compared with previous period")
-            )
-            .accessibilityValue(UsageFormatting.trendText(trend))
+            .lineLimit(1)
+            .minimumScaleFactor(0.85)
     }
 }
 
