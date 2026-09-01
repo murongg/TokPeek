@@ -78,7 +78,8 @@ fn hourly_contributions_fill_24_slots_and_keep_model_details() {
         message_at(start + 60 * 60 * 1_000, 20),
     ];
 
-    let contributions = super::aggregate_hourly_contributions(messages, start, end);
+    let intervals = tokscale_core::sessionize(&messages, tokscale_core::DEFAULT_IDLE_GAP_MS);
+    let contributions = super::aggregate_hourly_contributions(messages, &intervals, start, end);
 
     assert_eq!(contributions.len(), 24);
     assert_eq!(contributions[0].totals.tokens, 10);
@@ -86,6 +87,24 @@ fn hourly_contributions_fill_24_slots_and_keep_model_details() {
     assert_eq!(contributions[2].totals.tokens, 0);
     assert_eq!(contributions[0].clients.len(), 1);
     assert_eq!(contributions[0].clients[0].model_id, "gpt-5");
+}
+
+#[test]
+fn hourly_contributions_split_active_time_across_hour_boundaries() {
+    let start = 1_785_283_200_000;
+    let end = start + 24 * 60 * 60 * 1_000;
+    let messages = vec![timed_message_at(
+        start + 30 * 60 * 1_000,
+        90 * 60 * 1_000,
+        10,
+    )];
+
+    let intervals = tokscale_core::sessionize(&messages, tokscale_core::DEFAULT_IDLE_GAP_MS);
+    let contributions = super::aggregate_hourly_contributions(messages, &intervals, start, end);
+
+    assert_eq!(contributions[0].active_time_ms, Some(30 * 60 * 1_000));
+    assert_eq!(contributions[1].active_time_ms, Some(60 * 60 * 1_000));
+    assert_eq!(contributions[2].active_time_ms, Some(0));
 }
 
 fn message_at(timestamp: i64, tokens: i64) -> UnifiedMessage {
@@ -104,4 +123,10 @@ fn message_at(timestamp: i64, tokens: i64) -> UnifiedMessage {
         },
         0.01,
     )
+}
+
+fn timed_message_at(timestamp: i64, duration_ms: i64, tokens: i64) -> UnifiedMessage {
+    let mut message = message_at(timestamp, tokens);
+    message.duration_ms = Some(duration_ms);
+    message
 }

@@ -194,7 +194,10 @@ extension UsageReport {
                 hour: hour.hour,
                 totals: clients.combinedTotals,
                 tokenBreakdown: clients.combinedTokenBreakdown,
-                clients: clients
+                clients: clients,
+                // Active time is session-level and cannot be attributed to a
+                // selected client or model without inventing an estimate.
+                activeTimeMs: nil
             )
         }
 
@@ -424,15 +427,5 @@ private extension Array where Element == ClientContribution {
             cost: reduce(0) { $0 + $1.cost },
             messages: reduce(0) { $0 + $1.messages }
         )
-    }
-}
-
-extension Int64 {
-    fileprivate func saturatingAdd(_ other: Int64) -> Int64 {
-        let (value, overflow) = addingReportingOverflow(other)
-        guard overflow else {
-            return value
-        }
-        return other >= 0 ? .max : .min
     }
 }

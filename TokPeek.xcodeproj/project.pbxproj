@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B10000000000000000000001 /* ActivityHeatmap.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000001 /* ActivityHeatmap.swift */; };
+		B10000000000000000000002 /* ActivityHeatmapLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* ActivityHeatmapLayout.swift */; };
+		B10000000000000000000003 /* SaturatingArithmetic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000003 /* SaturatingArithmetic.swift */; };
+		B10000000000000000000004 /* ActivityHeatmapLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000002 /* ActivityHeatmapLayout.swift */; };
+		B10000000000000000000005 /* SaturatingArithmetic.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000003 /* SaturatingArithmetic.swift */; };
+		B10000000000000000000006 /* ActivityHeatmapLayoutTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A10000000000000000000004 /* ActivityHeatmapLayoutTests.swift */; };
 		0448904B92DA4141A55E40CEBB6927EA /* LocalizationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 86A92AD948CD96CCE9B03F755C9964CE /* LocalizationTests.swift */; };
 		0477EB946A46B9A6943407917E44B380 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 4CCC971AAD5048A5C4B06882C97D5E7A /* Sparkle */; };
 		04ACDF24B7F1BE5CFD508822DD90DD92 /* UpdateCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3667C769C3700BB997049297E3C1E27 /* UpdateCoordinatorTests.swift */; };
@@ -79,6 +85,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A10000000000000000000001 /* ActivityHeatmap.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ActivityHeatmap.swift; path = TokPeek/ActivityHeatmap.swift; sourceTree = "<group>"; };
+		A10000000000000000000002 /* ActivityHeatmapLayout.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ActivityHeatmapLayout.swift; path = TokPeekKit/ActivityHeatmapLayout.swift; sourceTree = "<group>"; };
+		A10000000000000000000003 /* SaturatingArithmetic.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = SaturatingArithmetic.swift; path = TokPeekKit/SaturatingArithmetic.swift; sourceTree = "<group>"; };
+		A10000000000000000000004 /* ActivityHeatmapLayoutTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ActivityHeatmapLayoutTests.swift; path = TokPeekKitTests/ActivityHeatmapLayoutTests.swift; sourceTree = "<group>"; };
 		0C9F0F3D6A5243128F2A1001 /* UsageReportCache.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageReportCache.swift; path = TokPeekKit/UsageReportCache.swift; sourceTree = "<group>"; };
 		10077C83AF7BBFCEFB23BFDA94816F68 /* BudgetOverview.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BudgetOverview.swift; path = TokPeek/BudgetOverview.swift; sourceTree = "<group>"; };
 		11D3344648555DAD5F9C0105E68485CB /* TokPeekTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TokPeekTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -204,6 +214,7 @@
 		A74C5A87657C3BBCFEB4BD5DB7D6DED2 /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				A10000000000000000000004 /* ActivityHeatmapLayoutTests.swift */,
 				36BE99D1CB8DF64FB97F45F453956BF9 /* ClientBreakdownLayoutTests.swift */,
 				9060B8B19E6269BB9F2439CADB0F2D2B /* CoreResponseTests.swift */,
 				7FAF6C2B2C8ADE6F40305F307E4F4F65 /* LaunchAtLoginTests.swift */,
@@ -246,6 +257,7 @@
 		F91FCC78EF263912BC3957EB5E8355CF /* Sources */ = {
 			isa = PBXGroup;
 			children = (
+				A10000000000000000000001 /* ActivityHeatmap.swift */,
 				517DE04D25C7C62AE55BB0AE800F9207 /* BudgetNotifications.swift */,
 				10077C83AF7BBFCEFB23BFDA94816F68 /* BudgetOverview.swift */,
 				FADB762FEBC32A1ADAE130CFE323649D /* ClientBreakdown.swift */,
@@ -268,9 +280,11 @@
 				8CA64A0E053BCC5991C8169656658A54 /* SettingsStore.swift */,
 				F18BA93EEC78C5F425551F38B58A5FEB /* UpdateCoordinator.swift */,
 				6FF0994A67FB8D1838826D030869829C /* UsageBudget.swift */,
+				A10000000000000000000002 /* ActivityHeatmapLayout.swift */,
 				CFD014D595A61FC2160510C6A01AA888 /* UsageChartLayout.swift */,
 				55066C97ACC1BCFCFE9B2FF2F239B5EC /* UsageFormatting.swift */,
 				6A971F3ADA3D0CA76DE740E37A91B79D /* UsageInsights.swift */,
+				A10000000000000000000003 /* SaturatingArithmetic.swift */,
 				2BF69944B8971A82BFB493138ECA9714 /* UsageReport.swift */,
 				0C9F0F3D6A5243128F2A1001 /* UsageReportCache.swift */,
 				355940114A516A53634806D7AD832B9D /* UsageRequest.swift */,
@@ -402,6 +416,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B10000000000000000000001 /* ActivityHeatmap.swift in Sources */,
 				CE3DFCD2E615B8A0A24842490C01D81D /* BudgetNotifications.swift in Sources */,
 				8685C1738BF3E7D62C15F56FB6B1F690 /* BudgetOverview.swift in Sources */,
 				8960E261AEB8E4EA4C7F5B53B09D5BCF /* ClientBreakdown.swift in Sources */,
@@ -424,9 +439,11 @@
 				B0F46860D553AD8404D8A03C69236FCD /* SettingsStore.swift in Sources */,
 				5403EED5D5810A240837259994F85CBE /* UpdateCoordinator.swift in Sources */,
 				80B0C9BDAC6211990189A31D8C281F5E /* UsageBudget.swift in Sources */,
+				B10000000000000000000002 /* ActivityHeatmapLayout.swift in Sources */,
 				40B944772867917A43B65E0D9673DD27 /* UsageChartLayout.swift in Sources */,
 				D5966B4C8D05818B451673F943B1EC71 /* UsageFormatting.swift in Sources */,
 				F21D87806B9AECAFA08B260D207A6F6A /* UsageInsights.swift in Sources */,
+				B10000000000000000000003 /* SaturatingArithmetic.swift in Sources */,
 				21CF368766BF85F812E37C094A385FF2 /* UsageReport.swift in Sources */,
 				0C9F0F3D6A5243128F2A1002 /* UsageReportCache.swift in Sources */,
 				F421DF10AECEC6ED4C946CA8091070A2 /* UsageRequest.swift in Sources */,
@@ -438,6 +455,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B10000000000000000000004 /* ActivityHeatmapLayout.swift in Sources */,
 				A933455113B8611A10766A470781CB32 /* ClientBreakdownLayout.swift in Sources */,
 				6C4B27C960F6B4EFE26AE2CC88FD7E75 /* CoreJSON.swift in Sources */,
 				F9E38D47784803426EEFA17A07E2D24B /* CoreResponse.swift in Sources */,
@@ -451,11 +469,13 @@
 				AB080FF2F81DB79A02D9FF8767233F9B /* UsageChartLayout.swift in Sources */,
 				5B036BCBAFEF9998F81FD8B4B05C92AF /* UsageFormatting.swift in Sources */,
 				71FB55A08A592B7B36847A5AF7272F6B /* UsageInsights.swift in Sources */,
+				B10000000000000000000005 /* SaturatingArithmetic.swift in Sources */,
 				464DA1F62A9081FCBB74B151CC8E93E1 /* UsageReport.swift in Sources */,
 				0C9F0F3D6A5243128F2A1003 /* UsageReportCache.swift in Sources */,
 				A614347260460A44E8E2E40CE02D2878 /* UsageRequest.swift in Sources */,
 				3E18342C30B6E3456E7945624768BA65 /* UsageStore.swift in Sources */,
 				6F3A2CD3E2ACC68F08433B708E6CD0C6 /* ClientBreakdownLayoutTests.swift in Sources */,
+				B10000000000000000000006 /* ActivityHeatmapLayoutTests.swift in Sources */,
 				1D0EF6E2E73771550E20C63A016D4D17 /* CoreResponseTests.swift in Sources */,
 				522BF5346363139DC80C1084B31D9341 /* LaunchAtLoginTests.swift in Sources */,
 				0448904B92DA4141A55E40CEBB6927EA /* LocalizationTests.swift in Sources */,

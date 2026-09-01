@@ -1,4 +1,4 @@
-use chrono::{Local, NaiveDate, TimeZone};
+use chrono::{Local, NaiveDate, TimeZone, Timelike};
 use serde::{Deserialize, Serialize};
 use std::collections::BTreeMap;
 use std::ffi::{c_char, CStr, CString};
@@ -7,8 +7,8 @@ use std::time::Instant;
 use tokscale_core::{
     aggregate_by_date, compute_daily_active_time, compute_time_metrics, generate_graph_result,
     generate_local_graph_report, parse_local_unified_messages, sessionize, ClientContribution,
-    DailyTotals, GraphResult, LocalParseOptions, ReportOptions, TokenBreakdown, UnifiedMessage,
-    DEFAULT_IDLE_GAP_MS,
+    DailyTotals, GraphResult, LocalParseOptions, ReportOptions, SessionInterval, TokenBreakdown,
+    UnifiedMessage, DEFAULT_IDLE_GAP_MS,
 };
 
 #[derive(Debug, Default, Deserialize)]
@@ -41,6 +41,7 @@ struct HourlyContribution {
     totals: DailyTotals,
     token_breakdown: TokenBreakdown,
     clients: Vec<ClientContribution>,
+    active_time_ms: Option<i64>,
 }
 
 #[derive(Serialize)]
@@ -131,7 +132,8 @@ async fn load_hourly_graph(request: BridgeRequest) -> Result<BridgeReport, Strin
         graph.meta.date_range_end = request.until.unwrap_or_default();
     }
 
-    let hourly_contributions = aggregate_hourly_contributions(messages, start_time_ms, end_time_ms);
+    let hourly_contributions =
+        aggregate_hourly_contributions(messages, &intervals, start_time_ms, end_time_ms);
     graph.meta.processing_time_ms = started_at.elapsed().as_millis() as u32;
 
     Ok(BridgeReport {
@@ -159,6 +161,7 @@ fn filter_messages_by_time(
 
 fn aggregate_hourly_contributions(
     messages: Vec<UnifiedMessage>,
+    intervals: &[SessionInterval],
     start_time_ms: i64,
     end_time_ms: i64,
 ) -> Vec<HourlyContribution> {
@@ -177,10 +180,20 @@ fn aggregate_hourly_contributions(
                     totals: contribution.totals,
                     token_breakdown: contribution.token_breakdown,
                     clients: contribution.clients,
+                    active_time_ms: Some(0),
                 },
             )
         })
         .collect();
+
+    let hourly_active_time = compute_hourly_active_time(intervals);
+    let mut populated = populated;
+    for (hour, active_time_ms) in hourly_active_time {
+        let contribution = populated
+            .entry(hour.clone())
+            .or_insert_with(|| empty_hourly_contribution(hour));
+        contribution.active_time_ms = Some(active_time_ms);
+    }
 
     let slot_count = ((end_time_ms - start_time_ms) / 3_600_000).max(0) as usize;
     (0..slot_count)
@@ -194,10 +207,52 @@ fn aggregate_hourly_contributions(
                     totals: contribution.totals.clone(),
                     token_breakdown: contribution.token_breakdown.clone(),
                     clients: contribution.clients.clone(),
+                    active_time_ms: contribution.active_time_ms,
                 })
                 .unwrap_or_else(|| empty_hourly_contribution(key))
         })
         .collect()
+}
+
+fn compute_hourly_active_time(intervals: &[SessionInterval]) -> BTreeMap<String, i64> {
+    let mut hourly: BTreeMap<String, i64> = BTreeMap::new();
+
+    for interval in intervals {
+        if interval.active_duration_ms <= 0 || interval.end_ts <= interval.start_ts {
+            continue;
+        }
+
+        let wall_duration_ms = interval.wall_duration_ms.max(1);
+        let mut cursor = interval.start_ts;
+        while cursor < interval.end_ts {
+            let Some(local_time) = Local.timestamp_millis_opt(cursor).single() else {
+                break;
+            };
+            let elapsed_in_hour_ms = i64::from(local_time.minute()) * 60_000
+                + i64::from(local_time.second()) * 1_000
+                + i64::from(local_time.timestamp_subsec_millis());
+            let hour_end = cursor - elapsed_in_hour_ms + 3_600_000;
+            let overlap_end = interval.end_ts.min(hour_end);
+            let overlap_ms = (overlap_end - cursor).max(0);
+            // Preserve the session's active-to-wall ratio when an interval
+            // crosses one or more local hour boundaries.
+            let active_time_ms = (interval.active_duration_ms as f64 * overlap_ms as f64
+                / wall_duration_ms as f64) as i64;
+
+            if active_time_ms > 0 {
+                let hour = hour_key_from_timestamp(cursor);
+                let current = hourly.entry(hour).or_default();
+                *current = current.saturating_add(active_time_ms);
+            }
+
+            if overlap_end <= cursor {
+                break;
+            }
+            cursor = overlap_end;
+        }
+    }
+
+    hourly
 }
 
 fn empty_hourly_contribution(hour: String) -> HourlyContribution {
@@ -206,6 +261,7 @@ fn empty_hourly_contribution(hour: String) -> HourlyContribution {
         totals: DailyTotals::default(),
         token_breakdown: TokenBreakdown::default(),
         clients: Vec::new(),
+        active_time_ms: Some(0),
     }
 }
 

@@ -167,6 +167,7 @@ func matchingReportKindsShareCoreScan() async throws {
     let request = UsageRequest()
     let store = UsageStore(loader: loader, request: request)
     store.comparisonRequest = request
+    store.activityRequest = request
     store.budgetRequest = request
 
     let currentRefresh = Task {
@@ -175,11 +176,16 @@ func matchingReportKindsShareCoreScan() async throws {
     await loader.waitUntilStarted()
 
     var comparisonStarted = false
+    var activityStarted = false
     var budgetStarted = false
     var catalogStarted = false
     let comparisonRefresh = Task { @MainActor in
         comparisonStarted = true
         await store.refreshComparisonIfNeeded()
+    }
+    let activityRefresh = Task { @MainActor in
+        activityStarted = true
+        await store.refreshActivityIfNeeded()
     }
     let budgetRefresh = Task { @MainActor in
         budgetStarted = true
@@ -189,7 +195,9 @@ func matchingReportKindsShareCoreScan() async throws {
         catalogStarted = true
         await store.refreshModelCatalogIfNeeded(maxAge: nil)
     }
-    while !comparisonStarted || !budgetStarted || !catalogStarted {
+    while !comparisonStarted || !activityStarted || !budgetStarted
+        || !catalogStarted
+    {
         await Task.yield()
     }
 
@@ -197,11 +205,13 @@ func matchingReportKindsShareCoreScan() async throws {
 
     await currentRefresh.value
     await comparisonRefresh.value
+    await activityRefresh.value
     await budgetRefresh.value
     await catalogRefresh.value
 
     #expect(store.report == report)
     #expect(store.comparisonReport == report)
+    #expect(store.activityReport == report)
     #expect(store.budgetReport == report)
     #expect(store.modelCatalog == ["mock-model"])
     #expect(await loader.loadCount == 1)
@@ -327,6 +337,62 @@ func changedRequestRefreshes() async throws {
     await store.refreshIfNeeded(maxAge: 300)
 
     #expect(await loader.loadCount == 2)
+}
+
+@MainActor
+@Test("Activity reports stay cached when the primary period changes")
+func activityReportIgnoresPrimaryPeriodChanges() async throws {
+    let report = try fixtureReport(totalTokens: 300)
+    let loader = CountingLoader(report: report)
+    let store = UsageStore(
+        loader: loader,
+        request: UsageRequest(since: "primary-a")
+    )
+    store.activityRequest = UsageRequest(
+        since: "activity-month",
+        hourly: true
+    )
+
+    await store.refreshActivityIfNeeded(maxAge: 300)
+    await store.refreshActivityIfNeeded(maxAge: 300)
+
+    store.request = UsageRequest(since: "primary-b")
+
+    #expect(store.activityReport == report)
+    #expect(await loader.loadCount == 1)
+}
+
+@MainActor
+@Test("Activity reports publish independent loading and error states")
+func activityReportPublishesLoadingAndErrorStates() async throws {
+    let report = try fixtureReport(totalTokens: 300)
+    let loader = SuspendedCountingLoader(report: report)
+    let store = UsageStore(loader: loader)
+    store.activityRequest = UsageRequest(
+        since: "activity-month",
+        hourly: true
+    )
+
+    let refresh = Task {
+        await store.refreshActivityIfNeeded(maxAge: 0)
+    }
+    await loader.waitUntilStarted()
+
+    #expect(store.isActivityLoading)
+    #expect(store.activityErrorMessage == nil)
+
+    await loader.release()
+    await refresh.value
+
+    #expect(store.activityReport == report)
+    #expect(store.isActivityLoading == false)
+
+    store.loader = FailingLoader()
+    await store.refreshActivityIfNeeded(maxAge: 0)
+
+    #expect(store.activityReport == report)
+    #expect(store.isActivityLoading == false)
+    #expect(store.activityErrorMessage == "Synthetic loading failure")
 }
 
 @MainActor

@@ -81,6 +81,9 @@ struct DashboardView: View {
                 .transition(.opacity)
         } else if let report = store.report {
             let filteredReport = filteredReport(report)
+            let filteredActivityReport = store.activityReport.map {
+                self.filteredReport($0)
+            }
             let comparison = store.comparisonReport.map {
                 filteredReport.compared(
                     to: self.filteredReport($0)
@@ -89,6 +92,7 @@ struct DashboardView: View {
             VStack(alignment: .leading, spacing: 16) {
                 reportContent(
                     filteredReport,
+                    activityReport: filteredActivityReport,
                     comparison: comparison
                 )
             }
@@ -215,6 +219,7 @@ struct DashboardView: View {
     @ViewBuilder
     private func reportContent(
         _ report: UsageReport,
+        activityReport: UsageReport?,
         comparison: UsageComparison?
     ) -> some View {
         UsageOverview(
@@ -227,6 +232,12 @@ struct DashboardView: View {
         UsageChart(
             report: report,
             period: settings.usagePeriod
+        )
+        ActivityHeatmap(
+            report: activityReport,
+            isLoading: store.isActivityLoading,
+            errorMessage: store.activityErrorMessage,
+            retry: refreshActivity
         )
         ClientBreakdown(summaries: report.clientSummaries)
         ModelRanking(summaries: report.modelSummaries)
@@ -336,9 +347,17 @@ struct DashboardView: View {
         }
     }
 
+    private func refreshActivity() {
+        Task {
+            configureRequests()
+            await store.refreshActivityIfNeeded(maxAge: 0)
+        }
+    }
+
     private func loadUsage() async {
         configureRequests()
         await store.refresh()
+        await store.refreshActivityIfNeeded(maxAge: 0)
         await store.refreshComparisonIfNeeded()
         await store.refreshBudgetIfNeeded(maxAge: 0)
     }
@@ -346,6 +365,9 @@ struct DashboardView: View {
     private func refreshLoop() async {
         configureRequests()
         await store.refreshIfNeeded(
+            maxAge: settings.refreshFrequency.seconds
+        )
+        await store.refreshActivityIfNeeded(
             maxAge: settings.refreshFrequency.seconds
         )
         await store.refreshComparisonIfNeeded()
@@ -380,6 +402,7 @@ struct DashboardView: View {
         let request = values.usageRequest(now: now)
         store.request = request
         store.comparisonRequest = request.previousPeriod()
+        store.activityRequest = values.activityRequest(now: now)
         store.budgetRequest = values.budget.analyticsRequest(
             now: now,
             useEnvironmentRoots: values.useEnvironmentRoots

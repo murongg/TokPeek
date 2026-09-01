@@ -86,6 +86,37 @@ public enum UsageFormatting {
         )
     }
 
+    public static func activeDuration(
+        milliseconds: Int64,
+        bundle: Bundle = .main,
+        locale: Locale = .current
+    ) -> String {
+        let totalMinutes = max(milliseconds, 0) / 60_000
+        if totalMinutes == 0 {
+            return Localization.string(
+                milliseconds > 0 ? "<1m" : "0m",
+                bundle: bundle
+            )
+        }
+
+        let hours = totalMinutes / 60
+        let minutes = totalMinutes % 60
+        if hours == 0 {
+            return Localization.format(
+                "%lldm",
+                [minutes],
+                bundle: bundle,
+                locale: locale
+            )
+        }
+        return Localization.format(
+            "%lldh %lldm",
+            [hours, minutes],
+            bundle: bundle,
+            locale: locale
+        )
+    }
+
     public static func percentage(_ fraction: Double) -> String {
         let clamped = min(max(fraction, 0), 1)
         return clamped.formatted(

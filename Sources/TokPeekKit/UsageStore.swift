@@ -14,10 +14,13 @@ public final class UsageStore: ObservableObject {
 
     @Published public private(set) var report: UsageReport?
     @Published public private(set) var comparisonReport: UsageReport?
+    @Published public private(set) var activityReport: UsageReport?
     @Published public private(set) var budgetReport: UsageReport?
     @Published public private(set) var modelCatalog: [String] = []
     @Published public private(set) var isLoading = false
+    @Published public private(set) var isActivityLoading = false
     @Published public private(set) var errorMessage: String?
+    @Published public private(set) var activityErrorMessage: String?
     @Published private var loadingRequest: UsageRequest?
 
     var loader: any UsageLoading
@@ -30,6 +33,19 @@ public final class UsageStore: ObservableObject {
             comparisonGeneration &+= 1
             if comparisonRequest != lastSuccessfulComparisonRequest {
                 comparisonReport = nil
+            }
+        }
+    }
+    public var activityRequest: UsageRequest? {
+        didSet {
+            guard activityRequest != oldValue else {
+                return
+            }
+            activityGeneration &+= 1
+            isActivityLoading = false
+            activityErrorMessage = nil
+            if activityRequest != lastSuccessfulActivityRequest {
+                activityReport = nil
             }
         }
     }
@@ -46,12 +62,15 @@ public final class UsageStore: ObservableObject {
     }
     private var refreshGeneration: UInt64 = 0
     private var comparisonGeneration: UInt64 = 0
+    private var activityGeneration: UInt64 = 0
     private var budgetGeneration: UInt64 = 0
     private var modelCatalogGeneration: UInt64 = 0
     private var lastSuccessfulRequest: UsageRequest?
     private var lastSuccessfulRefreshAt: Date?
     private var lastSuccessfulComparisonRequest: UsageRequest?
     private var lastSuccessfulComparisonRefreshAt: Date?
+    private var lastSuccessfulActivityRequest: UsageRequest?
+    private var lastSuccessfulActivityRefreshAt: Date?
     private var lastSuccessfulBudgetRequest: UsageRequest?
     private var lastSuccessfulBudgetRefreshAt: Date?
     private var lastSuccessfulModelCatalogRequest: UsageRequest?
@@ -79,6 +98,7 @@ public final class UsageStore: ObservableObject {
         self.request = request
         self.reportCache = reportCache
         comparisonRequest = nil
+        activityRequest = nil
         budgetRequest = nil
     }
 
@@ -203,6 +223,58 @@ public final class UsageStore: ObservableObject {
             // Comparison is supplementary; the current report remains useful
             // when an older range cannot be loaded.
             break
+        }
+    }
+
+    public func refreshActivityIfNeeded(
+        maxAge: TimeInterval? = nil,
+        now: Date = Date()
+    ) async {
+        guard let activityRequest else {
+            activityReport = nil
+            isActivityLoading = false
+            activityErrorMessage = nil
+            lastSuccessfulActivityRequest = nil
+            lastSuccessfulActivityRefreshAt = nil
+            return
+        }
+        guard shouldRefreshActivity(
+            request: activityRequest,
+            maxAge: maxAge,
+            now: now
+        ) else {
+            return
+        }
+
+        activityGeneration &+= 1
+        let generation = activityGeneration
+        let activeLoader = loader
+        isActivityLoading = true
+        activityErrorMessage = nil
+        defer {
+            if generation == activityGeneration {
+                isActivityLoading = false
+            }
+        }
+
+        switch await loadReport(
+            for: activityRequest,
+            using: activeLoader
+        ) {
+        case let .success(loadedReport):
+            guard generation == activityGeneration else {
+                return
+            }
+            activityReport = loadedReport
+            lastSuccessfulActivityRequest = activityRequest
+            lastSuccessfulActivityRefreshAt = now
+        case let .failure(message):
+            guard generation == activityGeneration else {
+                return
+            }
+            // Activity is supplementary; the main report remains useful
+            // when the fixed monthly hourly scan cannot be loaded.
+            activityErrorMessage = message
         }
     }
 
@@ -373,6 +445,28 @@ public final class UsageStore: ObservableObject {
 
         return now.timeIntervalSince(
             lastSuccessfulComparisonRefreshAt
+        ) >= maxAge
+    }
+
+    private func shouldRefreshActivity(
+        request: UsageRequest,
+        maxAge: TimeInterval?,
+        now: Date
+    ) -> Bool {
+        guard
+            activityReport != nil,
+            lastSuccessfulActivityRequest == request,
+            let lastSuccessfulActivityRefreshAt
+        else {
+            return true
+        }
+
+        guard let maxAge else {
+            return false
+        }
+
+        return now.timeIntervalSince(
+            lastSuccessfulActivityRefreshAt
         ) >= maxAge
     }
 

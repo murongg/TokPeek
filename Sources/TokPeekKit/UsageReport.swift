@@ -106,17 +106,20 @@ public struct HourlyContribution: Codable, Sendable, Equatable, Identifiable {
     public let totals: DailyTotals
     public let tokenBreakdown: TokenBreakdown
     public let clients: [ClientContribution]
+    public let activeTimeMs: Int64?
 
     public init(
         hour: String,
         totals: DailyTotals,
         tokenBreakdown: TokenBreakdown,
-        clients: [ClientContribution]
+        clients: [ClientContribution],
+        activeTimeMs: Int64? = nil
     ) {
         self.hour = hour
         self.totals = totals
         self.tokenBreakdown = tokenBreakdown
         self.clients = clients
+        self.activeTimeMs = activeTimeMs
     }
 }
 

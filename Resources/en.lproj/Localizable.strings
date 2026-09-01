@@ -125,3 +125,17 @@
 "View TokPeek on GitHub" = "View TokPeek on GitHub";
 "View Tokscale on GitHub" = "View Tokscale on GitHub";
 "Weekly" = "Weekly";
+"%@ at %@" = "%1$@ at %2$@";
+"%lldh %lldm" = "%1$lldh %2$lldm";
+"%lldm" = "%lldm";
+"0m" = "0m";
+"<1m" = "<1m";
+"Activity by hour" = "Activity by hour";
+"Duration" = "Duration";
+"Duration details are not available for this selection." = "Duration details are not available for this selection.";
+"Hourly activity is not available for this period." = "Hourly activity is not available for this period.";
+"Less" = "Less";
+"More" = "More";
+"Couldn’t load hourly activity." = "Couldn’t load hourly activity.";
+"Loading hourly activity" = "Loading hourly activity";
+"Retry" = "Retry";

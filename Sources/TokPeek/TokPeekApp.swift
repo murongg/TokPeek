@@ -121,11 +121,15 @@ struct TokPeekApp: App {
         let request = values.usageRequest(now: now)
         store.request = request
         store.comparisonRequest = request.previousPeriod()
+        store.activityRequest = values.activityRequest(now: now)
         store.budgetRequest = values.budget.analyticsRequest(
             now: now,
             useEnvironmentRoots: values.useEnvironmentRoots
         )
         await store.refreshIfNeeded(
+            maxAge: settings.refreshFrequency.seconds
+        )
+        await store.refreshActivityIfNeeded(
             maxAge: settings.refreshFrequency.seconds
         )
         await store.refreshComparisonIfNeeded()

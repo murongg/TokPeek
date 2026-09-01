@@ -125,3 +125,17 @@
 "View TokPeek on GitHub" = "在 GitHub 上查看 TokPeek";
 "View Tokscale on GitHub" = "在 GitHub 上查看 Tokscale";
 "Weekly" = "每周";
+"%@ at %@" = "%1$@ %2$@";
+"%lldh %lldm" = "%1$lld 小时 %2$lld 分钟";
+"%lldm" = "%lld 分钟";
+"0m" = "0 分钟";
+"<1m" = "少于 1 分钟";
+"Activity by hour" = "分时活跃";
+"Duration" = "时长";
+"Duration details are not available for this selection." = "当前筛选条件下无法归属使用时长。";
+"Hourly activity is not available for this period." = "此时间段暂无分时活跃数据。";
+"Less" = "少";
+"More" = "多";
+"Couldn’t load hourly activity." = "无法加载分时活跃数据。";
+"Loading hourly activity" = "正在加载分时活跃数据";
+"Retry" = "重试";

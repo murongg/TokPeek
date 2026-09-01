@@ -89,7 +89,66 @@ func usagePeriodBuildsRequest() throws {
 
     #expect(request.since == "2026-06-28")
     #expect(request.until == "2026-07-27")
+    #expect(request.hourly == false)
+    #expect(request.startTimeMs == nil)
+    #expect(request.endTimeMs == nil)
     #expect(request.useEnvironmentRoots)
+}
+
+@Test("Activity usage always requests the latest thirty natural days")
+func activityUsageBuildsFixedMonthlyRequest() throws {
+    var calendar = Calendar(identifier: .gregorian)
+    calendar.timeZone = try #require(TimeZone(secondsFromGMT: 0))
+    let now = try #require(
+        ISO8601DateFormatter().date(from: "2026-09-01T21:30:00Z")
+    )
+    let todayValues = SettingsValues(
+        usagePeriod: .today,
+        refreshFrequency: .minute,
+        menuBarMetric: .summary,
+        useEnvironmentRoots: true
+    )
+    let allTimeValues = SettingsValues(
+        usagePeriod: .all,
+        refreshFrequency: .minute,
+        menuBarMetric: .summary,
+        useEnvironmentRoots: true
+    )
+
+    let todayRequest = todayValues.activityRequest(
+        now: now,
+        calendar: calendar
+    )
+    let allTimeRequest = allTimeValues.activityRequest(
+        now: now,
+        calendar: calendar
+    )
+
+    #expect(todayRequest == allTimeRequest)
+    #expect(todayRequest.since == "2026-08-03")
+    #expect(todayRequest.until == "2026-09-01")
+    #expect(todayRequest.hourly)
+    #expect(todayRequest.useEnvironmentRoots)
+    #expect(
+        todayRequest.startTimeMs
+            == Int64(
+                try #require(
+                    ISO8601DateFormatter().date(
+                        from: "2026-08-03T00:00:00Z"
+                    )
+                ).timeIntervalSince1970 * 1_000
+            )
+    )
+    #expect(
+        todayRequest.endTimeMs
+            == Int64(
+                try #require(
+                    ISO8601DateFormatter().date(
+                        from: "2026-09-02T00:00:00Z"
+                    )
+                ).timeIntervalSince1970 * 1_000
+            )
+    )
 }
 
 @Test("Today is the first period and requests hourly data for the natural day")
@@ -187,6 +246,9 @@ func allTimeUsageLeavesDatesEmpty() {
 
     #expect(request.since == nil)
     #expect(request.until == nil)
+    #expect(request.hourly == false)
+    #expect(request.startTimeMs == nil)
+    #expect(request.endTimeMs == nil)
 }
 
 @Test("Custom usage ranges normalize dates and preserve inclusive bounds")
@@ -218,6 +280,8 @@ func customUsageRangeBuildsRequest() throws {
     #expect(request.since == "2026-07-05")
     #expect(request.until == "2026-07-27")
     #expect(request.hourly == false)
+    #expect(request.startTimeMs == nil)
+    #expect(request.endTimeMs == nil)
 }
 
 @Test("Date range drafts edit one boundary and normalize only when applied")

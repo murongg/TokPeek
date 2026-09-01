@@ -236,6 +236,32 @@ public struct SettingsValues: Sendable, Equatable, Hashable {
         )
     }
 
+    public func activityRequest(
+        now: Date = Date(),
+        calendar: Calendar = .current
+    ) -> UsageRequest {
+        let inclusiveEnd = calendar.startOfDay(for: now)
+        // Today plus the preceding 29 dates forms the fixed 30-day activity window.
+        let start =
+            calendar.date(
+                byAdding: .day,
+                value: -29,
+                to: inclusiveEnd
+            ) ?? inclusiveEnd
+        let end =
+            calendar.date(
+                byAdding: .day,
+                value: 1,
+                to: inclusiveEnd
+            ) ?? inclusiveEnd
+
+        return boundedHourlyRequest(
+            start: start,
+            end: end,
+            calendar: calendar
+        )
+    }
+
     private func hourlyUsageRequest(
         now: Date,
         calendar: Calendar
@@ -278,6 +304,18 @@ public struct SettingsValues: Sendable, Equatable, Hashable {
             )
         }
 
+        return boundedHourlyRequest(
+            start: start,
+            end: end,
+            calendar: calendar
+        )
+    }
+
+    private func boundedHourlyRequest(
+        start: Date,
+        end: Date,
+        calendar: Calendar
+    ) -> UsageRequest {
         // Tokscale's date filter is inclusive, while the timestamp interval is
         // half-open. Subtracting one millisecond keeps the coarse date filter
         // aligned with the exact hourly bounds.

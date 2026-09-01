@@ -47,6 +47,18 @@ func formatsBudgetValues() {
     )
 }
 
+@Test("Active duration keeps compact hour and minute precision")
+func formatsActiveDuration() {
+    #expect(UsageFormatting.activeDuration(milliseconds: 0) == "0m")
+    #expect(UsageFormatting.activeDuration(milliseconds: 45_000) == "<1m")
+    #expect(UsageFormatting.activeDuration(milliseconds: 30 * 60_000) == "30m")
+    #expect(
+        UsageFormatting.activeDuration(
+            milliseconds: 90 * 60_000
+        ) == "1h 30m"
+    )
+}
+
 @Test("Chart tooltip surface is fully opaque in every appearance")
 func chartTooltipSurfaceIsOpaque() {
     #expect(UsageTooltipAppearance.backgroundOpacity == 1)
