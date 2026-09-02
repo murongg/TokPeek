@@ -212,7 +212,7 @@ private struct ActivityHeatmapGrid: View {
             alignment: .leading,
             spacing: CGFloat(ActivityHeatmapGeometry.rowSpacing)
         ) {
-            ForEach(ActivityHeatmapLayout.weekdays, id: \.self) { weekday in
+            ForEach(layout.weekdays, id: \.self) { weekday in
                 HStack(
                     spacing: CGFloat(
                         ActivityHeatmapGeometry.labelSpacing

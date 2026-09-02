@@ -84,10 +84,10 @@ public struct ActivityHeatmapCell: Identifiable, Sendable, Equatable {
 }
 
 public struct ActivityHeatmapLayout: Sendable, Equatable {
-    public static let weekdays = Array(1...7)
     public static let hours = Array(0..<24)
     public static let maximumIntensity = 6
 
+    public let weekdays: [Int]
     public let cells: [ActivityHeatmapCell]
     public let isMetricAvailable: Bool
     public let maximumValue: Double
@@ -100,18 +100,16 @@ public struct ActivityHeatmapLayout: Sendable, Equatable {
         var buckets: [Slot: Bucket] = [:]
         var parsedContributionCount = 0
         var hasActiveTime = false
+        var latestDate: Date?
+        let hourFormatter = Self.hourFormatter(calendar: calendar)
 
         for contribution in report.hourlyContributions {
-            guard
-                let date = Self.date(
-                    from: contribution.hour,
-                    calendar: calendar
-                )
-            else {
+            guard let date = hourFormatter.date(from: contribution.hour) else {
                 continue
             }
 
             parsedContributionCount += 1
+            latestDate = max(latestDate ?? date, date)
             let slot = Slot(
                 weekday: calendar.component(.weekday, from: date),
                 hour: calendar.component(.hour, from: date)
@@ -130,6 +128,18 @@ public struct ActivityHeatmapLayout: Sendable, Equatable {
             buckets[slot] = bucket
         }
 
+        let endDate =
+            latestDate
+            ?? Self.day(
+                from: report.meta.dateRangeEnd,
+                calendar: calendar
+            )
+            ?? Date()
+        weekdays = Self.weekdayOrder(
+            endingAt: endDate,
+            calendar: calendar
+        )
+
         isMetricAvailable =
             switch metric {
             case .tokens, .cost:
@@ -138,7 +148,7 @@ public struct ActivityHeatmapLayout: Sendable, Equatable {
                 hasActiveTime
             }
 
-        let values = Self.weekdays.flatMap { weekday in
+        let values = weekdays.flatMap { weekday in
             Self.hours.map { hour in
                 let bucket =
                     buckets[
@@ -171,12 +181,12 @@ public struct ActivityHeatmapLayout: Sendable, Equatable {
         hour: Int
     ) -> ActivityHeatmapCell? {
         guard
-            Self.weekdays.contains(weekday),
+            let row = weekdays.firstIndex(of: weekday),
             Self.hours.contains(hour)
         else {
             return nil
         }
-        return cells[(weekday - 1) * 24 + hour]
+        return cells[row * Self.hours.count + hour]
     }
 
     private static func intensity(
@@ -193,7 +203,34 @@ public struct ActivityHeatmapLayout: Sendable, Equatable {
         )
     }
 
-    private static func date(
+    private static func weekdayOrder(
+        endingAt endDate: Date,
+        calendar: Calendar
+    ) -> [Int] {
+        let endDay = calendar.startOfDay(for: endDate)
+        return (-6...0).compactMap { offset in
+            calendar.date(
+                byAdding: .day,
+                value: offset,
+                to: endDay
+            ).map {
+                calendar.component(.weekday, from: $0)
+            }
+        }
+    }
+
+    private static func hourFormatter(
+        calendar: Calendar
+    ) -> DateFormatter {
+        let formatter = DateFormatter()
+        formatter.calendar = calendar
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter.timeZone = calendar.timeZone
+        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        return formatter
+    }
+
+    private static func day(
         from value: String,
         calendar: Calendar
     ) -> Date? {
@@ -201,7 +238,7 @@ public struct ActivityHeatmapLayout: Sendable, Equatable {
         formatter.calendar = calendar
         formatter.locale = Locale(identifier: "en_US_POSIX")
         formatter.timeZone = calendar.timeZone
-        formatter.dateFormat = "yyyy-MM-dd HH:mm"
+        formatter.dateFormat = "yyyy-MM-dd"
         return formatter.date(from: value)
     }
 }

@@ -42,6 +42,28 @@ func activityHeatmapResolvesHoveredCell() {
     #expect(horizontalGap == nil)
 }
 
+@Test("Activity heatmap rows end with the latest reported weekday")
+func activityHeatmapOrdersRowsChronologically() {
+    let layout = ActivityHeatmapLayout(
+        report: heatmapReport(
+            hourlyContributions: [
+                heatmapContribution(
+                    hour: "2026-09-02 23:00",
+                    tokens: 100,
+                    cost: 0.10,
+                    activeTimeMs: 60_000
+                )
+            ]
+        ),
+        metric: .tokens,
+        calendar: heatmapCalendar()
+    )
+
+    #expect(layout.weekdays == [5, 6, 7, 1, 2, 3, 4])
+    #expect(layout.cells.first?.weekday == 5)
+    #expect(layout.cells.last?.weekday == 4)
+}
+
 @Test("Activity heatmap aggregates matching weekday and hour slots")
 func activityHeatmapAggregatesWeekdayHours() throws {
     let calendar = heatmapCalendar()
@@ -85,9 +107,10 @@ func activityHeatmapAggregatesWeekdayHours() throws {
     )
 
     #expect(tokenLayout.cells.count == 7 * 24)
-    #expect(tokenLayout.cells.first?.weekday == 1)
+    #expect(tokenLayout.weekdays == [2, 3, 4, 5, 6, 7, 1])
+    #expect(tokenLayout.cells.first?.weekday == 2)
     #expect(tokenLayout.cells.first?.hour == 0)
-    #expect(tokenLayout.cells.last?.weekday == 7)
+    #expect(tokenLayout.cells.last?.weekday == 1)
     #expect(tokenLayout.cells.last?.hour == 23)
     #expect(tokenLayout.cell(weekday: 1, hour: 9)?.value == 400)
     #expect(
