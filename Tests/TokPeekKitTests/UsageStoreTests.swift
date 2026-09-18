@@ -674,6 +674,49 @@ func activityFailureEndsPendingState() async {
     #expect(!store.isActivityLoading)
 }
 
+@MainActor
+@Test("Manual refresh stays busy through activity and ignores duplicate clicks")
+func manualRefreshCoversWholeDashboard() async throws {
+    let settings = refreshSettings()
+    let loader = SuspendedCountingLoader(
+        report: try fixtureReport(),
+        suspendedRequest: settings.activityRequest()
+    )
+    let store = UsageStore(loader: loader)
+    let refresh = Task {
+        await store.refreshManually(settings: settings)
+    }
+    await loader.waitUntilStarted()
+
+    #expect(store.report != nil)
+    #expect(!store.isLoading)
+    #expect(store.isManualRefreshing)
+    #expect(await loader.loadCount == 2)
+
+    await store.refreshManually(settings: settings)
+    #expect(await loader.loadCount == 2)
+
+    await loader.release()
+    await refresh.value
+    #expect(!store.isManualRefreshing)
+    #expect(await loader.loadCount == 5)
+
+    await store.refreshManually(settings: settings)
+    #expect(!store.isManualRefreshing)
+    #expect(await loader.loadCount == 9)
+}
+
+@MainActor
+@Test("A failed manual refresh clears the busy state and preserves its error")
+func failedManualRefreshClearsBusyState() async {
+    let store = UsageStore(loader: FailingLoader())
+
+    await store.refreshManually(settings: refreshSettings())
+
+    #expect(!store.isManualRefreshing)
+    #expect(store.errorMessage == "Synthetic loading failure")
+}
+
 private struct StubLoader: UsageLoading {
     let report: UsageReport
 
@@ -713,18 +756,23 @@ private actor DelayedCountingLoader: UsageLoading {
 
 private actor SuspendedCountingLoader: UsageLoading {
     let report: UsageReport
+    private let suspendedRequest: UsageRequest?
     private(set) var loadCount = 0
     private var isStarted = false
     private var isReleased = false
     private var startWaiters: [CheckedContinuation<Void, Never>] = []
     private var releaseWaiters: [CheckedContinuation<Void, Never>] = []
 
-    init(report: UsageReport) {
+    init(report: UsageReport, suspendedRequest: UsageRequest? = nil) {
         self.report = report
+        self.suspendedRequest = suspendedRequest
     }
 
     func loadReport(request: UsageRequest) async throws -> UsageReport {
         loadCount += 1
+        if let suspendedRequest, request != suspendedRequest {
+            return report
+        }
         isStarted = true
         let waiters = startWaiters
         startWaiters.removeAll()

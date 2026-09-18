@@ -85,6 +85,7 @@
 		2686819C37B359404CAC022C /* WindowVisibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7FC0C4E5676CC8C6D1439 /* WindowVisibility.swift */; };
 		27BD83CD565BB443E0104A89 /* WindowVisibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7FC0C4E5676CC8C6D1439 /* WindowVisibility.swift */; };
 		9445E1790E9CB495128FB7D8 /* WindowVisibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7AA161788667EFE0EDDEA8E /* WindowVisibilityTests.swift */; };
+		B20000000000000000000001 /* RefreshButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* RefreshButton.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -149,6 +150,7 @@
 		FB87DD866E93B4047E9EBB506EC6B5F7 /* UsageStore.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = UsageStore.swift; path = TokPeekKit/UsageStore.swift; sourceTree = "<group>"; };
 		27F7FC0C4E5676CC8C6D1439 /* WindowVisibility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WindowVisibility.swift; path = TokPeekKit/WindowVisibility.swift; sourceTree = "<group>"; };
 		E7AA161788667EFE0EDDEA8E /* WindowVisibilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WindowVisibilityTests.swift; path = TokPeekKitTests/WindowVisibilityTests.swift; sourceTree = "<group>"; };
+		A20000000000000000000001 /* RefreshButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RefreshButton.swift; path = TokPeek/RefreshButton.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -269,6 +271,7 @@
 				FADB762FEBC32A1ADAE130CFE323649D /* ClientBreakdown.swift */,
 				36F40BEB92D5650D78A550A5B25B8B67 /* DashboardView.swift */,
 				1AEE80BE8A097FEF53C80293B11945CB /* ModelRanking.swift */,
+				A20000000000000000000001 /* RefreshButton.swift */,
 				C6D2303AA536289BE560078179220D09 /* SettingsView.swift */,
 				84E297B1992E8A294D90FA3DB43EA113 /* SparkleUpdateChecker.swift */,
 				7E4E59624198BB91D6155D0662794D77 /* Theme.swift */,
@@ -429,6 +432,7 @@
 				8960E261AEB8E4EA4C7F5B53B09D5BCF /* ClientBreakdown.swift in Sources */,
 				3F7985F171B879C1D0834287737A5607 /* DashboardView.swift in Sources */,
 				6DAD7787FCF834692E963AC5D0CC0B21 /* ModelRanking.swift in Sources */,
+				B20000000000000000000001 /* RefreshButton.swift in Sources */,
 				D921EEE315C7609A78169C91E9C910BC /* SettingsView.swift in Sources */,
 				6AFBCBDD0F7F2BAA6F00782CB03FBB40 /* SparkleUpdateChecker.swift in Sources */,
 				FD1B347AC43CCA4FA23F00C36A28C35D /* Theme.swift in Sources */,

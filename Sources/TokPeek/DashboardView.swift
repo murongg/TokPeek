@@ -126,23 +126,11 @@ struct DashboardView: View {
 
             Spacer()
 
-            Button {
-                refresh()
-            } label: {
-                Image(systemName: "arrow.clockwise")
-                    .frame(width: 20, height: 20)
-            }
-            .buttonStyle(.borderless)
-            .help("Refresh usage")
-            .disabled(store.isLoading)
-            .accessibilityLabel(
-                Localization.string(
-                    store.isLoading
-                        ? "Refreshing usage"
-                        : "Refresh usage"
-                )
+            RefreshButton(
+                isRefreshing: store.isManualRefreshing || store.isLoading,
+                isVisible: isVisible,
+                action: refresh
             )
-            .keyboardShortcut("r", modifiers: .command)
         }
     }
 
@@ -343,7 +331,7 @@ struct DashboardView: View {
 
     private func refresh() {
         Task {
-            await loadUsage(maxAge: 0)
+            await store.refreshManually(settings: settings.values)
         }
     }
 

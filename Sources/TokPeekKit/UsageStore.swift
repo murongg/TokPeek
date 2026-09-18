@@ -23,6 +23,7 @@ public final class UsageStore: ObservableObject {
     @Published public private(set) var budgetReport: UsageReport?
     @Published public private(set) var modelCatalog: [String] = []
     @Published public private(set) var isLoading = false
+    @Published public private(set) var isManualRefreshing = false
     @Published public private(set) var isActivityLoading = false
     @Published public private(set) var errorMessage: String?
     @Published public private(set) var activityErrorMessage: String?
@@ -118,6 +119,15 @@ public final class UsageStore: ObservableObject {
             return
         }
         await refresh()
+    }
+
+    public func refreshManually(settings: SettingsValues) async {
+        guard !isManualRefreshing else { return }
+        // The button stays busy through every dashboard report, including
+        // activity and model scans that outlive the primary loading flag.
+        isManualRefreshing = true
+        defer { isManualRefreshing = false }
+        await refreshUsage(settings: settings, scope: .dashboard, maxAge: 0)
     }
 
     public func refreshUsage(
