@@ -47,11 +47,13 @@ public final class UsageStore: ObservableObject {
                 return
             }
             activityGeneration &+= 1
-            isActivityLoading = false
             activityErrorMessage = nil
             if activityRequest != lastSuccessfulActivityRequest {
                 activityReport = nil
             }
+            // The first scan may be queued behind another report. Until it
+            // succeeds or fails, nil means pending, not an empty period.
+            isActivityLoading = activityRequest != nil && activityReport == nil
         }
     }
     public var budgetRequest: UsageRequest? {
@@ -135,15 +137,18 @@ public final class UsageStore: ObservableObject {
 
         await refreshIfNeeded(maxAge: maxAge, now: now)
         guard !Task.isCancelled else { return }
+        if scope == .dashboard {
+            // Fill the visible heatmap before supplementary comparisons and
+            // budgets; each worker may have to wait for pricing on cold start.
+            await refreshActivityIfNeeded(maxAge: maxAge, now: now)
+        }
+        guard !Task.isCancelled else { return }
         await refreshComparisonIfNeeded(now: now)
         guard !Task.isCancelled else { return }
         await refreshBudgetIfNeeded(maxAge: maxAge, now: now)
         guard !Task.isCancelled, scope == .dashboard else { return }
 
-        // The menu bar needs totals and budget alerts, but has no consumer for
-        // the heatmap or all-time model catalog. Load those only for the panel.
-        await refreshActivityIfNeeded(maxAge: maxAge, now: now)
-        guard !Task.isCancelled else { return }
+        // The all-time model catalog is only consumed by the dashboard.
         await refreshModelCatalogIfNeeded(
             maxAge: maxAge == 0 ? 0 : 300,
             now: now

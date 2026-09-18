@@ -619,6 +619,61 @@ private func refreshSettings() -> SettingsValues {
     )
 }
 
+@MainActor
+@Test("The dashboard shows activity loading while the initial scan is queued")
+func dashboardIndicatesQueuedActivity() async throws {
+    let loader = SuspendedCountingLoader(report: try fixtureReport())
+    let store = UsageStore(loader: loader)
+    let refresh = Task {
+        await store.refreshUsage(settings: refreshSettings(), scope: .dashboard, maxAge: 60)
+    }
+    await loader.waitUntilStarted()
+
+    #expect(store.activityReport == nil)
+    #expect(store.isActivityLoading)
+
+    await loader.release()
+    await refresh.value
+    #expect(store.activityReport != nil)
+    #expect(!store.isActivityLoading)
+}
+
+@MainActor
+@Test("The dashboard loads the visible heatmap before comparison and budget scans")
+func dashboardPrioritizesActivity() async throws {
+    let report = try fixtureReport()
+    let loader = CatalogLoader(currentReport: report, catalogReport: report)
+    let store = UsageStore(loader: loader)
+    let now = Date()
+    let settings = refreshSettings()
+
+    await store.refreshUsage(settings: settings, scope: .dashboard, maxAge: 60, now: now)
+
+    #expect(await loader.requests.prefix(2) == [
+        settings.usageRequest(now: now),
+        settings.activityRequest(now: now),
+    ])
+}
+
+@MainActor
+@Test("Failed or removed activity requests do not stay pending")
+func activityFailureEndsPendingState() async {
+    let store = UsageStore(loader: FailingLoader())
+    store.activityRequest = UsageRequest(since: "mock-range", hourly: true)
+    #expect(store.isActivityLoading)
+
+    await store.refreshActivityIfNeeded(maxAge: 0)
+
+    #expect(!store.isActivityLoading)
+    #expect(store.activityReport == nil)
+    #expect(store.activityErrorMessage == "Synthetic loading failure")
+
+    store.activityRequest = UsageRequest(since: "mock-next-range", hourly: true)
+    #expect(store.isActivityLoading)
+    store.activityRequest = nil
+    #expect(!store.isActivityLoading)
+}
+
 private struct StubLoader: UsageLoading {
     let report: UsageReport
 
