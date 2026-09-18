@@ -13,6 +13,7 @@ struct DashboardView: View {
     @Environment(\.openSettings) private var openSettings
     @State private var selectedClientID: String?
     @State private var selectedModelID: String?
+    @State private var isVisible = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -50,8 +51,10 @@ struct DashboardView: View {
         }
         .frame(width: 480, height: 560)
         .background(.regularMaterial)
+        .background(WindowVisibility { isVisible = $0 })
         .tint(.primary)
-        .task(id: refreshTaskID) {
+        .task(id: "\(refreshTaskID)|\(isVisible)") {
+            guard isVisible else { return }
             await refreshLoop()
         }
         .onChange(of: availableModelIDs) {
@@ -340,43 +343,27 @@ struct DashboardView: View {
 
     private func refresh() {
         Task {
-            await loadUsage()
-            await store.refreshModelCatalogIfNeeded(
-                maxAge: 0
-            )
+            await loadUsage(maxAge: 0)
         }
     }
 
     private func refreshActivity() {
         Task {
-            configureRequests()
+            store.activityRequest = settings.values.activityRequest()
             await store.refreshActivityIfNeeded(maxAge: 0)
         }
     }
 
-    private func loadUsage() async {
-        configureRequests()
-        await store.refresh()
-        await store.refreshActivityIfNeeded(maxAge: 0)
-        await store.refreshComparisonIfNeeded()
-        await store.refreshBudgetIfNeeded(maxAge: 0)
+    private func loadUsage(maxAge: TimeInterval?) async {
+        await store.refreshUsage(
+            settings: settings.values,
+            scope: .dashboard,
+            maxAge: maxAge
+        )
     }
 
     private func refreshLoop() async {
-        configureRequests()
-        await store.refreshIfNeeded(
-            maxAge: settings.refreshFrequency.seconds
-        )
-        await store.refreshActivityIfNeeded(
-            maxAge: settings.refreshFrequency.seconds
-        )
-        await store.refreshComparisonIfNeeded()
-        await store.refreshBudgetIfNeeded(
-            maxAge: settings.refreshFrequency.seconds
-        )
-        await store.refreshModelCatalogIfNeeded(
-            maxAge: 300
-        )
+        await loadUsage(maxAge: settings.refreshFrequency.seconds)
 
         guard let seconds = settings.refreshFrequency.seconds else {
             return
@@ -388,25 +375,8 @@ struct DashboardView: View {
             } catch {
                 return
             }
-            await loadUsage()
-            await store.refreshModelCatalogIfNeeded(
-                maxAge: 300
-            )
+            await loadUsage(maxAge: seconds)
         }
-    }
-
-    private func configureRequests(
-        now: Date = Date()
-    ) {
-        let values = settings.values
-        let request = values.usageRequest(now: now)
-        store.request = request
-        store.comparisonRequest = request.previousPeriod()
-        store.activityRequest = values.activityRequest(now: now)
-        store.budgetRequest = values.budget.analyticsRequest(
-            now: now,
-            useEnvironmentRoots: values.useEnvironmentRoots
-        )
     }
 
     private var budgetSnapshot: UsageBudgetSnapshot? {

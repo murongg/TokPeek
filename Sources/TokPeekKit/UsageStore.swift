@@ -5,6 +5,11 @@ public protocol UsageLoading: Sendable {
     func loadReport(request: UsageRequest) async throws -> UsageReport
 }
 
+public enum UsageRefreshScope: Sendable {
+    case menuBar
+    case dashboard
+}
+
 @MainActor
 public final class UsageStore: ObservableObject {
     private enum ReportLoadOutcome: Sendable {
@@ -111,6 +116,38 @@ public final class UsageStore: ObservableObject {
             return
         }
         await refresh()
+    }
+
+    public func refreshUsage(
+        settings: SettingsValues,
+        scope: UsageRefreshScope,
+        maxAge: TimeInterval?,
+        now: Date = Date()
+    ) async {
+        guard !Task.isCancelled else { return }
+        request = settings.usageRequest(now: now)
+        comparisonRequest = request.previousPeriod()
+        activityRequest = settings.activityRequest(now: now)
+        budgetRequest = settings.budget.analyticsRequest(
+            now: now,
+            useEnvironmentRoots: settings.useEnvironmentRoots
+        )
+
+        await refreshIfNeeded(maxAge: maxAge, now: now)
+        guard !Task.isCancelled else { return }
+        await refreshComparisonIfNeeded(now: now)
+        guard !Task.isCancelled else { return }
+        await refreshBudgetIfNeeded(maxAge: maxAge, now: now)
+        guard !Task.isCancelled, scope == .dashboard else { return }
+
+        // The menu bar needs totals and budget alerts, but has no consumer for
+        // the heatmap or all-time model catalog. Load those only for the panel.
+        await refreshActivityIfNeeded(maxAge: maxAge, now: now)
+        guard !Task.isCancelled else { return }
+        await refreshModelCatalogIfNeeded(
+            maxAge: maxAge == 0 ? 0 : 300,
+            now: now
+        )
     }
 
     public func refresh() async {
@@ -402,7 +439,9 @@ public final class UsageStore: ObservableObject {
             return false
         }
 
-        return now.timeIntervalSince(lastSuccessfulRefreshAt) >= maxAge
+        // Zero means an explicit refresh, even if `now` was captured before
+        // the previous scan completed and is earlier than its completion time.
+        return maxAge <= 0 || now.timeIntervalSince(lastSuccessfulRefreshAt) >= maxAge
     }
 
     private func shouldRefreshModelCatalog(
@@ -421,7 +460,7 @@ public final class UsageStore: ObservableObject {
             return false
         }
 
-        return now.timeIntervalSince(
+        return maxAge <= 0 || now.timeIntervalSince(
             lastSuccessfulModelCatalogRefreshAt
         ) >= maxAge
     }
@@ -443,7 +482,7 @@ public final class UsageStore: ObservableObject {
             return false
         }
 
-        return now.timeIntervalSince(
+        return maxAge <= 0 || now.timeIntervalSince(
             lastSuccessfulComparisonRefreshAt
         ) >= maxAge
     }
@@ -465,7 +504,7 @@ public final class UsageStore: ObservableObject {
             return false
         }
 
-        return now.timeIntervalSince(
+        return maxAge <= 0 || now.timeIntervalSince(
             lastSuccessfulActivityRefreshAt
         ) >= maxAge
     }
@@ -487,7 +526,7 @@ public final class UsageStore: ObservableObject {
             return false
         }
 
-        return now.timeIntervalSince(
+        return maxAge <= 0 || now.timeIntervalSince(
             lastSuccessfulBudgetRefreshAt
         ) >= maxAge
     }

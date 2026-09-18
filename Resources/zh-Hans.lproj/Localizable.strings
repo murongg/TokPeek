@@ -140,3 +140,5 @@
 "Couldn’t load hourly activity." = "无法加载分时活跃数据。";
 "Loading hourly activity" = "正在加载分时活跃数据";
 "Retry" = "重试";
+"Usage scanner is unavailable" = "用量扫描程序不可用";
+"Usage scanner exited with status %d" = "用量扫描程序已退出，状态码为 %d";

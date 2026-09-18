@@ -55,5 +55,11 @@ let package = Package(
             dependencies: ["TokPeekKit"],
             path: "Tests/TokPeekKitTests"
         ),
+        .testTarget(
+            name: "TokPeekBridgeTests",
+            dependencies: ["TokPeekBridge"],
+            path: "Tests/TokPeekBridgeTests",
+            linkerSettings: rustLinkerSettings
+        ),
     ]
 )

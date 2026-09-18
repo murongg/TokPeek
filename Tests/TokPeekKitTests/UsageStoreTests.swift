@@ -531,6 +531,94 @@ func nilBudgetRequestClearsReport() async throws {
     #expect(store.budgetReport == nil)
 }
 
+@MainActor
+@Test("Background refresh keeps usage and budgets current without dashboard scans")
+func backgroundRefreshSkipsDashboardScans() async throws {
+    let report = try fixtureReport()
+    let loader = CatalogLoader(currentReport: report, catalogReport: report)
+    let store = UsageStore(loader: loader)
+    let now = Date()
+    let settings = refreshSettings()
+
+    await store.refreshUsage(settings: settings, scope: .menuBar, maxAge: 60, now: now)
+
+    #expect(await loader.requests == [
+        settings.usageRequest(now: now),
+        settings.usageRequest(now: now).previousPeriod()!,
+        settings.budget.analyticsRequest(now: now, useEnvironmentRoots: false)!,
+    ])
+    #expect(store.report == report)
+    #expect(store.budgetReport == report)
+    #expect(store.activityReport == nil)
+    #expect(store.modelCatalog.isEmpty)
+}
+
+@MainActor
+@Test("Opening the dashboard reuses fresh background reports and loads its own data")
+func dashboardRefreshReusesBackgroundReports() async throws {
+    let report = try fixtureReport(models: ["mock-model"])
+    let loader = CatalogLoader(currentReport: report, catalogReport: report)
+    let store = UsageStore(loader: loader)
+    let now = Date()
+    let settings = refreshSettings()
+
+    await store.refreshUsage(settings: settings, scope: .menuBar, maxAge: 60, now: now)
+    await store.refreshUsage(settings: settings, scope: .dashboard, maxAge: 60, now: now)
+    await store.refreshUsage(settings: settings, scope: .dashboard, maxAge: 60, now: now)
+
+    #expect(await loader.requests.count == 5)
+    #expect(store.activityReport == report)
+    #expect(store.modelCatalog == ["mock-model"])
+
+    await store.refreshUsage(settings: settings, scope: .dashboard, maxAge: 0, now: now)
+
+    #expect(await loader.requests.count == 9)
+}
+
+@MainActor
+@Test("Expired background reports refresh without waking dashboard scans")
+func expiredBackgroundRefreshSkipsDashboardScans() async throws {
+    let report = try fixtureReport()
+    let loader = CountingLoader(report: report)
+    let store = UsageStore(loader: loader)
+    let now = Date()
+    let settings = refreshSettings()
+
+    await store.refreshUsage(settings: settings, scope: .menuBar, maxAge: 60, now: now)
+    await store.refreshUsage(settings: settings, scope: .menuBar, maxAge: 0, now: now)
+
+    #expect(await loader.loadCount == 5)
+}
+
+@MainActor
+@Test("Cancelling a refresh prevents follow-up scans")
+func cancelledRefreshStopsFollowUpScans() async throws {
+    let loader = SuspendedCountingLoader(report: try fixtureReport())
+    let store = UsageStore(loader: loader)
+    let refresh = Task {
+        await store.refreshUsage(settings: refreshSettings(), scope: .dashboard, maxAge: 60)
+    }
+    await loader.waitUntilStarted()
+    refresh.cancel()
+    await loader.release()
+    await refresh.value
+
+    #expect(await loader.loadCount == 1)
+}
+
+private func refreshSettings() -> SettingsValues {
+    SettingsValues(
+        usagePeriod: .today,
+        refreshFrequency: .minute,
+        menuBarMetric: .summary,
+        useEnvironmentRoots: false,
+        budget: UsageBudget(
+            isEnabled: true, period: .month, metric: .cost,
+            limit: 50, notificationsEnabled: true
+        )
+    )
+}
+
 private struct StubLoader: UsageLoading {
     let report: UsageReport
 

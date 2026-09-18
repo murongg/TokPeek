@@ -140,3 +140,5 @@
 "Couldn’t load hourly activity." = "Couldn’t load hourly activity.";
 "Loading hourly activity" = "Loading hourly activity";
 "Retry" = "Retry";
+"Usage scanner is unavailable" = "Usage scanner is unavailable";
+"Usage scanner exited with status %d" = "Usage scanner exited with status %d";

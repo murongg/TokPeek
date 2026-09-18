@@ -9,6 +9,16 @@ import SwiftUI
 #endif
 
 @main
+enum TokPeekMain {
+    @MainActor
+    static func main() throws {
+        // Worker mode must finish before constructing SwiftUI, the menu bar,
+        // or any auto-refresh tasks; only the parent owns application state.
+        if try TokscaleWorker.runIfRequested() { return }
+        TokPeekApp.main()
+    }
+}
+
 struct TokPeekApp: App {
     @NSApplicationDelegateAdaptor(AppDelegate.self)
     private var appDelegate
@@ -118,23 +128,11 @@ struct TokPeekApp: App {
     private func refreshMenuBarUsage() async {
         let now = Date()
         let values = settings.values
-        let request = values.usageRequest(now: now)
-        store.request = request
-        store.comparisonRequest = request.previousPeriod()
-        store.activityRequest = values.activityRequest(now: now)
-        store.budgetRequest = values.budget.analyticsRequest(
-            now: now,
-            useEnvironmentRoots: values.useEnvironmentRoots
-        )
-        await store.refreshIfNeeded(
-            maxAge: settings.refreshFrequency.seconds
-        )
-        await store.refreshActivityIfNeeded(
-            maxAge: settings.refreshFrequency.seconds
-        )
-        await store.refreshComparisonIfNeeded()
-        await store.refreshBudgetIfNeeded(
-            maxAge: settings.refreshFrequency.seconds
+        await store.refreshUsage(
+            settings: values,
+            scope: .menuBar,
+            maxAge: settings.refreshFrequency.seconds,
+            now: now
         )
 
         guard
