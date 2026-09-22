@@ -86,6 +86,9 @@
 		27BD83CD565BB443E0104A89 /* WindowVisibility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 27F7FC0C4E5676CC8C6D1439 /* WindowVisibility.swift */; };
 		9445E1790E9CB495128FB7D8 /* WindowVisibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E7AA161788667EFE0EDDEA8E /* WindowVisibilityTests.swift */; };
 		B20000000000000000000001 /* RefreshButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000001 /* RefreshButton.swift */; };
+		2316A93851231316C2C48C6A /* PeriodPickerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 147C9A2587AF75B19293642C /* PeriodPickerTests.swift */; };
+		BFC8E4901E4F15ACFBF3455F /* PeriodPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAD60E6E6AB98AC7D831C5E /* PeriodPicker.swift */; };
+		B30000000000000000000001 /* PeriodPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDAD60E6E6AB98AC7D831C5E /* PeriodPicker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -151,6 +154,8 @@
 		27F7FC0C4E5676CC8C6D1439 /* WindowVisibility.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WindowVisibility.swift; path = TokPeekKit/WindowVisibility.swift; sourceTree = "<group>"; };
 		E7AA161788667EFE0EDDEA8E /* WindowVisibilityTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = WindowVisibilityTests.swift; path = TokPeekKitTests/WindowVisibilityTests.swift; sourceTree = "<group>"; };
 		A20000000000000000000001 /* RefreshButton.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RefreshButton.swift; path = TokPeek/RefreshButton.swift; sourceTree = "<group>"; };
+		147C9A2587AF75B19293642C /* PeriodPickerTests.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PeriodPickerTests.swift; path = TokPeekKitTests/PeriodPickerTests.swift; sourceTree = "<group>"; };
+		DDAD60E6E6AB98AC7D831C5E /* PeriodPicker.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = PeriodPicker.swift; path = TokPeekKit/PeriodPicker.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -237,6 +242,7 @@
 				62F7AE0E763D0829F2562CC8AB84591A /* UsageReportTests.swift */,
 				2A521E7F770E955BA6972373DBCEC302 /* UsageStoreTests.swift */,
 				E7AA161788667EFE0EDDEA8E /* WindowVisibilityTests.swift */,
+				147C9A2587AF75B19293642C /* PeriodPickerTests.swift */,
 			);
 			name = Tests;
 			path = Tests;
@@ -300,6 +306,7 @@
 				FB87DD866E93B4047E9EBB506EC6B5F7 /* UsageStore.swift */,
 				32D29E744F47CAB0FA1F2E6282829C50 /* tokpeek_core.h */,
 				27F7FC0C4E5676CC8C6D1439 /* WindowVisibility.swift */,
+				DDAD60E6E6AB98AC7D831C5E /* PeriodPicker.swift */,
 			);
 			name = Sources;
 			path = Sources;
@@ -460,6 +467,7 @@
 				F421DF10AECEC6ED4C946CA8091070A2 /* UsageRequest.swift in Sources */,
 				545601EA32565830FBC2E02F274C6608 /* UsageStore.swift in Sources */,
 				27BD83CD565BB443E0104A89 /* WindowVisibility.swift in Sources */,
+				BFC8E4901E4F15ACFBF3455F /* PeriodPicker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -502,7 +510,9 @@
 				CFA3610B30A333117EA5C07BF8D1CD10 /* UsageReportTests.swift in Sources */,
 				578B718B07C7BA74D0219B0FC52AC440 /* UsageStoreTests.swift in Sources */,
 				2686819C37B359404CAC022C /* WindowVisibility.swift in Sources */,
+				B30000000000000000000001 /* PeriodPicker.swift in Sources */,
 				9445E1790E9CB495128FB7D8 /* WindowVisibilityTests.swift in Sources */,
+				2316A93851231316C2C48C6A /* PeriodPickerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
