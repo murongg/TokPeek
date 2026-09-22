@@ -5,13 +5,9 @@ import Testing
     @testable import TokPeekKit
 #endif
 
-@Test("Dashboard tabs compensate the native segmented control alignment inset")
+@Test("Dashboard filter controls fit the content width")
 func dashboardTabsAlignWithContent() {
-    #expect(
-        DashboardLayoutMetrics.segmentedControlHorizontalAllowance
-            == 14
-    )
-    #expect(DashboardLayoutMetrics.periodPickerWidth == 300)
+    #expect(DashboardLayoutMetrics.periodPickerWidth == 328)
     #expect(DashboardLayoutMetrics.filtersMenuWidth == 74)
     #expect(
         DashboardLayoutMetrics.filtersMenuLabelWidth
@@ -39,7 +35,6 @@ func dashboardTabsAlignWithContent() {
     )
     #expect(
         DashboardLayoutMetrics.periodPickerWidth
-            + DashboardLayoutMetrics.segmentedControlHorizontalAllowance * 2
             + DashboardLayoutMetrics.calendarButtonWidth
             + DashboardLayoutMetrics.filtersMenuWidth
             + DashboardLayoutMetrics.filterSpacing * 2

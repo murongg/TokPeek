@@ -391,30 +391,7 @@ private struct UsageFilterBar: View {
                 DashboardLayoutMetrics.filterSpacing
             )
         ) {
-            Picker(
-                "Usage period",
-                selection: $settings.usagePeriod
-            ) {
-                ForEach(UsagePeriod.presetCases) { period in
-                    Text(period.shortTitle)
-                        .tag(period)
-                }
-            }
-            .pickerStyle(.segmented)
-            .labelsHidden()
-            .frame(
-                width: CGFloat(
-                    DashboardLayoutMetrics.periodPickerWidth
-                )
-            )
-            .padding(
-                .horizontal,
-                CGFloat(
-                    DashboardLayoutMetrics
-                        .segmentedControlHorizontalAllowance
-                )
-            )
-            .accessibilityLabel("Usage period")
+            PeriodPicker(selection: $settings.usagePeriod)
 
             Button {
                 showsCustomRange = true
