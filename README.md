@@ -181,7 +181,7 @@ See [RELEASING.md](RELEASING.md) for certificate, API key, and secret setup.
 ## Tokscale Core
 
 The Rust bridge pins Tokscale to commit
-`a3209ff03da1b71262a4dd97bff854c07ca548b3` (v4.15.1). Upgrades should be
+`dcf8d3656bbcecf05d112c6f35f9be328e4f66b7` (v4.17.0). Upgrades should be
 reviewed and tested deliberately because local session formats and report
 contracts can change.
 

@@ -1569,8 +1569,8 @@ dependencies = [
 
 [[package]]
 name = "tokscale-core"
-version = "4.15.1"
-source = "git+https://github.com/junhoyeo/tokscale?rev=a3209ff03da1b71262a4dd97bff854c07ca548b3#a3209ff03da1b71262a4dd97bff854c07ca548b3"
+version = "4.17.0"
+source = "git+https://github.com/junhoyeo/tokscale?rev=dcf8d3656bbcecf05d112c6f35f9be328e4f66b7#dcf8d3656bbcecf05d112c6f35f9be328e4f66b7"
 dependencies = [
  "bincode",
  "chrono",

@@ -174,7 +174,7 @@ Apple 和 Sparkle 签名凭据仅保存在加密的 GitHub Secrets 中，并会�
 ## Tokscale Core
 
 Rust Bridge 当前固定使用 Tokscale 提交
-`a3209ff03da1b71262a4dd97bff854c07ca548b3`（v4.15.1）。由于本地会话格式和报告协议
+`dcf8d3656bbcecf05d112c6f35f9be328e4f66b7`（v4.17.0）。由于本地会话格式和报告协议
 可能变化，升级时需要进行代码审查和完整测试。
 
 ## 隐私
