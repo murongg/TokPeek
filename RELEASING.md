@@ -86,19 +86,23 @@ git push origin v0.1.0
 
 The Release workflow then:
 
-1. Runs the complete Rust, Swift Package Manager, and Xcode test suites.
-2. Imports the Developer ID certificate into an ephemeral keychain.
-3. Builds a Universal 2 app with hardened runtime and a secure timestamp.
-4. Verifies the Developer ID signature, timestamp, architectures, and version.
-5. Submits the app to Apple with `notarytool` and waits for acceptance.
-6. Staples and validates the notarization ticket, then runs Gatekeeper checks.
-7. Generates an EdDSA-signed `appcast.xml` for Sparkle.
-8. Publishes the final ZIP, SHA-256 checksum, and appcast to GitHub Releases.
-9. Deletes the temporary keychain, certificate, API key, and submission files.
+1. Generates release notes from commit subjects since the previous version tag.
+2. Runs the complete Rust, Swift Package Manager, and Xcode test suites.
+3. Imports the Developer ID certificate into an ephemeral keychain.
+4. Builds a Universal 2 app with hardened runtime and a secure timestamp.
+5. Verifies the Developer ID signature, timestamp, architectures, and version.
+6. Submits the app to Apple with `notarytool` and waits for acceptance.
+7. Staples and validates the notarization ticket, then runs Gatekeeper checks.
+8. Embeds the notes in an EdDSA-signed `appcast.xml` for Sparkle's update dialog.
+9. Publishes the final ZIP, SHA-256 checksum, appcast, and the same release
+   notes to GitHub Releases.
+10. Deletes the temporary keychain, certificate, API key, and submission files.
 
 Release tags must use the exact form `vMAJOR.MINOR.PATCH`, such as `v1.2.3`.
 The first release containing Sparkle bootstraps update support. Its update flow
 can be exercised when the following release is published.
+Editing GitHub Release notes after publication does not change an existing
+signed appcast.
 
 ## Rotate credentials
 

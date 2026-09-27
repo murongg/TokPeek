@@ -41,6 +41,41 @@ jobs:
           fi
           echo "value=${tag#v}" >> "$GITHUB_OUTPUT"
 
+      - name: Generate release notes
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.value }}
+        run: |
+          previous_tag=$(
+            git describe --tags --abbrev=0 \
+              --match 'v[0-9]*.[0-9]*.[0-9]*' \
+              "$GITHUB_REF_NAME^" 2>/dev/null || true
+          )
+          if [[ -n "$previous_tag" ]]; then
+            range="$previous_tag..$GITHUB_REF_NAME"
+          else
+            range="$GITHUB_REF_NAME"
+          fi
+
+          changes=$(git log --no-merges --format='- %s' "$range")
+          if [[ -z "$changes" ]]; then
+            changes=$(git log --format='- %s' "$range")
+          fi
+          if [[ -z "$changes" ]]; then
+            echo "No changes found for $GITHUB_REF_NAME." >&2
+            exit 1
+          fi
+
+          notes_path="$RUNNER_TEMP/tokpeek-release-notes.md"
+          {
+            printf '# TokPeek %s\n\n## Changes\n\n' "$RELEASE_VERSION"
+            printf '%s\n' "$changes"
+            printf '\nThis build is signed with Developer ID and notarized by Apple. It requires macOS 14 or later.\n'
+            if [[ -n "$previous_tag" ]]; then
+              printf '\n**Full Changelog**: https://github.com/%s/compare/%s...%s\n' \
+                "$GITHUB_REPOSITORY" "$previous_tag" "$GITHUB_REF_NAME"
+            fi
+          } > "$notes_path"
+
       - name: Configure Rust
         run: |
           rustup set profile minimal
@@ -235,11 +270,8 @@ jobs:
           appcast_dir="$RUNNER_TEMP/tokpeek-appcast"
           mkdir -p "$appcast_dir"
           cp "artifacts/$archive" "$appcast_dir/$archive"
-          cat > "$appcast_dir/${archive%.zip}.md" <<EOF
-          # TokPeek ${RELEASE_VERSION}
-
-          See the full release notes on GitHub.
-          EOF
+          cp "$RUNNER_TEMP/tokpeek-release-notes.md" \
+            "$appcast_dir/${archive%.zip}.md"
 
           generate_appcast=$(
             find .build/xcode/SourcePackages/artifacts \
@@ -291,10 +323,9 @@ jobs:
             "artifacts/$archive.sha256#SHA-256 checksum" \
             "artifacts/appcast.xml#Sparkle update feed" \
             --verify-tag \
-            --generate-notes \
             --fail-on-no-commits \
             --title "TokPeek $RELEASE_VERSION" \
-            --notes "This build is signed with Developer ID and notarized by Apple. It requires macOS 14 or later."
+            --notes-file "$RUNNER_TEMP/tokpeek-release-notes.md"
 
       - name: Remove signing credentials
         if: ${{ always() }}
@@ -307,3 +338,4 @@ jobs:
             "$RUNNER_TEMP/AuthKey.p8" \
             "$RUNNER_TEMP/TokPeek-notarization.zip"
           rm -rf "$RUNNER_TEMP/tokpeek-appcast"
+          rm -f "$RUNNER_TEMP/tokpeek-release-notes.md"
