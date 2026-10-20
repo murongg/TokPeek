@@ -119,6 +119,7 @@ fn message_at(timestamp: i64, tokens: i64) -> UnifiedMessage {
             output: 0,
             cache_read: 0,
             cache_write: 0,
+            cache_write_1h: 0,
             reasoning: 0,
         },
         0.01,

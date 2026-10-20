@@ -13,4 +13,4 @@ chrono = "0.4"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 tokio = { version = "1", features = ["rt", "net", "time"] }
-tokscale-core = { git = "https://github.com/junhoyeo/tokscale", rev = "dcf8d3656bbcecf05d112c6f35f9be328e4f66b7" }
+tokscale-core = { git = "https://github.com/junhoyeo/tokscale", rev = "c1973901fc2f7ba0d134252bfd923c714cc123db" }
